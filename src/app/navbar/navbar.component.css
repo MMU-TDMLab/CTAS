@@ -1,0 +1,13 @@
+.navbar-nav {
+  width: 100%;
+  text-align: center;
+}
+
+.navbar-brand {
+  font-family: courier;
+}
+
+.nav-item-cust {
+  padding-left: 50px;
+  font-family: courier;
+}
