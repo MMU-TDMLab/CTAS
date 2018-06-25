@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy, Pipe, PipeTransform } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { FormControl, NgModel } from '@angular/forms';
 
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
+import { Router } from '@angular/router';
 // | orderBy: reverse
 
 @Component({
@@ -15,8 +17,9 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   isLoading = false;
   private postsSub: Subscription;
   private isExpanded = true;
+  private editClicked = false;
 
-  constructor(public postsService: PostsService) {}
+  constructor(public postsService: PostsService, private router: Router) {}
 
   ngOnInit() {
     this.isLoading = true;
@@ -34,6 +37,17 @@ export class ShowPostComponent implements OnInit, OnDestroy {
         } else {
           this.isExpanded = false;
         }
+  }
+
+  onEdit(postId: string) {
+    if (this.editClicked === false) {
+      this.editClicked = true;
+      this.router.navigate(['/edit', postId]);
+      // [routerLink]="['/edit', post.id]";
+    } else {
+      this.editClicked = false;
+      this.router.navigate(['/module']);
+    }
   }
 
   // sortingArray() {
