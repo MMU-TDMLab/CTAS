@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Pipe, PipeTransform } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
+// | orderBy: reverse
 
 @Component({
   selector: 'app-show-post',
@@ -13,6 +14,7 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
   isLoading = false;
   private postsSub: Subscription;
+  private isExpanded = true;
 
   constructor(public postsService: PostsService) {}
 
@@ -25,6 +27,19 @@ export class ShowPostComponent implements OnInit, OnDestroy {
         this.posts = posts;
       });
   }
+
+  onExpand() {
+    if (this.isExpanded === false) {
+          this.isExpanded = true;
+        } else {
+          this.isExpanded = false;
+        }
+  }
+
+  // sortingArray() {
+  //    let sort = this.posts.sort((a, b) => {
+  //     return b.title - a.title;
+  // }
 
   onDelete(postId: string) {
     this.postsService.deletePost(postId);

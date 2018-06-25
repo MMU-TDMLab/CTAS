@@ -1,3 +1,15 @@
 #deleteBtn {
-  margin-left: 2em;
+  margin-left: 1em;
 }
+
+.card-title {
+  font-weight: bold;
+}
+
+#editBtn {
+  margin-left: 1em;
+}
+
+/* #btn {
+  max-height: 3px;
+} */

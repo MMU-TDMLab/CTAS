@@ -4,6 +4,18 @@
     <div class="col">
     </div>
     <div class="col-6">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-secondary active">
+              <input type="radio" name="options" id="option1" autocomplete="off" checked> Student
+            </label>
+            <label class="btn btn-secondary">
+              <input type="radio" name="options" id="option2" autocomplete="off"> Teacher
+            </label>
+            <label class="btn btn-secondary">
+              <input type="radio" name="options" id="option3" autocomplete="off"> Admin
+            </label>
+          </div>
+          <hr>
         <div class="form-group">
           <label for="user">User</label>
           <input type="text" class="form-control" name="user" placeholder="User Name" formControlName="user">

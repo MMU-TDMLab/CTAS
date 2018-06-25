@@ -9,7 +9,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { CourseComponent } from './course/course.component';
-import { ModuleComponent } from './module/module.component';
+import { ModuleComponent } from './course/module/module.component';
 import { CreatePostComponent } from './posts/create-post/create-post.component';
 import { ShowPostComponent } from './posts/show-post/show-post.component';
 import { PostsService } from './posts/posts.service';

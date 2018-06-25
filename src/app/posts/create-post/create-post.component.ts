@@ -4,7 +4,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 
 import { PostsService } from '../posts.service';
 import { Post } from '../post.model';
-
+// import { ShowPostComponent } from '../show-post/show-post.component';
 
 @Component({
   selector: 'app-create-post',
@@ -17,7 +17,7 @@ export class CreatePostComponent implements OnInit {
   form: FormGroup;
   private postId: string;
   private mode = 'create';
-  private addPostBtn = true;
+  public addPostBtn = true;
 
   constructor(public postsService: PostsService, public route: ActivatedRoute) {}
 
@@ -49,13 +49,13 @@ export class CreatePostComponent implements OnInit {
     });
   }
 
-  onAddPostBtn () {
-    if (this.addPostBtn === false) {
-      this.addPostBtn = true;
-    } else {
-      this.addPostBtn = false;
-    }
-  }
+  // onAddPostBtn () {
+  //   if (this.addPostBtn === false) {
+  //     this.addPostBtn = true;
+  //   } else {
+  //     this.addPostBtn = false;
+  //   }
+  // }
 
   onSavePost() {
     if (this.form.invalid) {
