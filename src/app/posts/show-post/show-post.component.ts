@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, Pipe, PipeTransform } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { FormControl, NgModel } from '@angular/forms';
 
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
