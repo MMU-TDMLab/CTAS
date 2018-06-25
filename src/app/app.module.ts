@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -9,6 +10,9 @@ import { LoginComponent } from './login/login.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { CourseComponent } from './course/course.component';
 import { ModuleComponent } from './module/module.component';
+import { CreatePostComponent } from './posts/create-post/create-post.component';
+import { ShowPostComponent } from './posts/show-post/show-post.component';
+import { PostsService } from './posts/posts.service';
 
 @NgModule({
   declarations: [
@@ -18,13 +22,16 @@ import { ModuleComponent } from './module/module.component';
     CourseComponent,
     LoginComponent,
     ModuleComponent,
+    CreatePostComponent,
+    ShowPostComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [PostsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

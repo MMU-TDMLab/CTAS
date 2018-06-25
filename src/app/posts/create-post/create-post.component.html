@@ -1,0 +1,17 @@
+<div class="container">
+    <button class="btn btn-primary" (click)="onAddPostBtn()">Open Post Creator</button>
+    <ng-template [ngIf]="!addPostBtn">
+  <form [formGroup]='form' (submit)="onSavePost()">
+<div class="form-group">
+  <label for="Header">Create New Post</label>
+  <input type="text" class="form-control" name="header" placeholder="Post Header" formControlName="header">
+</div>
+<br>
+<div class="input-group">
+  <textarea class="form-control" rows="3" name="message" placeholder="Post Message" formControlName="message"></textarea>
+</div>
+<button class="btn btn-success" id="postbtn" type="submit" [disabled]="!form.valid">Save Post</button>
+</form>
+</ng-template>
+</div>
+
