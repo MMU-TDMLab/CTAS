@@ -7,3 +7,20 @@
   text-align: center;
   padding-top: 1.5em;
 }
+
+.input-group {
+  padding-bottom: 1em;
+}
+
+input[type="file"] {
+  visibility: hidden;
+}
+
+.file-preview {
+  height: 5rem;
+  margin: 1rem 0;
+}
+
+.file-preview img {
+  height: 100%;
+}

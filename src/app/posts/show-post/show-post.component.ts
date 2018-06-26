@@ -15,7 +15,6 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
   isLoading = false;
   private postsSub: Subscription;
-  private isExpanded = true;
   private editClicked = false;
 
   constructor(public postsService: PostsService, private router: Router) {}
@@ -28,14 +27,6 @@ export class ShowPostComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.posts = posts;
       });
-  }
-
-  onExpand() {
-    if (this.isExpanded === false) {
-          this.isExpanded = true;
-        } else {
-          this.isExpanded = false;
-        }
   }
 
   onEdit(postId: string) {

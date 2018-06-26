@@ -16,7 +16,7 @@ export class CreatePostComponent implements OnInit {
   form: FormGroup;
   private postId: string;
   private mode = 'create';
-  public addPostBtn = true;
+  public filePreview = '';
 
   constructor(public postsService: PostsService, public route: ActivatedRoute) {}
 
@@ -24,7 +24,11 @@ export class CreatePostComponent implements OnInit {
     this.form = new FormGroup({
       header: new FormControl(null, {validators: [Validators.required, Validators.minLength(3)]
       }),
-      message: new FormControl(null, {validators: [Validators.required]})
+      message: new FormControl(null, {validators: [Validators.required, Validators.minLength(5)]
+      }),
+      file: new FormControl(null, {
+        validators: [Validators.required]
+      })
     });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
@@ -34,11 +38,13 @@ export class CreatePostComponent implements OnInit {
           this.post = {
             id: postData._id,
             header: postData.header,
-            message: postData.message
+            message: postData.message,
+            filePath: postData.filePath
           };
           this.form.setValue({
             header: this.post.header,
-            message: this.post.message
+            message: this.post.message,
+            file: this.post.filePath
         });
         });
       } else {
@@ -48,25 +54,34 @@ export class CreatePostComponent implements OnInit {
     });
   }
 
-  // onAddPostBtn () {
-  //   if (this.addPostBtn === false) {
-  //     this.addPostBtn = true;
-  //   } else {
-  //     this.addPostBtn = false;
-  //   }
-  // }
+  onFilePicked(event: Event) {
+    const filePicked = (event.target as HTMLInputElement).files[0];
+    this.form.patchValue({ file: filePicked });
+    this.form.get('file').updateValueAndValidity();
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.filePreview = reader.result;
+      // this.filePreview = reader.result.setContentType('application/word');
+      // response.setContentType("application/pdf");
+      // console.log(this.filePreview);
+      // console.log('reader result: ', reader.result);
+    };
+    reader.readAsText(filePicked);
+    // console.log(filePicked);
+  }
 
   onSavePost() {
     if (this.form.invalid) {
       return;
     }
     if (this.mode === 'create') {
-      this.postsService.addPost(this.form.value.header, this.form.value.message);
+      this.postsService.addPost(this.form.value.header, this.form.value.message, this.form.value.file);
     } else {
       this.postsService.updatePost(
         this.postId,
         this.form.value.header,
-        this.form.value.message
+        this.form.value.message,
+        this.form.value.file
       );
     }
     this.form.reset();
