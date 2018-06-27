@@ -1,29 +1,65 @@
 const express = require('express');
+const multer = require('multer');
 
 const Post = require('../models/post');
 
 const router = express.Router();
 
+// const mimeTypeMap = {
+//   'file/pdf': 'pdf',
+//   'file/text': 'txt',
+//   'file/txt': 'txt',
+//   'file/word': 'word'
+// }
 
-router.post("", (req, res, next) => {
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    // const isValid = mimeTypeMap[file.mimetype];
+    // let error = new Error('Invalid mime type');
+    // if (isValid) {
+    //   error = null;
+    // }
+    cb(null, 'backend/documents');
+  },
+  filename: (req, file, cb) => {
+    const name = file.originalname.toLowerCase().split(' ').join('-');
+    const nameWithoutExtension = name.replace(/\.[^/.]+$/, "");
+    const fileExtention = file.originalname.split('.').pop();
+    const fileName = nameWithoutExtension;
+    cb(null, nameWithoutExtension + '-' + Date.now() + '.' + fileExtention);
+  }
+});
+
+router.post("", multer({storage: storage}).single('file'), (req, res, next) => {
+  const url = req.protocol + '://' + req.get('host');
   const post = new Post({
     header: req.body.header,
-    message: req.body.message
+    message: req.body.message,
+    filePath: url + '/documents/' + req.file.filename
   });
   post.save().then(createdPost => {
     console.log(createdPost);
     res.status(201).json({
       message: "Post added successfully",
-      postId: createdPost._id
+      post: {
+        ...createdPost,
+        id: createdPost._id,
+      }
     });
   });
 });
 
-router.put("/:id", (req, res, next) => {
+router.put("/:id", multer({storage: storage}).single('file'), (req, res, next) => {
+  let filePath = req.body.filePath;
+  if (req.file) {
+    const url = req.protocol + '://' + req.get('host');
+    filePath = url + '/documents/' + req.file.filename
+  }
   const post = new Post({
     _id: req.body.id,
     header: req.body.header,
-    message: req.body.message
+    message: req.body.message,
+    filePath: filePath
   });
   console.log(post);
   Post.updateOne({ _id: req.params.id }, post).then(result => {

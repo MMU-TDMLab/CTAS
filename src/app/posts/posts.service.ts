@@ -46,9 +46,16 @@ export class PostsService {
 
   addPost(header: string, message: string, file: File) {
     const postData = new FormData();
+    // const postToSave: Post = {
+    //   id: '1',
+    //   header: header,
+    //   message: message,
+    //   filePath: file
+    // };
+    // this.posts.push(postToSave);
     postData.append('header', header);
     postData.append('message', message);
-    postData.append('file', file, header);
+    postData.append('file', file);
     this.http
       .post<{ message: string; post: Post }>(
         'http://localhost:3000/api/posts',
@@ -73,7 +80,7 @@ export class PostsService {
       postData.append('id', id);
       postData.append('header', header);
       postData.append('message', message);
-      postData.append('file', file, header);
+      postData.append('file', file);
     } else {
         postData = {
         id: id,

@@ -1,33 +1,45 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Sanitizer } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 import { PostsService } from '../posts.service';
 import { Post } from '../post.model';
+// import { fileType } from './file-type.validator';
 
 @Component({
   selector: 'app-create-post',
   templateUrl: './create-post.component.html',
   styleUrls: ['./create-post.component.css']
 })
-
 export class CreatePostComponent implements OnInit {
   post: Post;
   form: FormGroup;
   private postId: string;
   private mode = 'create';
   public filePreview = '';
+  trustTwo = null;
 
-  constructor(public postsService: PostsService, public route: ActivatedRoute) {}
+  constructor(
+    public postsService: PostsService,
+    public route: ActivatedRoute,
+    public sanitizer: DomSanitizer
+  ) {
+    this.trustTwo = sanitizer.bypassSecurityTrustResourceUrl(this.filePreview);
+    // this.trustedUrl = sanitizer.bypassSecurityTrustUrl(this.filePreview);
+  }
 
   ngOnInit() {
     this.form = new FormGroup({
-      header: new FormControl(null, {validators: [Validators.required, Validators.minLength(3)]
+      header: new FormControl(null, {
+        validators: [Validators.required, Validators.minLength(3)]
       }),
-      message: new FormControl(null, {validators: [Validators.required, Validators.minLength(5)]
+      message: new FormControl(null, {
+        validators: [Validators.required, Validators.minLength(1)]
       }),
       file: new FormControl(null, {
         validators: [Validators.required]
+        // asyncValidators: [fileType]
       })
     });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
@@ -45,7 +57,7 @@ export class CreatePostComponent implements OnInit {
             header: this.post.header,
             message: this.post.message,
             file: this.post.filePath
-        });
+          });
         });
       } else {
         this.mode = 'create';
@@ -63,11 +75,8 @@ export class CreatePostComponent implements OnInit {
       this.filePreview = reader.result;
       // this.filePreview = reader.result.setContentType('application/word');
       // response.setContentType("application/pdf");
-      // console.log(this.filePreview);
-      // console.log('reader result: ', reader.result);
     };
-    reader.readAsText(filePicked);
-    // console.log(filePicked);
+    reader.readAsDataURL(filePicked);
   }
 
   onSavePost() {
@@ -75,7 +84,11 @@ export class CreatePostComponent implements OnInit {
       return;
     }
     if (this.mode === 'create') {
-      this.postsService.addPost(this.form.value.header, this.form.value.message, this.form.value.file);
+      this.postsService.addPost(
+        this.form.value.header,
+        this.form.value.message,
+        this.form.value.file
+      );
     } else {
       this.postsService.updatePost(
         this.postId,
@@ -85,5 +98,12 @@ export class CreatePostComponent implements OnInit {
       );
     }
     this.form.reset();
+
+    // this.myInputVariable.nativeElement.value = '';
+    // this.form.nativeElement("uploadCaptureInputFile").value = "";
+    // document.getElementById('file').value = null;
+    // this.form.value.file.nativeElement.value = '';
+    // this.filePicker
+    // this.myInputVariable.nativeElement.value = '';
   }
 }

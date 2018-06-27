@@ -26,6 +26,7 @@ export class ShowPostComponent implements OnInit, OnDestroy {
       .subscribe((posts: Post[]) => {
         this.isLoading = false;
         this.posts = posts;
+        this.posts.reverse();
       });
   }
 
@@ -39,11 +40,6 @@ export class ShowPostComponent implements OnInit, OnDestroy {
       this.router.navigate(['/module']);
     }
   }
-
-  // sortingArray() {
-  //    let sort = this.posts.sort((a, b) => {
-  //     return b.title - a.title;
-  // }
 
   onDelete(postId: string) {
     this.postsService.deletePost(postId);
