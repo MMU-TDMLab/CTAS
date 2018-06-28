@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 
 const Post = require('../models/post');
+const authCheck = require('../middleware/check-auth');
 
 const router = express.Router();
 
@@ -30,42 +31,54 @@ const storage = multer.diskStorage({
   }
 });
 
-router.post("", multer({storage: storage}).single('file'), (req, res, next) => {
-  const url = req.protocol + '://' + req.get('host');
-  const post = new Post({
-    header: req.body.header,
-    message: req.body.message,
-    filePath: url + '/documents/' + req.file.filename
-  });
-  post.save().then(createdPost => {
-    console.log(createdPost);
-    res.status(201).json({
-      message: "Post added successfully",
-      post: {
-        ...createdPost,
-        id: createdPost._id,
-      }
+router.post("",
+  authCheck,
+  multer({
+    storage: storage
+  }).single('file'), (req, res, next) => {
+    const url = req.protocol + '://' + req.get('host');
+    const post = new Post({
+      header: req.body.header,
+      message: req.body.message,
+      filePath: url + '/documents/' + req.file.filename
+    });
+    post.save().then(createdPost => {
+      console.log(createdPost);
+      res.status(201).json({
+        message: "Post added successfully",
+        post: {
+          ...createdPost,
+          id: createdPost._id,
+        }
+      });
     });
   });
-});
 
-router.put("/:id", multer({storage: storage}).single('file'), (req, res, next) => {
-  let filePath = req.body.filePath;
-  if (req.file) {
-    const url = req.protocol + '://' + req.get('host');
-    filePath = url + '/documents/' + req.file.filename
-  }
-  const post = new Post({
-    _id: req.body.id,
-    header: req.body.header,
-    message: req.body.message,
-    filePath: filePath
+router.put("/:id",
+  authCheck,
+  multer({
+    storage: storage
+  }).single('file'), (req, res, next) => {
+    let filePath = req.body.filePath;
+    if (req.file) {
+      const url = req.protocol + '://' + req.get('host');
+      filePath = url + '/documents/' + req.file.filename
+    }
+    const post = new Post({
+      _id: req.body.id,
+      header: req.body.header,
+      message: req.body.message,
+      filePath: filePath
+    });
+    console.log(post);
+    Post.updateOne({
+      _id: req.params.id
+    }, post).then(result => {
+      res.status(200).json({
+        message: "Update successful!"
+      });
+    });
   });
-  console.log(post);
-  Post.updateOne({ _id: req.params.id }, post).then(result => {
-    res.status(200).json({ message: "Update successful!" });
-  });
-});
 
 router.get("", (req, res, next) => {
   Post.find()
@@ -79,20 +92,28 @@ router.get("", (req, res, next) => {
 });
 
 router.get('/:id', (req, res, next) => {
-  Post.findById(req.params.id).then(post =>{
+  Post.findById(req.params.id).then(post => {
     if (post) {
       res.status(200).json(post);
     } else {
-      res.status(404).json({message: 'Post not found!'});
+      res.status(404).json({
+        message: 'Post not found!'
+      });
     }
   })
 })
 
-router.delete("/:id", (req, res, next) => {
-  Post.deleteOne({_id: req.params.id}).then(result => {
-    console.log(result);
-    res.status(200).json({message: 'Post deleted!'});
-  })
-});
+router.delete("/:id",
+  authCheck,
+  (req, res, next) => {
+    Post.deleteOne({
+      _id: req.params.id
+    }).then(result => {
+      console.log(result);
+      res.status(200).json({
+        message: 'Post deleted!'
+      });
+    })
+  });
 
 module.exports = router;

@@ -5,6 +5,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { CourseComponent } from './course/course.component';
 import { ModuleComponent } from './course/module/module.component';
+import { SignupComponent } from './signup/signup.component';
 
 
 
@@ -14,7 +15,8 @@ const appRoutes: Routes = [
   { path: 'course', component: CourseComponent },
   { path: 'module', component: ModuleComponent },
   { path: 'edit/:postId', component: ModuleComponent },
-  { path: 'login', component: LoginComponent }
+  { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignupComponent}
 ];
 
 

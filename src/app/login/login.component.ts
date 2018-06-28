@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from './auth.service';
 
 
 @Component({
@@ -13,11 +14,11 @@ export class LoginComponent implements OnInit {
   notLoggedIn = true;
   loggingIn: String = '';
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, public authService: AuthService) { }
 
   ngOnInit() {
     this.form = new FormGroup({
-      user: new FormControl(null, {validators: [Validators.required, Validators.minLength(3)]
+      email: new FormControl(null, {validators: [Validators.required, Validators.minLength(3)]
       }),
       password: new FormControl(null, {validators: [Validators.required, Validators.minLength(3)]
       }),
@@ -28,10 +29,12 @@ export class LoginComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
-    if (this.notLoggedIn === true) {
-      this.router.navigate(['/']);
-    }
-    this.form.reset();
-  }
+    this.authService.userLogin(this.form.value.email, this.form.value.password); // , this.form.value.role
+    this.router.navigate(['/']);
+    //   if (this.notLoggedIn === true) {
+  //     this.router.navigate(['/']);
+  //   }
+  //   this.form.reset();
 
+  }
 }
