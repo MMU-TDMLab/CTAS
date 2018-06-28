@@ -1,7 +1,7 @@
 import { Component, OnInit, Sanitizer } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+// import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 import { PostsService } from '../posts.service';
 import { Post } from '../post.model';
@@ -18,14 +18,14 @@ export class CreatePostComponent implements OnInit {
   private postId: string;
   private mode = 'create';
   public filePreview = '';
-  trustTwo = null;
+  // trustTwo = null;
 
   constructor(
     public postsService: PostsService,
     public route: ActivatedRoute,
-    public sanitizer: DomSanitizer
+    // public sanitizer: DomSanitizer
   ) {
-    this.trustTwo = sanitizer.bypassSecurityTrustResourceUrl(this.filePreview);
+    // this.trustTwo = sanitizer.bypassSecurityTrustResourceUrl(this.filePreview);
     // this.trustedUrl = sanitizer.bypassSecurityTrustUrl(this.filePreview);
   }
 

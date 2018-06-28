@@ -12,6 +12,10 @@
   padding-bottom: 1em;
 }
 
+#file2 {
+  visibility: hidden;
+}
+
 /* input[type="file"] {
   visibility: hidden;
 }

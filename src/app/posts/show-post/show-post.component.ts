@@ -1,10 +1,9 @@
-import { Component, OnInit, OnDestroy, Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
 import { Router } from '@angular/router';
-// | orderBy: reverse
 
 @Component({
   selector: 'app-show-post',
