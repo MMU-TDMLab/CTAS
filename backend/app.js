@@ -10,7 +10,7 @@ const config = require('../config/config');
 
 const app = express();
 
-mongoose.connect(`mongodb+srv://${config.name}:${config.pw}@cluster0-hhltm.mongodb.net/node-angular?retryWrites=true`)
+mongoose.connect(`mongodb+srv://${config.name}:${config.pw}@cluster0-hhltm.mongodb.net/node-angular`)
 .then(() => {
     console.log('Connected to the database!')
   })

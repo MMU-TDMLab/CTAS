@@ -13,6 +13,8 @@ import { ModuleComponent } from './course/module/module.component';
 import { CreatePostComponent } from './posts/create-post/create-post.component';
 import { ShowPostComponent } from './posts/show-post/show-post.component';
 import { PostsService } from './posts/posts.service';
+import { AuthService } from './login/auth.service';
+import { SignupComponent } from './signup/signup.component';
 
 
 @NgModule({
@@ -25,6 +27,7 @@ import { PostsService } from './posts/posts.service';
     ModuleComponent,
     CreatePostComponent,
     ShowPostComponent,
+    SignupComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,7 +35,7 @@ import { PostsService } from './posts/posts.service';
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [PostsService],
+  providers: [PostsService, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
