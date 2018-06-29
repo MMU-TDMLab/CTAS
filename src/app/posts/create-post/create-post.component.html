@@ -9,8 +9,11 @@
     <div class="form-group">
       <input class="form-control-file" type="file" id="file1" (change)="onFilePicked($event)">
     </div>
-    <button ng-click="angular.copy(file1)" #filePicker id="file2" type="reset">Remove files</button>
-    <button class="btn btn-success btn-sm" id="postbtn" type="submit" [disabled]="!form.valid" (click)="filePicker.click()">Create Post</button>
+    <div>
+        <button ng-click="angular.copy(file1)" #filePicker id="file2" type="reset">Remove files</button>
+      </div>
+    <button class="btn btn-success btn-sm" id="postbtn" type="submit" [disabled]="!form.valid">Create Post</button>
+    <!-- (click)="filePicker.click()" -->
 
     <!-- <object [data]="trustTwo" type="application/pdf">
       <embed [src]="trustTwo" type="application/pdf" />

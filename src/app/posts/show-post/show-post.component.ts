@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../../login/auth.service';
 
 @Component({
   selector: 'app-show-post',
@@ -15,8 +16,10 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   isLoading = false;
   private postsSub: Subscription;
   private editClicked = false;
+  private authStatus: Subscription;
+  public userIsAuthenticated = false;
 
-  constructor(public postsService: PostsService, private router: Router) {}
+  constructor(public postsService: PostsService, private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
     this.isLoading = true;
@@ -26,6 +29,9 @@ export class ShowPostComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.posts = posts;
         this.posts.reverse();
+      });
+      this.authStatus = this.authService.getAuthStatus().subscribe(isAuthenticated => {
+        this.userIsAuthenticated = isAuthenticated;
       });
   }
 
@@ -46,5 +52,6 @@ export class ShowPostComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.postsSub.unsubscribe();
+    this.authStatus.unsubscribe();
   }
 }
