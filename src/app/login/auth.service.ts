@@ -7,12 +7,17 @@ import { Subject } from 'rxjs';
 @Injectable({ providedIn: 'root'})
 export class AuthService {
   private token: string;
+  private isAuthenticated = false;
   private authStatus = new Subject<boolean>();
 
   constructor(private http: HttpClient) {}
 
   getToken() {
     return this.token;
+  }
+
+  getIsAuth() {
+    return this.isAuthenticated;
   }
 
   getAuthStatus() {
@@ -33,7 +38,17 @@ export class AuthService {
     .subscribe(response => {
       const token = response.token;
       this.token = token;
-      this.authStatus.next(true);
+      if (token) {
+        this.isAuthenticated = true;
+        this.authStatus.next(true);
+      }
     });
   }
+
+  logout() {
+    this.token = null;
+    this.isAuthenticated = false;
+    this.authStatus.next(false);
+  }
+
 }

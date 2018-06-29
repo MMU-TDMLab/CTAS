@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
       return;
     }
     this.authService.userLogin(this.form.value.email, this.form.value.password); // , this.form.value.role
-    this.router.navigate(['/module']);
+    this.router.navigate(['/course']);
     //   if (this.notLoggedIn === true) {
   //     this.router.navigate(['/']);
   //   }

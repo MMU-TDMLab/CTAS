@@ -30,6 +30,7 @@ export class ShowPostComponent implements OnInit, OnDestroy {
         this.posts = posts;
         this.posts.reverse();
       });
+      this.userIsAuthenticated = this.authService.getIsAuth();
       this.authStatus = this.authService.getAuthStatus().subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
       });

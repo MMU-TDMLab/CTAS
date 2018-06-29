@@ -1,10 +1,12 @@
-import { Component, OnInit, Sanitizer } from '@angular/core';
+import { Component, OnInit, Sanitizer, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Subscription } from 'rxjs';
 // import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 import { PostsService } from '../posts.service';
 import { Post } from '../post.model';
+import { AuthService } from '../../login/auth.service';
 // import { fileType } from './file-type.validator';
 
 @Component({
@@ -12,17 +14,20 @@ import { Post } from '../post.model';
   templateUrl: './create-post.component.html',
   styleUrls: ['./create-post.component.css']
 })
-export class CreatePostComponent implements OnInit {
+export class CreatePostComponent implements OnInit, OnDestroy {
   post: Post;
   form: FormGroup;
   private postId: string;
   private mode = 'create';
   public filePreview = '';
+  private authStatus: Subscription;
+  public userIsAuthenticated = false;
   // trustTwo = null;
 
   constructor(
     public postsService: PostsService,
     public route: ActivatedRoute,
+    private authService: AuthService
     // public sanitizer: DomSanitizer
   ) {
     // this.trustTwo = sanitizer.bypassSecurityTrustResourceUrl(this.filePreview);
@@ -64,6 +69,10 @@ export class CreatePostComponent implements OnInit {
         this.postId = null;
       }
     });
+    this.userIsAuthenticated = this.authService.getIsAuth();
+      this.authStatus = this.authService.getAuthStatus().subscribe(isAuthenticated => {
+        this.userIsAuthenticated = isAuthenticated;
+      });
   }
 
   onFilePicked(event: Event) {
@@ -98,12 +107,15 @@ export class CreatePostComponent implements OnInit {
       );
     }
     this.form.reset();
-
     // this.myInputVariable.nativeElement.value = '';
     // this.form.nativeElement("uploadCaptureInputFile").value = "";
     // document.getElementById('file').value = null;
     // this.form.value.file.nativeElement.value = '';
     // this.filePicker
     // this.myInputVariable.nativeElement.value = '';
+  }
+
+  ngOnDestroy() {
+    this.authStatus.unsubscribe();
   }
 }

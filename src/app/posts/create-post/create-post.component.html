@@ -1,4 +1,5 @@
 <div class="container">
+    <ng-template [ngIf]="userIsAuthenticated">
   <form [formGroup]='form' (submit)="onSavePost()">
     <div class="form-group">
       <input type="text" class="form-control" name="header" placeholder="Post Header" formControlName="header">
@@ -22,4 +23,5 @@
     <!-- <embed [src]='trustTwo' width="800px" height="2100px" type='application/pdf'> -->
     <!-- <embed src="http://example.com/the.pdf" width="500" height="375" type='application/pdf'> -->
   </form>
+  </ng-template>
 </div>
