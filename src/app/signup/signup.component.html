@@ -1,21 +1,22 @@
 <div class="container">
-    <form [formGroup]='form' (submit)="onSignup()">
+    <form [formGroup]='form'>
     <div class="row">
       <div class="col">
       </div>
        <div class="col-6">
-         <!-- <div class="btn-group btn-group-toggle" data-toggle="buttons">
-              <label class="btn btn-secondary active">
-                <input type="radio" class="form-control" value='student' id="option1" formControlName="role" checked> Student
-              </label>
-              <label class="btn btn-secondary">
-                <input type="radio" class="form-control" value='teacher' id="option2" formControlName="role"> Teacher
-              </label>
-              <label class="btn btn-secondary">
-                <input type="radio" class="form-control" value='admin' id="option3" formControlName="role"> Admin
-                name="role"
-              </label>
-            </div> -->
+        <br>
+          <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="role" id="inlineRadio1" value="student" formControlName="role">
+              <label class="form-check-label" for="inlineRadio1">Student</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="role" id="inlineRadio2" value="teacher" formControlName="role">
+              <label class="form-check-label" for="inlineRadio2">Teacher</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="role" id="inlineRadio3" value="admin" formControlName="role">
+              <label class="form-check-label" for="inlineRadio3">Admin</label>
+            </div>
             <hr>
           <div class="form-group">
             <label for="email">Email</label>
@@ -25,8 +26,11 @@
             <label for="password">Password</label>
             <input type="password" class="form-control" name="password" placeholder="Password" formControlName="password">
           </div>
-          <button class="btn btn-primary" type="submit">Signup</button>
+          <button class="btn btn-primary" type="button" (click)="onSignup()" [disabled]="!form.valid">Signup</button>
           <!-- [disabled]="!form.valid" -->
+
+          <p>form value: {{this.form.value | json}}</p>
+          <p>form status: {{this.form.status | json}}</p>
       </div>
       <div class="col"></div>
     </div>

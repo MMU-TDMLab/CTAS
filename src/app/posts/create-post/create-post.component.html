@@ -1,6 +1,6 @@
 <div class="container">
     <ng-template [ngIf]="userIsAuthenticated">
-  <form [formGroup]='form' (submit)="onSavePost()">
+  <form [formGroup]='form' name="test">
     <div class="form-group">
       <input type="text" class="form-control" name="header" placeholder="Post Header" formControlName="header">
     </div>
@@ -8,12 +8,12 @@
       <textarea class="form-control" rows="3" name="message" placeholder="Post Message" formControlName="message"></textarea>
     </div>
     <div class="form-group">
-      <input class="form-control-file" type="file" id="file1" (change)="onFilePicked($event)">
+      <input class="form-control-file" type="file" id="file1" ng-model="test1" (change)="onFilePicked($event)">
     </div>
     <div>
         <button ng-click="angular.copy(file1)" #filePicker id="file2" type="reset">Remove files</button>
       </div>
-    <button class="btn btn-success btn-sm" id="postbtn" type="submit" [disabled]="!form.valid">Create Post</button>
+    <button class="btn btn-success btn-sm" id="postbtn" type="button" [disabled]="!form.valid" (click)="onSavePost()">Create Post</button>
     <!-- (click)="filePicker.click()" -->
 
     <!-- <object [data]="trustTwo" type="application/pdf">

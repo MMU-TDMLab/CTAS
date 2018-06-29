@@ -22,6 +22,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   public filePreview = '';
   private authStatus: Subscription;
   public userIsAuthenticated = false;
+  // public test1: any;
   // trustTwo = null;
 
   constructor(
@@ -106,6 +107,9 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         this.form.value.file
       );
     }
+
+    // document.getElementById('#file1').value = "";
+    // this.test1.value = '';
     this.form.reset();
     // this.myInputVariable.nativeElement.value = '';
     // this.form.nativeElement("uploadCaptureInputFile").value = "";
@@ -113,6 +117,10 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     // this.form.value.file.nativeElement.value = '';
     // this.filePicker
     // this.myInputVariable.nativeElement.value = '';
+  }
+
+  resetBtn() {
+    // (click)= this.form.filePicker.click()
   }
 
   ngOnDestroy() {
