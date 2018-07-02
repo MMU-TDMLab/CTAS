@@ -8,7 +8,11 @@ const postSchema = mongoose.Schema({
   message: {
     type: String,
     required: true
-  }
+  },
+  poster: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true }
 });
 
 module.exports = mongoose.model('Post', postSchema);
