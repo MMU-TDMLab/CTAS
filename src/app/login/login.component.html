@@ -4,19 +4,19 @@
     <div class="col">
     </div>
     <div class="col-6">
-
-        <!-- <div class="btn-group btn-group-toggle" data-toggle="buttons">
-            <label class="btn btn-secondary active">
-              <input type="radio" name="options" id="option1" autocomplete="off" checked> Student
-            </label>
-            <label class="btn btn-secondary">
-              <input type="radio" name="options" id="option2" autocomplete="off"> Teacher
-            </label>
-            <label class="btn btn-secondary">
-              <input type="radio" name="options" id="option3" autocomplete="off"> Admin
-            </label>
-          </div> -->
-
+        <br>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="role" id="inlineRadio1" value="student" formControlName="role">
+            <label class="form-check-label" for="inlineRadio1">Student</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="role" id="inlineRadio2" value="teacher" formControlName="role">
+            <label class="form-check-label" for="inlineRadio2">Teacher</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="role" id="inlineRadio3" value="admin" formControlName="role">
+            <label class="form-check-label" for="inlineRadio3">Admin</label>
+          </div>
           <hr>
         <div class="form-group">
           <label for="email">Email</label>

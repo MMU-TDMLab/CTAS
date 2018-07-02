@@ -11,11 +11,10 @@ router.post('/signup', (req, res, next) => {
     .then(hash => {
       const user = new User({
         email: req.body.email,
-        password: hash
-        // role: req.body.role
+        password: hash,
+        role: req.body.role
       });
-      user
-      .save()
+      user.save()
         .then(result => {
           res.status(201).json({
             message: 'User Created!',
@@ -43,7 +42,7 @@ router.post('/login', (req, res, next) => {
         });
       }
       fetchedUser = user;
-      return bcrypt.compare(req.body.password, user.password); // , req.body.role
+      return bcrypt.compare(req.body.password, user.password); //, req.body.role
     })
     .then(result => {
       if (!result) {
@@ -52,7 +51,7 @@ router.post('/login', (req, res, next) => {
         });
       }
       const token = jwt.sign(
-        { email: fetchedUser.email, userId: fetchedUser._id },
+        { email: fetchedUser.email, userId: fetchedUser._id}, // , role: fetchedUser.role
          'secret_this_is_my_secret',
          { expiresIn: '1h' }
       );

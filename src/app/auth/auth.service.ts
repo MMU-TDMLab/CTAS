@@ -25,16 +25,16 @@ export class AuthService {
     return this.authStatus.asObservable();
   }
 
-  createUser(email: string, password: string) { // , role: string
-    const authData: AuthData = {email: email, password: password}; // , role: role
+  createUser(email: string, password: string, role: string) { // , role: string
+    const authData: AuthData = {email: email, password: password, role: role}; // , role: role
     this.http.post('http://localhost:3000/api/user/signup', authData)
       .subscribe(response => {
         console.log(response);
       });
   }
 
-  userLogin(email: string, password: string) {  // , role: string
-    const authData: AuthData = {email: email, password: password}; // , role: role
+  userLogin(email: string, password: string, role: string) {
+    const authData: AuthData = {email: email, password: password, role: role};
     this.http.post<{token: string}>('http://localhost:3000/api/user/login', authData)
     .subscribe(response => {
       const token = response.token;

@@ -13,9 +13,9 @@ import { ModuleComponent } from './course/module/module.component';
 import { CreatePostComponent } from './posts/create-post/create-post.component';
 import { ShowPostComponent } from './posts/show-post/show-post.component';
 import { PostsService } from './posts/posts.service';
-import { AuthService } from './login/auth.service';
+import { AuthService } from './auth/auth.service';
 import { SignupComponent } from './signup/signup.component';
-import { AuthInterceptor } from './login/auth-interceptor';
+import { AuthInterceptor } from './auth/auth-interceptor';
 
 
 @NgModule({

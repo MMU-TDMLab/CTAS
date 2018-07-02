@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
 import { Router } from '@angular/router';
-import { AuthService } from '../../login/auth.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-show-post',

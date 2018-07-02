@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 
 import { PostsService } from '../posts.service';
 import { Post } from '../post.model';
-import { AuthService } from '../../login/auth.service';
+import { AuthService } from '../../auth/auth.service';
 // import { fileType } from './file-type.validator';
 
 @Component({
