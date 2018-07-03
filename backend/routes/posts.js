@@ -7,17 +7,35 @@ const authCheck = require('../middleware/check-auth');
 const router = express.Router();
 
 // const mimeTypeMap = {
+//   'file/.txt': 'text/plain',
+//   'file/txt': 'text/plain',
 //   'file/pdf': 'pdf',
 //   'file/text': 'txt',
 //   'file/txt': 'txt',
 //   'file/word': 'word'
 // }
+//////
 
+// const mimeTypeMap = multer({
+//   fileFilter: function (req, file, cb) {
+
+//     var filetypes = /txt|text/;
+//     var mimetype = filetypes.test(file.mimetype);
+//     var extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+
+//     if (mimetype && extname) {
+//       return cb(null, true);
+//     }
+//     cb("Error: File upload only supports the following filetypes - " + filetypes);
+//   }
+// });
+
+///////
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     // const isValid = mimeTypeMap[file.mimetype];
     // let error = new Error('Invalid mime type');
-    // if (isValid) {
+    // if (!isValid) {
     //   error = null;
     // }
     cb(null, 'backend/documents');
@@ -27,7 +45,7 @@ const storage = multer.diskStorage({
     const nameWithoutExtension = name.replace(/\.[^/.]+$/, "");
     const fileExtention = file.originalname.split('.').pop();
     const fileName = nameWithoutExtension;
-    cb(null, nameWithoutExtension + '-' + Date.now() + '.' + fileExtention);
+    cb(null, fileName + '-' + Date.now() + '.' + fileExtention);
   }
 });
 
@@ -40,9 +58,11 @@ router.post("",
     const post = new Post({
       header: req.body.header,
       message: req.body.message,
-      filePath: url + '/documents/' + req.file.filename
+      filePath: url + '/documents/' + req.file.filename,
+      poster: req.userData.userId
     });
     post.save().then(createdPost => {
+      // console.log(filePath);
       console.log(createdPost);
       res.status(201).json({
         message: "Post added successfully",
@@ -71,6 +91,7 @@ router.put("/:id",
       filePath: filePath
     });
     console.log(post);
+    // console.log(post.);
     Post.updateOne({
       _id: req.params.id
     }, post).then(result => {

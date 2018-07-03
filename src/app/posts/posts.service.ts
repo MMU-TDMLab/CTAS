@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
+// import { Router } from '@angular/router';
 
 import { Post } from './post.model';
 
@@ -11,7 +11,7 @@ export class PostsService {
   private posts: Post[] = [];
   private postsUpdated = new Subject<Post[]>();
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient) {} // , private router: Router
 
   getPosts() {
     this.http
@@ -23,12 +23,14 @@ export class PostsService {
               header: post.header,
               message: post.message,
               id: post._id,
-              filePath: post.filePath
+              filePath: post.filePath,
+              poster: post.poster
             };
           });
         })
       )
       .subscribe(transformedPosts => {
+        console.log(transformedPosts);
         this.posts = transformedPosts;
         this.postsUpdated.next([...this.posts]);
       });
