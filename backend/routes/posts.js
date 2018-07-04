@@ -29,7 +29,7 @@ const router = express.Router();
 //     cb("Error: File upload only supports the following filetypes - " + filetypes);
 //   }
 // });
-
+/////
 ///////
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -62,7 +62,6 @@ router.post("",
       poster: req.userData.userId
     });
     post.save().then(createdPost => {
-      // console.log(filePath);
       console.log(createdPost);
       res.status(201).json({
         message: "Post added successfully",
@@ -88,16 +87,23 @@ router.put("/:id",
       _id: req.body.id,
       header: req.body.header,
       message: req.body.message,
-      filePath: filePath
+      filePath: filePath,
+      poster: req.userData.userId
     });
     console.log(post);
-    // console.log(post.);
     Post.updateOne({
-      _id: req.params.id
+      _id: req.params.id,
+      poster: req.userData.userId
     }, post).then(result => {
-      res.status(200).json({
-        message: "Update successful!"
-      });
+      if (result.nModified > 0) {
+        res.status(200).json({
+          message: "Update successful!"
+        });
+      } else {
+        res.status(401).json({
+          message: "Not authorised!"
+        });
+      }
     });
   });
 
@@ -128,12 +134,18 @@ router.delete("/:id",
   authCheck,
   (req, res, next) => {
     Post.deleteOne({
-      _id: req.params.id
+      _id: req.params.id, poster: req.userData.userId
     }).then(result => {
-      console.log(result);
-      res.status(200).json({
-        message: 'Post deleted!'
-      });
+      // console.log(result);
+      if (result.n > 0) {
+        res.status(200).json({
+          message: "Deletion successful!"
+        });
+      } else {
+        res.status(401).json({
+          message: "Not authorised!"
+        });
+      }
     })
   });
 

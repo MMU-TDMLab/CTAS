@@ -1,6 +1,6 @@
 import { Component, OnInit, Sanitizer, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 // import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
@@ -22,13 +22,15 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   public filePreview = '';
   private authStatus: Subscription;
   public userIsAuthenticated = false;
+  public btnText = 'Create Post';
   // public test1: any;
   // trustTwo = null;
 
   constructor(
     public postsService: PostsService,
     public route: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    public router: Router
     // public sanitizer: DomSanitizer
   ) {
     // this.trustTwo = sanitizer.bypassSecurityTrustResourceUrl(this.filePreview);
@@ -51,13 +53,15 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
         this.mode = 'edit';
+        this.btnText = 'Modify Post';
         this.postId = paramMap.get('postId');
         this.postsService.getPost(this.postId).subscribe(postData => {
           this.post = {
             id: postData._id,
             header: postData.header,
             message: postData.message,
-            filePath: postData.filePath
+            filePath: postData.filePath,
+            poster: postData.poster
           };
           this.form.setValue({
             header: this.post.header,
@@ -67,6 +71,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         });
       } else {
         this.mode = 'create';
+        this.btnText = 'Create Post';
         this.postId = null;
       }
     });
@@ -97,7 +102,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       this.postsService.addPost(
         this.form.value.header,
         this.form.value.message,
-        this.form.value.file
+        this.form.value.file,
+        this.postId
       );
     } else {
       this.postsService.updatePost(
@@ -106,6 +112,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         this.form.value.message,
         this.form.value.file
       );
+      this.router.navigate(['/module']);
     }
 
     // document.getElementById('#file1').value = "";
@@ -119,9 +126,9 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     // this.myInputVariable.nativeElement.value = '';
   }
 
-  resetBtn() {
+  // resetBtn() {
     // (click)= this.form.filePicker.click()
-  }
+  // }
 
   ngOnDestroy() {
     this.authStatus.unsubscribe();

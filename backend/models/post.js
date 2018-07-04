@@ -1,16 +1,20 @@
 const mongoose = require('mongoose');
 
 const postSchema = mongoose.Schema({
-  header: {
+  header: {  // Post Title
     type: String,
     required: true
   },
-  message: {
+  message: { // Post Message
+    type: String,
+    required: true
+  },
+  filePath: {
     type: String,
     required: true
   },
   poster: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,  // Gets the ID of the user who posted
     ref: 'User',
     required: true }
 });

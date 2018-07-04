@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-// import { Router } from '@angular/router';
 
 import { Post } from './post.model';
 
@@ -11,7 +10,7 @@ export class PostsService {
   private posts: Post[] = [];
   private postsUpdated = new Subject<Post[]>();
 
-  constructor(private http: HttpClient) {} // , private router: Router
+  constructor(private http: HttpClient) {}
 
   getPosts() {
     this.http
@@ -41,20 +40,13 @@ export class PostsService {
   }
 
   getPost(id: string) {
-    return this.http.get<{ _id: string, header: string, message: string, filePath: string }>(
+    return this.http.get<{ _id: string, header: string, message: string, filePath: string, poster: string }>(
       'http://localhost:3000/api/posts/' + id
     );
   }
 
-  addPost(header: string, message: string, file: File) {
+  addPost(header: string, message: string, file: File, poster: string) {
     const postData = new FormData();
-    // const postToSave: Post = {
-    //   id: '1',
-    //   header: header,
-    //   message: message,
-    //   filePath: file
-    // };
-    // this.posts.push(postToSave);
     postData.append('header', header);
     postData.append('message', message);
     postData.append('file', file);
@@ -68,7 +60,8 @@ export class PostsService {
           id: responseData.post.id,
           header: header,
           message: message,
-          filePath: responseData.post.filePath
+          filePath: responseData.post.filePath,
+          poster: poster
         };
         this.posts.push(post);
         this.postsUpdated.next([...this.posts]);
@@ -88,7 +81,8 @@ export class PostsService {
         id: id,
         header: header,
         message: message,
-        filePath: file
+        filePath: file,
+        poster: null
       };
     }
     this.http
@@ -100,7 +94,8 @@ export class PostsService {
           id: id,
           header: header,
           message: message,
-          filePath: ''
+          filePath: '',
+          poster: null
         };
         updatedPosts[oldPostIndex] = post;
         this.posts = updatedPosts;

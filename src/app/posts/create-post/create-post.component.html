@@ -13,9 +13,8 @@
     <div>
         <button ng-click="angular.copy(file1)" #filePicker id="file2" type="reset">Remove files</button>
       </div>
-    <button class="btn btn-success btn-sm" id="postbtn" type="button" [disabled]="!form.valid" (click)="onSavePost()">Create Post</button>
+    <button class="btn btn-success btn-sm" id="postbtn" type="button" [disabled]="!form.valid" (click)="onSavePost()">{{ btnText }}</button>
     <!-- (click)="filePicker.click()" -->
-
     <!-- <object [data]="trustTwo" type="application/pdf">
       <embed [src]="trustTwo" type="application/pdf" />
   </object> -->

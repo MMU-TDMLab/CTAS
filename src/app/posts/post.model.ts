@@ -3,4 +3,5 @@ export interface Post {
   header: string;
   message: string;
   filePath: string;
+  poster: string;
 }
