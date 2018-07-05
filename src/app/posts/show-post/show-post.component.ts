@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+// import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
@@ -16,6 +16,7 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
   isLoading = false;
   userId: string;
+  // userRole: string;
   private postsSub: Subscription;
   private editClicked = false;
   private authStatus: Subscription;
@@ -27,7 +28,7 @@ export class ShowPostComponent implements OnInit, OnDestroy {
     public postsService: PostsService,
     private router: Router,
     private authService: AuthService,
-    public sanitizer: DomSanitizer,
+    // public sanitizer: DomSanitizer,
     public route: ActivatedRoute) {
     // this.trustTwo = sanitizer.bypassSecurityTrustResourceUrl(this.posts.filePath);
     // this.trustedUrl = sanitizer.bypassSecurityTrustUrl(this.);
@@ -36,18 +37,19 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.isLoading = true;
     this.postsService.getPosts();
+    // this.userRole = this.authService.getUserRole();
     this.userId = this.authService.getUserId();
     this.postsSub = this.postsService.getPostUpdateListener()
       .subscribe((posts: Post[]) => {
         this.isLoading = false;
         this.posts = posts;
         this.posts.reverse();
-        // this.trustedUrl = sanitizer.bypassSecurityTrustUrl(this.posts.);
       });
       this.userIsAuthenticated = this.authService.getIsAuth();
       this.authStatus = this.authService.getAuthStatus().subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
         this.userId = this.authService.getUserId();
+        // this.userRole = this.authService.getUserRole();
       });
   }
 

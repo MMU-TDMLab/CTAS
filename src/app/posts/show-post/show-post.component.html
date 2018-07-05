@@ -11,10 +11,18 @@
           <div id="demo{{$index}}" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="card-body">
               {{ post.message }}
+              <br>
               {{ post.filePath }}
             </div>
           </div>
+          <!-- <div>
+            <p>
+              {{ userRole }}
+              hello guys
+            </p>
+          </div> -->
             <ng-template [ngIf]="userIsAuthenticated && userId == post.poster">
+                <!-- || userIsAuthenticated && userRole === 'admin' -->
                 <hr>
                 <button class="btn btn-outline-primary btn-sm" id="editBtn" (click)="onEdit(post.id)">Edit</button>
                 <button class="btn btn-outline-danger btn-sm" id="deleteBtn" (click)="onDelete(post.id)">Delete</button>

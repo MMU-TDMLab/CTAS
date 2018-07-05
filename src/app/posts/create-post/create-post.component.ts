@@ -1,5 +1,5 @@
-import { Component, OnInit, Sanitizer, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit, Sanitizer, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { FormGroup, FormControl, Validators, FormsModule } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 // import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
@@ -15,6 +15,7 @@ import { AuthService } from '../../auth/auth.service';
   styleUrls: ['./create-post.component.css']
 })
 export class CreatePostComponent implements OnInit, OnDestroy {
+  // @ViewChild('fileInput') fileInput: ElementRef;
   post: Post;
   form: FormGroup;
   private postId: string;
@@ -26,29 +27,26 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   // public test1: any;
   // trustTwo = null;
 
-  constructor(
-    public postsService: PostsService,
-    public route: ActivatedRoute,
-    private authService: AuthService,
-    public router: Router
+  constructor(public postsService: PostsService, public route: ActivatedRoute, private authService: AuthService, public router: Router ) {}
     // public sanitizer: DomSanitizer
-  ) {
     // this.trustTwo = sanitizer.bypassSecurityTrustResourceUrl(this.filePreview);
     // this.trustedUrl = sanitizer.bypassSecurityTrustUrl(this.filePreview);
-  }
 
   ngOnInit() {
     this.form = new FormGroup({
       header: new FormControl(null, {
-        validators: [Validators.required, Validators.minLength(3)]
+        validators: [Validators.required, Validators.minLength(3), Validators.maxLength(15)]
       }),
       message: new FormControl(null, {
-        validators: [Validators.required, Validators.minLength(1)]
+        validators: [Validators.required, Validators.minLength(3), Validators.maxLength(200)]
       }),
       file: new FormControl(null, {
         validators: [Validators.required]
-        // asyncValidators: [fileType]
-      })
+      }),
+      // test1: new FormControl('', {
+      //   validators: [Validators.required]
+      // })
+      // asyncValidators: [fileType]
     });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
@@ -88,8 +86,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     const reader = new FileReader();
     reader.onload = () => {
       this.filePreview = reader.result;
-      // this.filePreview = reader.result.setContentType('application/word');
-      // response.setContentType("application/pdf");
     };
     reader.readAsDataURL(filePicked);
   }
@@ -114,22 +110,13 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       );
       this.router.navigate(['/module']);
     }
-
-    // document.getElementById('#file1').value = "";
-    // this.test1.value = '';
     this.form.reset();
+    // this.fileInput.nativeElement.value = undefined;
+    // this.fileInput.nativeElement.updateValue('');
+    // this.form.nativeElement.reset();
     // this.myInputVariable.nativeElement.value = '';
-    // this.form.nativeElement("uploadCaptureInputFile").value = "";
-    // document.getElementById('file').value = null;
     // this.form.value.file.nativeElement.value = '';
-    // this.filePicker
-    // this.myInputVariable.nativeElement.value = '';
   }
-
-  // resetBtn() {
-    // (click)= this.form.filePicker.click()
-  // }
-
   ngOnDestroy() {
     this.authStatus.unsubscribe();
   }

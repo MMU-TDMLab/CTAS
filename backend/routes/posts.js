@@ -29,8 +29,7 @@ const router = express.Router();
 //     cb("Error: File upload only supports the following filetypes - " + filetypes);
 //   }
 // });
-/////
-///////
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     // const isValid = mimeTypeMap[file.mimetype];
@@ -59,7 +58,7 @@ router.post("",
       header: req.body.header,
       message: req.body.message,
       filePath: url + '/documents/' + req.file.filename,
-      poster: req.userData.userId
+      poster: req.userData.userId,
     });
     post.save().then(createdPost => {
       console.log(createdPost);
@@ -88,9 +87,12 @@ router.put("/:id",
       header: req.body.header,
       message: req.body.message,
       filePath: filePath,
-      poster: req.userData.userId
+      poster: req.userData.userId,
     });
     console.log(post);
+    // if (req.userData.role === 'admin') {
+    console.log(req.userData.role);
+    // }
     Post.updateOne({
       _id: req.params.id,
       poster: req.userData.userId
@@ -134,7 +136,8 @@ router.delete("/:id",
   authCheck,
   (req, res, next) => {
     Post.deleteOne({
-      _id: req.params.id, poster: req.userData.userId
+      _id: req.params.id,
+      poster: req.userData.userId
     }).then(result => {
       // console.log(result);
       if (result.n > 0) {
