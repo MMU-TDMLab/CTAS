@@ -16,7 +16,7 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
   isLoading = false;
   userId: string;
-  // userRole: string;
+  role: string;
   private postsSub: Subscription;
   private editClicked = false;
   private authStatus: Subscription;
@@ -37,7 +37,7 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.isLoading = true;
     this.postsService.getPosts();
-    // this.userRole = this.authService.getUserRole();
+    this.role = this.authService.getUserRole();
     this.userId = this.authService.getUserId();
     this.postsSub = this.postsService.getPostUpdateListener()
       .subscribe((posts: Post[]) => {
@@ -49,7 +49,7 @@ export class ShowPostComponent implements OnInit, OnDestroy {
       this.authStatus = this.authService.getAuthStatus().subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
         this.userId = this.authService.getUserId();
-        // this.userRole = this.authService.getUserRole();
+        this.role = this.authService.getUserRole();
       });
   }
 

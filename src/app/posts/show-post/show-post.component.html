@@ -15,14 +15,13 @@
               {{ post.filePath }}
             </div>
           </div>
-          <!-- <div>
+          <div>
             <p>
-              {{ userRole }}
-              hello guys
+              {{ role }}
+               < --
             </p>
-          </div> -->
-            <ng-template [ngIf]="userIsAuthenticated && userId == post.poster">
-                <!-- || userIsAuthenticated && userRole === 'admin' -->
+          </div>
+            <ng-template [ngIf]="userIsAuthenticated && userId == post.poster || userIsAuthenticated && this.role == 'admin'">
                 <hr>
                 <button class="btn btn-outline-primary btn-sm" id="editBtn" (click)="onEdit(post.id)">Edit</button>
                 <button class="btn btn-outline-danger btn-sm" id="deleteBtn" (click)="onDelete(post.id)">Delete</button>

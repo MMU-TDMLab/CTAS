@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
 import { AuthData } from './auth-data.model';
-import { Subject } from 'rxjs';
-import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root'})
 export class AuthService {
   private token: string;
   private tokenTimer: any;
   private userId: string;
-  // private userRole: string;
+  private role: string;
   private isAuthenticated = false;
   private authStatus = new Subject<boolean>();
 
@@ -32,9 +32,9 @@ export class AuthService {
     return this.userId;
   }
 
-  // getUserRole() {
-  //   return this.userRole;
-  // }
+  getUserRole() {
+    return this.role;
+  }
 
   createUser(email: string, password: string, role: string) {
     const authData: AuthData = {email: email, password: password, role: role};
@@ -46,7 +46,8 @@ export class AuthService {
 
   userLogin(email: string, password: string, role: string) {
     const authData: AuthData = {email: email, password: password, role: role};
-    this.http.post<{ token: string, expiresIn: number, userId: string }>('http://localhost:3000/api/user/login', authData) // , role: string
+    // tslint:disable-next-line:max-line-length
+    this.http.post<{ token: string, expiresIn: number, userId: string, role: string }>('http://localhost:3000/api/user/login', authData) // , role: string
     .subscribe(response => {
       const token = response.token;
       this.token = token;
@@ -54,12 +55,13 @@ export class AuthService {
         const expiresDuration = response.expiresIn;
         this.authTimer(expiresDuration);
         this.isAuthenticated = true;
-        // this.userRole = response.role;
+        this.role = response.role;
         this.userId = response.userId;
+        console.log('does this show ', this.role);
         this.authStatus.next(true);
         const now = new Date();
         const expirationDate = new Date(now.getTime() + expiresDuration * 1000);
-        this.saveAuthData(token, expirationDate, this.userId); // , this.userRole
+        this.saveAuthData(token, expirationDate, this.userId, this.role); // , this.userRole
         this.router.navigate(['/']);
       }
     });
@@ -76,7 +78,8 @@ export class AuthService {
       this.token = authInfo.token;
       this.isAuthenticated = true;
       this.userId = authInfo.userId;
-      // this.userRole = authInfo.userRole;
+      this.role = authInfo.role;
+      console.log('role authUser ', this.role);
       this.authTimer(expiresIn / 1000);
       this.authStatus.next(true);
     }
@@ -89,30 +92,30 @@ export class AuthService {
     clearTimeout(this.tokenTimer); // Clear token timer
     this.clearAuthData();
     this.userId = null;
-    // this.userRole = null;
-    this.router.navigate(['/home']);
+    this.role = null;
+    this.router.navigate(['/login']);
   }
 
-  // tslint:disable-next-line:max-line-length    //, userRole: string
-  private saveAuthData(token: string, expirationDate: Date, userId: string) { // Saves token and expiration date to local storage
+  // tslint:disable-next-line:max-line-length
+  private saveAuthData(token: string, expirationDate: Date, userId: string, role: string) { // Saves token and expiration date to local storage
     localStorage.setItem('token', token);
     localStorage.setItem('expiration', expirationDate.toISOString());
     localStorage.setItem('userId', userId);
-    // localStorage.setItem('userRole', userRole);
+    localStorage.setItem('role', role);
   }
 
   private clearAuthData() { // Clears the token and the expiration date of token
     localStorage.removeItem('token');
     localStorage.removeItem('expiration');
     localStorage.removeItem('userId');
-    // localStorage.removeItem('userRole');
+    localStorage.removeItem('role');
   }
 
   private getAuthData() {
     const token = localStorage.getItem('token');
     const expirationDate = localStorage.getItem('expiration');
     const userId = localStorage.getItem('userId');
-    // const userRole = localStorage.getItem('userRole');
+    const role = localStorage.getItem('role');
     if (!token || !expirationDate) {
       return;
     }
@@ -120,7 +123,7 @@ export class AuthService {
       token: token,
       expirationDate: new Date(expirationDate),
       userId: userId,
-      // userRole: userRole
+      role: role
     };
   }
 

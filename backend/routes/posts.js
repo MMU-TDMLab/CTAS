@@ -2,6 +2,9 @@ const express = require('express');
 const multer = require('multer');
 
 const Post = require('../models/post');
+
+const User = require('../models/user'); // ********FOR NOW*********
+
 const authCheck = require('../middleware/check-auth');
 
 const router = express.Router();
@@ -89,10 +92,13 @@ router.put("/:id",
       filePath: filePath,
       poster: req.userData.userId,
     });
-    console.log(post);
+    // console.log(post);
+
     // if (req.userData.role === 'admin') {
-    console.log(req.userData.role);
+    // console.log('user RoLe ', req.body.role);
+    console.log('user ROLE = ', req.userData.role);
     // }
+
     Post.updateOne({
       _id: req.params.id,
       poster: req.userData.userId
@@ -135,21 +141,70 @@ router.get('/:id', (req, res, next) => {
 router.delete("/:id",
   authCheck,
   (req, res, next) => {
-    Post.deleteOne({
-      _id: req.params.id,
-      poster: req.userData.userId
-    }).then(result => {
-      // console.log(result);
-      if (result.n > 0) {
-        res.status(200).json({
-          message: "Deletion successful!"
-        });
-      } else {
-        res.status(401).json({
-          message: "Not authorised!"
-        });
-      }
-    })
+    User.findOne({
+        role: 'admin'
+      })
+      .then(user => {
+        // console.log('req userdata ', req.userData.role);
+        if (!req.userData.role === 'admin') {
+          Post.deleteOne({
+            _id: req.params.id,
+            poster: req.userData.userId,
+          }).then(result => {
+            // console.log(result);
+            if (result.n > 0) {
+              res.status(200).json({
+                message: "Deletion successful!"
+              });
+            } else {
+              res.status(401).json({
+                message: "Not authorised!"
+              });
+            }
+          })
+        } else {
+          Post.deleteOne({
+            _id: req.params.id,
+            poster: req.userData.userId,
+          }).then(result => {
+            // console.log(result);
+            if (result.n > 0) {
+              res.status(200).json({
+                message: "Deletion successful!"
+              });
+            } else {
+              res.status(401).json({
+                message: "Not authorised!"
+              });
+            }
+          })
+        }
+      })
   });
+
+// router.delete("/:id",
+//   authCheck,
+//   (req, res, next) => {
+//     User.find()
+//     .then(documents => {
+//       console.log(documents);
+//     });
+//     Post.deleteOne({
+//       _id: req.params.id,
+//       poster: req.userData.userId,
+//       role: req.userData.role
+//     }).then(result => {
+//       // console.log(result);
+//       if (result.n > 0) {
+//         res.status(200).json({
+//           message: "Deletion successful!"
+//         });
+//       } else {
+//         res.status(401).json({
+//           message: "Not authorised!"
+//         });
+//       }
+//     })
+//   });
 
 module.exports = router;

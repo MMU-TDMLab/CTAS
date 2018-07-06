@@ -51,14 +51,15 @@ router.post('/login', (req, res, next) => {
         });
       }
       const token = jwt.sign(
-        { email: fetchedUser.email, userId: fetchedUser._id }, // , role: fetchedUser.role
+        { email: fetchedUser.email, userId: fetchedUser._id, role: fetchedUser.role }, // , role: fetchedUser.role
          'secret_this_is_my_secret',
          { expiresIn: '1h' }
       );
       res.status(200).json({
         token: token,
         expiresIn: 3600,
-        userId: fetchedUser._id
+        userId: fetchedUser._id,
+        role: fetchedUser.role
       });
     })
     .catch(err => {
