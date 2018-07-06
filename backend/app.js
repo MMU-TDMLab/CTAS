@@ -10,8 +10,8 @@ const config = require('../config/config');
 
 const app = express();
 
-mongoose.connect(`mongodb+srv://${config.name}:${config.pw}@cluster0-hhltm.mongodb.net/node-angular`)
-// mongoose.connect('mongodb://admin:password@ds161700.mlab.com:61700/angular-file-system')
+// mongoose.connect(`mongodb+srv://${config.name}:${config.pw}@cluster0-hhltm.mongodb.net/node-angular`)
+mongoose.connect('mongodb://Uni:Uni123@ds161700.mlab.com:61700/angular-file-system')
 .then(() => {
     console.log('Connected to the database!')
   })

@@ -57,7 +57,6 @@ export class AuthService {
         this.isAuthenticated = true;
         this.role = response.role;
         this.userId = response.userId;
-        console.log('does this show ', this.role);
         this.authStatus.next(true);
         const now = new Date();
         const expirationDate = new Date(now.getTime() + expiresDuration * 1000);
@@ -79,7 +78,6 @@ export class AuthService {
       this.isAuthenticated = true;
       this.userId = authInfo.userId;
       this.role = authInfo.role;
-      console.log('role authUser ', this.role);
       this.authTimer(expiresIn / 1000);
       this.authStatus.next(true);
     }

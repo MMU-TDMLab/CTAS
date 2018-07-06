@@ -11,8 +11,12 @@
           <div id="demo{{$index}}" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="card-body">
               {{ post.message }}
-              <br>
-              {{ post.filePath }}
+              <!-- <br>
+              {{ post.filePath }} -->
+              <hr>
+              <a id="btnPro" routerLink="/annotation" class="btn btn-dark btn-sm">
+                <i class="far fa-file-alt"></i> Annotation
+              </a>
             </div>
           </div>
           <!-- <div>
