@@ -16,6 +16,7 @@ import { PostsService } from './posts/posts.service';
 import { AuthService } from './auth/auth.service';
 import { SignupComponent } from './signup/signup.component';
 import { AuthInterceptor } from './auth/auth-interceptor';
+import { AnnotationComponent } from './annotation/annotation.component';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { AuthInterceptor } from './auth/auth-interceptor';
     CreatePostComponent,
     ShowPostComponent,
     SignupComponent,
+    AnnotationComponent,
   ],
   imports: [
     BrowserModule,

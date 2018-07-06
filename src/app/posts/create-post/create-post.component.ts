@@ -18,6 +18,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   // @ViewChild('fileInput') fileInput: ElementRef;
   post: Post;
   form: FormGroup;
+  role: string;
   private postId: string;
   private mode = 'create';
   public filePreview = '';
@@ -48,6 +49,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       // })
       // asyncValidators: [fileType]
     });
+    this.role = this.authService.getUserRole();
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
         this.mode = 'edit';
@@ -76,6 +78,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     this.userIsAuthenticated = this.authService.getIsAuth();
       this.authStatus = this.authService.getAuthStatus().subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
+        this.role = this.authService.getUserRole();
       });
   }
 

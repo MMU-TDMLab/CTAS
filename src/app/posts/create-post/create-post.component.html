@@ -1,4 +1,5 @@
 <div class="container">
+    <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || userIsAuthenticated && this.role == 'admin'">
     <form [formGroup]='form' name="test">
       <div class="form-group">
         <input type="text" class="form-control" name="header" placeholder="Post Header" formControlName="header">
@@ -12,6 +13,7 @@
       </div>
       <button class="btn btn-success btn-sm" id="postbtn" type="button" [disabled]="!form.valid" (click)="onSavePost()">{{ btnText }}</button>
     </form>
+    </ng-template>
 </div>
 
 <!-- <input #fileInput class="form-control-file" type="file" id="file1" formControlName="fileInput" (change)="onFilePicked($event)"> -->

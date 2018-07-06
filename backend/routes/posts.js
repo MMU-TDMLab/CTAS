@@ -63,16 +63,23 @@ router.post("",
       filePath: url + '/documents/' + req.file.filename,
       poster: req.userData.userId,
     });
-    post.save().then(createdPost => {
-      console.log(createdPost);
-      res.status(201).json({
-        message: "Post added successfully",
-        post: {
-          ...createdPost,
-          id: createdPost._id,
-        }
-      });
-    });
+    // User.findOne({ })
+    //   .then(user => {
+    //     // console.log('the user', user);
+    //     console.log('user data ', req.userData);
+    //     if (req.userData.role === 'admin' || req.userData.role === 'teacher') {
+          post.save().then(createdPost => {
+            console.log(createdPost);
+            res.status(201).json({
+              message: "Post added successfully",
+              post: {
+                ...createdPost,
+                id: createdPost._id,
+              }
+            });
+          });
+      //   }
+      // });
   });
 
 router.put("/:id",
@@ -92,33 +99,49 @@ router.put("/:id",
       filePath: filePath,
       poster: req.userData.userId,
     });
-    // console.log(post);
-
-    // if (req.userData.role === 'admin') {
-    // console.log('user RoLe ', req.body.role);
-    console.log('user ROLE = ', req.userData.role);
-    // }
-
-    Post.updateOne({
-      _id: req.params.id,
-      poster: req.userData.userId
-    }, post).then(result => {
-      if (result.nModified > 0) {
-        res.status(200).json({
-          message: "Update successful!"
-        });
-      } else {
-        res.status(401).json({
-          message: "Not authorised!"
-        });
-      }
-    });
+    User.findOne({
+        role: 'admin'
+      })
+      .then(user => {
+        // console.log('req userdata ', req.userData.role);
+        if (!req.userData.role === 'admin') {
+          Post.updateOne({
+            _id: req.params.id,
+            poster: req.userData.userId
+          }, post).then(result => {
+            if (result.nModified > 0) {
+              res.status(200).json({
+                message: "Update successful!"
+              });
+            } else {
+              res.status(401).json({
+                message: "Not authorised!"
+              });
+            }
+          });
+        } else {
+          Post.updateOne({
+            _id: req.params.id,
+            poster: req.userData.userId
+          }, post).then(result => {
+            if (result.nModified > 0) {
+              res.status(200).json({
+                message: "Admin Update successful!"
+              });
+            } else {
+              res.status(401).json({
+                message: "Not authorised!"
+              });
+            }
+          });
+        }
+      });
   });
 
 router.get("", (req, res, next) => {
   Post.find()
     .then(documents => {
-      console.log(documents);
+      // console.log(documents);
       res.status(200).json({
         message: 'Posts fetched succesfully!',
         posts: documents
@@ -151,7 +174,6 @@ router.delete("/:id",
             _id: req.params.id,
             poster: req.userData.userId,
           }).then(result => {
-            // console.log(result);
             if (result.n > 0) {
               res.status(200).json({
                 message: "Deletion successful!"
@@ -167,10 +189,9 @@ router.delete("/:id",
             _id: req.params.id,
             poster: req.userData.userId,
           }).then(result => {
-            // console.log(result);
             if (result.n > 0) {
               res.status(200).json({
-                message: "Deletion successful!"
+                message: "Admin Deletion successful!"
               });
             } else {
               res.status(401).json({
