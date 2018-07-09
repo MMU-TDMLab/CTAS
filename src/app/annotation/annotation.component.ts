@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
-// import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 import { Post } from '../posts/post.model';
 import { PostsService } from '../posts/posts.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+// import { post } from '../../../node_modules/@types/selenium-webdriver/http';
 
 @Component({
   selector: 'app-annotation',
@@ -13,9 +13,12 @@ import { AuthService } from '../auth/auth.service';
   styleUrls: ['./annotation.component.css']
 })
 export class AnnotationComponent implements OnInit, OnDestroy {
-  @Input() name: string;
+  // @Input() name: string;
   posts: Post[] = [];
   public id: string;
+  public thePost;
+  public postIWant: string;
+  // public thePostPath = this.posts.find(post.id);
   // public fileName = this.id;
   // private fileExtention: string;
   public filePreview = '';
@@ -29,7 +32,11 @@ export class AnnotationComponent implements OnInit, OnDestroy {
     public route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.id = this.route.snapshot.paramMap.get('postId');
+   this.id = this.route.snapshot.paramMap.get('postId');
+
+//    this.thePost = this.posts.map(num => {
+//     return num.id = this.id;
+// });
     // const fileExtention = this.fileName;
     // const str = this.fileName;
     // const nameWithoutExtension = str.replace(/\.[^/.]+$/, '');
@@ -41,6 +48,14 @@ export class AnnotationComponent implements OnInit, OnDestroy {
       .getPostUpdateListener()
       .subscribe((posts: Post[]) => {
         this.posts = posts;
+        this.posts.map( post => {
+          if (post.id === this.id) {
+            this.postIWant = post.filePath;
+          }
+        });
+//         this.thePost = this.posts.find(function(element) {
+//           return element.id === id;
+// });
         // this.posts.reverse();
       });
     this.userIsAuthenticated = this.authService.getIsAuth();

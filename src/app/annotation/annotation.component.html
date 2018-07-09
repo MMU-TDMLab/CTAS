@@ -22,9 +22,11 @@
       <div *ngFor="let post of posts; let $index=index;">
         <ng-template [ngIf]="post.id === id">
           {{ post.header }}
-          <!-- {{ id }} -->
-          {{ post.filePath }}
-          <!-- {{ name }} -->
+          <!-- {{ post.filePath }} -->
+ <hr>
+          here {{ thePost }}
+
+          {{postIWant}}
           <!-- style="overflow-y: scroll; height:500px;" -->
           <div id="scrollable">
             {{ filePreview }}
