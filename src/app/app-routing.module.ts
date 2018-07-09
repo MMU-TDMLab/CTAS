@@ -19,7 +19,8 @@ const appRoutes: Routes = [
   { path: 'edit/:postId', component: ModuleComponent, canActivate: [AuthGuard]  },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
-  { path: 'annotation', component: AnnotationComponent, canActivate: [AuthGuard] }
+  { path: 'annotation', component: AnnotationComponent, canActivate: [AuthGuard] },
+  { path: 'annotation/:postId', component: AnnotationComponent, canActivate: [AuthGuard] }
 ];
 
 

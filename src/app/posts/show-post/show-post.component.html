@@ -14,17 +14,11 @@
               <!-- <br>
               {{ post.filePath }} -->
               <hr>
-              <a id="btnPro" routerLink="/annotation" class="btn btn-dark btn-sm">
+              <a class="btn btn-dark btn-sm" id="btnPro" (click)="onAnnotation(post.id)">
                 <i class="far fa-file-alt"></i> Annotation
               </a>
             </div>
           </div>
-          <!-- <div>
-            <p>
-              {{ role }}
-               < --
-            </p>
-          </div> -->
             <ng-template [ngIf]="userIsAuthenticated && userId == post.poster || userIsAuthenticated && this.role == 'admin'">
                 <hr>
                 <button class="btn btn-outline-primary btn-sm" id="editBtn" (click)="onEdit(post.id)">Edit</button>

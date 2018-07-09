@@ -6,6 +6,7 @@
 #scrollable {
   /* padding-top: 2em; */
   margin-top: 2em;
+  margin-bottom: 2em;
   /* outline: 5px dotted green; */
   outline: 2px solid black;
   /* outline-style:outset; */

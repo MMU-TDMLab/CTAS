@@ -19,6 +19,7 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   role: string;
   private postsSub: Subscription;
   private editClicked = false;
+  private annoClicked = false;
   private authStatus: Subscription;
   public userIsAuthenticated = false;
   // trustTwo = null;
@@ -29,24 +30,28 @@ export class ShowPostComponent implements OnInit, OnDestroy {
     private router: Router,
     private authService: AuthService,
     // public sanitizer: DomSanitizer,
-    public route: ActivatedRoute) {
+    public route: ActivatedRoute
+  ) {
     // this.trustTwo = sanitizer.bypassSecurityTrustResourceUrl(this.posts.filePath);
     // this.trustedUrl = sanitizer.bypassSecurityTrustUrl(this.);
   }
 
   ngOnInit() {
-    this.isLoading = true;
+    // this.isLoading = true;
     this.postsService.getPosts();
     this.role = this.authService.getUserRole();
     this.userId = this.authService.getUserId();
-    this.postsSub = this.postsService.getPostUpdateListener()
+    this.postsSub = this.postsService
+      .getPostUpdateListener()
       .subscribe((posts: Post[]) => {
-        this.isLoading = false;
+        // this.isLoading = false;
         this.posts = posts;
         this.posts.reverse();
       });
-      this.userIsAuthenticated = this.authService.getIsAuth();
-      this.authStatus = this.authService.getAuthStatus().subscribe(isAuthenticated => {
+    this.userIsAuthenticated = this.authService.getIsAuth();
+    this.authStatus = this.authService
+      .getAuthStatus()
+      .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
         this.userId = this.authService.getUserId();
         this.role = this.authService.getUserRole();
@@ -61,6 +66,14 @@ export class ShowPostComponent implements OnInit, OnDestroy {
       this.editClicked = false;
       this.router.navigate(['/module']);
     }
+  }
+
+  onAnnotation(postId: string) {
+    if (this.annoClicked === false) {
+      this.annoClicked = true;
+      this.router.navigate(['/annotation', postId]);
+    }
+    this.annoClicked = false;
   }
 
   onDelete(postId: string) {
