@@ -2,3 +2,11 @@
   padding-top: 2em;
   padding-left: 3em;
 }
+
+#scrollable {
+  /* padding-top: 2em; */
+  margin-top: 2em;
+  /* outline: 5px dotted green; */
+  outline: 2px solid black;
+  /* outline-style:outset; */
+}
