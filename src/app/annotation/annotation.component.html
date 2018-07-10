@@ -22,15 +22,14 @@
       <div *ngFor="let post of posts; let $index=index;">
         <ng-template [ngIf]="post.id === id">
           {{ post.header }}
-          {{postIWant}}
           <!-- style="overflow-y: scroll; height:500px;" -->
           <div id="scrollable">
-           over here {{ filePreview }}
+           {{postIWant}}
           </div>
         </ng-template>
       </div>
       <div class="questions">
-        Questions here:
+          Questions here:
         <br> Q1: Nam quam nunc, blandit vel
         <br> Q2: Duis leo. Sed fringilla mauris sit amet nibh.
         <br> Q3: Etiam rhoncus. Maecenas tempus

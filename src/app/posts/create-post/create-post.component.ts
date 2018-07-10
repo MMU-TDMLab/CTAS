@@ -61,12 +61,14 @@ export class CreatePostComponent implements OnInit, OnDestroy {
             header: postData.header,
             message: postData.message,
             filePath: postData.filePath,
+            fileText: postData.fileText,
             poster: postData.poster
           };
           this.form.setValue({
             header: this.post.header,
             message: this.post.message,
-            file: this.post.filePath
+            file: this.post.filePath,
+            fileContent: this.filePreview
           });
         });
       } else {
@@ -102,6 +104,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         this.form.value.header,
         this.form.value.message,
         this.form.value.file,
+        this.filePreview,
         this.postId
       );
     } else {
@@ -109,7 +112,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         this.postId,
         this.form.value.header,
         this.form.value.message,
-        this.form.value.file
+        this.form.value.file,
+        this.filePreview
       );
       this.router.navigate(['/module']);
     }

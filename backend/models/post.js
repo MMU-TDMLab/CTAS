@@ -13,6 +13,13 @@ const postSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  fileText: {
+    type: String,
+    required: true
+  },
+  annotation: {
+    type: String
+  },
   poster: {
     type: mongoose.Schema.Types.ObjectId,  // Gets the ID of the user who posted
     ref: 'User',

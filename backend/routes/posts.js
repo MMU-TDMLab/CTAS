@@ -61,6 +61,7 @@ router.post("",
       header: req.body.header,
       message: req.body.message,
       filePath: url + '/documents/' + req.file.filename,
+      fileText: req.body.fileText,
       poster: req.userData.userId,
     });
     // User.findOne({ })
@@ -69,7 +70,7 @@ router.post("",
     //     console.log('user data ', req.userData);
     //     if (req.userData.role === 'admin' || req.userData.role === 'teacher') {
           post.save().then(createdPost => {
-            console.log(createdPost);
+            // console.log(createdPost);
             res.status(201).json({
               message: "Post added successfully",
               post: {
@@ -97,6 +98,7 @@ router.put("/:id",
       header: req.body.header,
       message: req.body.message,
       filePath: filePath,
+      fileText: req.body.fileText,
       poster: req.userData.userId,
     });
     User.findOne({

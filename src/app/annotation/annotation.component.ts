@@ -44,7 +44,8 @@ export class AnnotationComponent implements OnInit, OnDestroy {
         this.posts = posts;
         this.posts.map(post => {
           if (post.id === this.id) {
-            this.postIWant = post.filePath;
+            // this.postIWant = post.filePath;
+            this.postIWant = post.fileText;
           }
         });
         // this.posts.reverse();
@@ -55,7 +56,7 @@ export class AnnotationComponent implements OnInit, OnDestroy {
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
       });
-
+      // highlightSelection();
     // const filePicked = this.postIWant;
     // this.postIWant.patchValue({ file: filePicked });
     // this.postIWant.get('file').updateValueAndValidity();

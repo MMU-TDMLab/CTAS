@@ -23,6 +23,7 @@ export class PostsService {
               message: post.message,
               id: post._id,
               filePath: post.filePath,
+              fileText: post.fileText,
               poster: post.poster
             };
           });
@@ -40,16 +41,17 @@ export class PostsService {
   }
 
   getPost(id: string) {
-    return this.http.get<{ _id: string, header: string, message: string, filePath: string, poster: string }>(
+    return this.http.get<{ _id: string, header: string, message: string, filePath: string, fileText: string, poster: string }>(
       'http://localhost:3000/api/posts/' + id
     );
   }
 
-  addPost(header: string, message: string, file: File, poster: string) {
+  addPost(header: string, message: string, file: File, fileText: string, poster: string) {
     const postData = new FormData();
     postData.append('header', header);
     postData.append('message', message);
     postData.append('file', file);
+    postData.append('fileText', fileText);
     this.http
       .post<{ message: string; post: Post }>(
         'http://localhost:3000/api/posts',
@@ -61,6 +63,7 @@ export class PostsService {
           header: header,
           message: message,
           filePath: responseData.post.filePath,
+          fileText: fileText,
           poster: poster
         };
         this.posts.push(post);
@@ -68,7 +71,7 @@ export class PostsService {
       });
   }
 
-  updatePost(id: string, header: string, message: string, file: File | string) {
+  updatePost(id: string, header: string, message: string, file: File | string, fileText: string) {
     let postData: Post | FormData;
     if (typeof(file) === 'object') {
       postData = new FormData();
@@ -76,12 +79,14 @@ export class PostsService {
       postData.append('header', header);
       postData.append('message', message);
       postData.append('file', file);
+      postData.append('fileText', fileText);
     } else {
         postData = {
         id: id,
         header: header,
         message: message,
         filePath: file,
+        fileText: fileText,
         poster: null
       };
     }
@@ -95,6 +100,7 @@ export class PostsService {
           header: header,
           message: message,
           filePath: '',
+          fileText: '',
           poster: null
         };
         updatedPosts[oldPostIndex] = post;
