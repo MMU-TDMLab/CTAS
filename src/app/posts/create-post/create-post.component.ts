@@ -90,7 +90,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     reader.onload = () => {
       this.filePreview = reader.result;
     };
-    reader.readAsDataURL(filePicked);
+    reader.readAsText(filePicked);
   }
 
   onSavePost() {

@@ -1,11 +1,10 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { Post } from '../posts/post.model';
 import { PostsService } from '../posts/posts.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
-// import { post } from '../../../node_modules/@types/selenium-webdriver/http';
 
 @Component({
   selector: 'app-annotation',
@@ -13,12 +12,9 @@ import { AuthService } from '../auth/auth.service';
   styleUrls: ['./annotation.component.css']
 })
 export class AnnotationComponent implements OnInit, OnDestroy {
-  // @Input() name: string;
   posts: Post[] = [];
   public id: string;
-  public thePost;
-  public postIWant: string;
-  // public thePostPath = this.posts.find(post.id);
+  public postIWant;
   // public fileName = this.id;
   // private fileExtention: string;
   public filePreview = '';
@@ -26,17 +22,15 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   private authStatus: Subscription;
   public userIsAuthenticated = false;
 
-  constructor(public postsService: PostsService,
+  constructor(
+    public postsService: PostsService,
     private router: Router,
     private authService: AuthService,
-    public route: ActivatedRoute) { }
+    public route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
-   this.id = this.route.snapshot.paramMap.get('postId');
-
-//    this.thePost = this.posts.map(num => {
-//     return num.id = this.id;
-// });
+    this.id = this.route.snapshot.paramMap.get('postId');
     // const fileExtention = this.fileName;
     // const str = this.fileName;
     // const nameWithoutExtension = str.replace(/\.[^/.]+$/, '');
@@ -48,14 +42,11 @@ export class AnnotationComponent implements OnInit, OnDestroy {
       .getPostUpdateListener()
       .subscribe((posts: Post[]) => {
         this.posts = posts;
-        this.posts.map( post => {
+        this.posts.map(post => {
           if (post.id === this.id) {
             this.postIWant = post.filePath;
           }
         });
-//         this.thePost = this.posts.find(function(element) {
-//           return element.id === id;
-// });
         // this.posts.reverse();
       });
     this.userIsAuthenticated = this.authService.getIsAuth();
@@ -64,36 +55,59 @@ export class AnnotationComponent implements OnInit, OnDestroy {
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
       });
+
+    // const filePicked = this.postIWant;
+    // this.postIWant.patchValue({ file: filePicked });
+    // this.postIWant.get('file').updateValueAndValidity();
+    // const reader = new FileReader();
+    // reader.onload = () => {
+    //   this.filePreview = reader.result;
+    // };
+    // reader.readAsText(filePicked);
+    // this.onFilePicked();
   }
 
-  onFilePicked(event: Event) {
-    const filePicked = (event.target as HTMLInputElement).files[0];
-    // this.form.patchValue({ file: filePicked });
-    // this.form.get('file').updateValueAndValidity();
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.filePreview = reader.result;
-    };
-    reader.readAsText(filePicked);
+  // onFilePicked() {
+  //   const filePicked = (this.postIWant).files[0];
+  //   this.postIWant.patchValue({ file: filePicked });
+  //   this.postIWant.get('file').updateValueAndValidity();
+  //   const reader = new FileReader();
+  //   reader.onload = () => {
+  //     this.filePreview = reader.result;
+  //   };
+  //   reader.readAsText(filePicked);
+  // }
+
+    // onFilePicked() {
+    // const file = (this.postIWant);
+    // const textType = /text.*/;
+    // if (file.type.match(textType)) {
+      // const reader = new FileReader();
+      // reader.onload = () => {
+        // this.filePreview = reader.result;
+      // };
+      // reader.readAsText(file);
+    // } else {
+      // this.filePreview = 'File not supported!';
+    // }
+  // }
+
+  //   isAnyPartOfElementInViewport(el) {
+
+  //     const rect = el.getBoundingClientRect();
+  //     DOMRect { x: 8, y: 8, width: 100, height: 100, top: 8, right: 108, bottom: 108, left: 8 }
+  //     const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+  //     const windowWidth = (window.innerWidth || document.documentElement.clientWidth);
+
+  //     // http://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
+  //     const vertInView = (rect.top <= windowHeight) && ((rect.top + rect.height) >= 0);
+  //     const horInView = (rect.left <= windowWidth) && ((rect.left + rect.width) >= 0);
+
+  //     return (vertInView && horInView);
+  // }
+
+  ngOnDestroy() {
+    this.postsSub.unsubscribe();
+    this.authStatus.unsubscribe();
   }
-
-//   isAnyPartOfElementInViewport(el) {
-
-//     const rect = el.getBoundingClientRect();
-//     DOMRect { x: 8, y: 8, width: 100, height: 100, top: 8, right: 108, bottom: 108, left: 8 }
-//     const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
-//     const windowWidth = (window.innerWidth || document.documentElement.clientWidth);
-
-//     // http://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
-//     const vertInView = (rect.top <= windowHeight) && ((rect.top + rect.height) >= 0);
-//     const horInView = (rect.left <= windowWidth) && ((rect.left + rect.width) >= 0);
-
-//     return (vertInView && horInView);
-// }
-
-ngOnDestroy() {
-  this.postsSub.unsubscribe();
-  this.authStatus.unsubscribe();
-}
-
 }
