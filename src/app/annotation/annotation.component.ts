@@ -15,6 +15,7 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
   public id: string;
   public postIWant;
+  public highlighter = 'true';
   // public fileName = this.id;
   // private fileExtention: string;
   public filePreview = '';
@@ -24,7 +25,7 @@ export class AnnotationComponent implements OnInit, OnDestroy {
 
   constructor(
     public postsService: PostsService,
-    private router: Router,
+    // private router: Router,
     private authService: AuthService,
     public route: ActivatedRoute
   ) {}
@@ -56,42 +57,7 @@ export class AnnotationComponent implements OnInit, OnDestroy {
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
       });
-      // highlightSelection();
-    // const filePicked = this.postIWant;
-    // this.postIWant.patchValue({ file: filePicked });
-    // this.postIWant.get('file').updateValueAndValidity();
-    // const reader = new FileReader();
-    // reader.onload = () => {
-    //   this.filePreview = reader.result;
-    // };
-    // reader.readAsText(filePicked);
-    // this.onFilePicked();
   }
-
-  // onFilePicked() {
-  //   const filePicked = (this.postIWant).files[0];
-  //   this.postIWant.patchValue({ file: filePicked });
-  //   this.postIWant.get('file').updateValueAndValidity();
-  //   const reader = new FileReader();
-  //   reader.onload = () => {
-  //     this.filePreview = reader.result;
-  //   };
-  //   reader.readAsText(filePicked);
-  // }
-
-    // onFilePicked() {
-    // const file = (this.postIWant);
-    // const textType = /text.*/;
-    // if (file.type.match(textType)) {
-      // const reader = new FileReader();
-      // reader.onload = () => {
-        // this.filePreview = reader.result;
-      // };
-      // reader.readAsText(file);
-    // } else {
-      // this.filePreview = 'File not supported!';
-    // }
-  // }
 
   //   isAnyPartOfElementInViewport(el) {
 
@@ -106,6 +72,74 @@ export class AnnotationComponent implements OnInit, OnDestroy {
 
   //     return (vertInView && horInView);
   // }
+
+
+  viewAnnotation() {
+    // return;
+  }
+
+  highlightSelection() {
+      const userSelection = window.getSelection();
+      for (let i = 0; i < userSelection.rangeCount; i++) {
+          this.highlightRange(userSelection.getRangeAt(i));
+     }
+  }
+
+  highlightRange(range) {
+    const newNode = document.createElement('a');
+    newNode.id = 'close';
+    newNode.className = 'close_layer';
+    newNode.setAttribute(
+       'style',
+       'background-color: yellow; display: inline;'
+    ),
+    newNode.setAttribute(
+      'onclick',
+      'viewAnnotation()'
+    ),
+    range.surroundContents(newNode);
+    console.log(newNode);
+}
+
+
+// highlightSelectionRemove() {
+  // const close = document.createElement('span');
+  // close.id = 'close';
+  // close.className = 'close_layer';
+// }
+
+// highlightSelectionRemove () {
+//   const userSelection = window.getSelection();
+//   for (let i = 0; i < userSelection.rangeCount; i++) {
+//     this.removeHighLightRange(userSelection.getRangeAt(i));
+//   }
+// }
+
+// removeHighLightRange(range) {
+//   const element = document.getElementById('close');
+//   // element.setAttribute(
+//   //   'style',
+//   //   'disabled;'
+//   // );
+//   element.parentNode.removeChild(element);
+//   console.log(element);
+// }
+
+// removeHighLightRange(range) {
+//   const element = document.getElementById('close');
+//   element.setAttribute(
+//     'style',
+//     'disabled;'
+//   );
+//   let str = element;
+//   str = str.replace(/<\/?span[^>]*>/g,'');
+//   range.surroundContents(element);
+//   console.log(element);
+// }
+
+
+// var str = // your string here
+// str = str.replace(/<\/?span[^>]*>/g,"");
 
   ngOnDestroy() {
     this.postsSub.unsubscribe();

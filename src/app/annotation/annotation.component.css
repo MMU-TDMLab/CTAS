@@ -9,5 +9,14 @@
   margin-bottom: 2em;
   /* outline: 5px dotted green; */
   outline: 2px solid black;
+  outline-offset: 12px;
   /* outline-style:outset; */
+}
+
+#btnHighLight {
+  margin-top: 2em;
+}
+
+#btnRemoveHighLight {
+  margin-top: 2em;
 }
