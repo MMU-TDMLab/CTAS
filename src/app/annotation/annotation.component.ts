@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { Post } from '../posts/post.model';
 import { PostsService } from '../posts/posts.service';
-import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 
 @Component({
@@ -12,10 +13,15 @@ import { AuthService } from '../auth/auth.service';
   styleUrls: ['./annotation.component.css']
 })
 export class AnnotationComponent implements OnInit, OnDestroy {
+  form: FormGroup;
   posts: Post[] = [];
+  public role: string;
   public id: string;
   public postIWant;
   public highlighter = 'true';
+  public annotation = '';
+  public complexWord = '';
+  // public annotations = [];
   // public fileName = this.id;
   // private fileExtention: string;
   public filePreview = '';
@@ -31,6 +37,11 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.role = this.authService.getUserRole();
+    this.form = new FormGroup({
+      annotation: new FormControl(null, {validators: [Validators.required, Validators.minLength(8), Validators.maxLength(250)]
+      }),
+    });
     this.id = this.route.snapshot.paramMap.get('postId');
     // const fileExtention = this.fileName;
     // const str = this.fileName;
@@ -45,17 +56,16 @@ export class AnnotationComponent implements OnInit, OnDestroy {
         this.posts = posts;
         this.posts.map(post => {
           if (post.id === this.id) {
-            // this.postIWant = post.filePath;
             this.postIWant = post.fileText;
           }
         });
-        // this.posts.reverse();
       });
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authStatus = this.authService
       .getAuthStatus()
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
+        this.role = this.authService.getUserRole();
       });
   }
 
@@ -74,38 +84,55 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   // }
 
 
-  viewAnnotation() {
-    // return;
+  viewAnnotation(newNode) {
+    // console.log('hello');
+    console.log(newNode);
   }
 
   highlightSelection() {
       const userSelection = window.getSelection();
-      for (let i = 0; i < userSelection.rangeCount; i++) {
-          this.highlightRange(userSelection.getRangeAt(i));
-     }
+      if (userSelection.toString() === null) {
+        return;
+      } else {
+        for (let i = 0; i < userSelection.rangeCount; i++) {
+            this.highlightRange(userSelection.getRangeAt(i));
+            this.complexWord = userSelection.toString();
+            // this.annotation = this.complexWord;
+            // console.log(this.complexWord);
+           }
+      }
   }
+
+  guidGenerator() {
+    const S4 = () => {
+       // tslint:disable-next-line:no-bitwise
+       return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    };
+    return (S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4());
+}
 
   highlightRange(range) {
     const newNode = document.createElement('a');
-    newNode.id = 'close';
-    newNode.className = 'close_layer';
+    newNode.id = this.guidGenerator();
+    newNode.className = 'annotation_class';
     newNode.setAttribute(
        'style',
        'background-color: yellow; display: inline;'
     ),
-    newNode.setAttribute(
-      'onclick',
-      'viewAnnotation()'
-    ),
+    // newNode.setAttribute(
+    //   'onclick',
+    //   'this.viewAnnotation(newNode.id);'
+    // ),
     range.surroundContents(newNode);
-    console.log(newNode);
+    this.viewAnnotation(newNode.id);
+    // onAnnotate();
 }
 
 
-// highlightSelectionRemove() {
-  // const close = document.createElement('span');
-  // close.id = 'close';
-  // close.className = 'close_layer';
+// highlightSelectionRemove(newNode) {
+//   const close = document.createElement('span');
+//   close.id = 'close';
+//   close.className = 'close_layer';
 // }
 
 // highlightSelectionRemove () {
@@ -144,5 +171,19 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.postsSub.unsubscribe();
     this.authStatus.unsubscribe();
+  }
+
+  onAnnotate() {
+    if (this.form.invalid) {
+      return;
+    }
+    this.annotation = this.form.value.annotation;
+    // this.authService.userLogin(this.form.value.annotation, this.form.value.password); // , this.form.value.role
+    this.form.reset();
+  }
+
+  resetAlertBox() {
+    this.complexWord = '';
+    this.annotation = '';
   }
 }

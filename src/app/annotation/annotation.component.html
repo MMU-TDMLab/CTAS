@@ -1,18 +1,3 @@
-<!-- <div class="container">
-    <div class="row">
-      <div class="col-md">
-      </div>
-      <div class="col-md">
-          Depending on the post picked the Title will show here *
-          <div id="scrollable" style="overflow-y: scroll; height:500px;">
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,
-          </div>
-      </div>
-      <div class="col-md">
-      </div>
-    </div>
-  </div> -->
-
 <div class="container">
   <div class="row">
     <div class="col">
@@ -24,12 +9,12 @@
           {{ post.header }}
           <!-- style="overflow-y: scroll; height:500px;" -->
           <div id="scrollable">
-           {{postIWant}}
+            {{ postIWant }}
           </div>
         </ng-template>
       </div>
       <div class="questions">
-          Questions here:
+        Questions here:
         <br> Q1: Nam quam nunc, blandit vel
         <br> Q2: Duis leo. Sed fringilla mauris sit amet nibh.
         <br> Q3: Etiam rhoncus. Maecenas tempus
@@ -38,12 +23,27 @@
       </div>
     </div>
     <div class="col">
-      Annotations go here
-      <div>
-        <button type="button" class="btn btn-warning btn-sm" id="btnHighLight" (click)="highlightSelection()">HighLight</button>
-      </div>
+        <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || userIsAuthenticated && this.role == 'admin'">
+            <div>
+              <button type="button" class="btn btn-warning btn-sm" id="btnHighLight" (click)="highlightSelection()">Highlight</button>
+            </div>
+          </ng-template>
+      <ng-template [ngIf]='complexWord'>
+        <form [formGroup]='form' (submit)="onAnnotate()">
+          <div class="alert alert-warning alert-dismissible fade show" id="annotation" role="alert">
+            {{ complexWord }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)='resetAlertBox()'>
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="form-group">
+            <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Annotation Description" rows="3" formControlName="annotation"></textarea>
+          </div>
+          <button class="btn btn-success btn-sm" id="postbtn" type="submit" [disabled]="!form.valid">Save Annotation</button>
+        </form>
+      </ng-template>
       <!-- <div>
-        <button type="button" class="btn btn-danger btn-sm" id="btnRemoveHighLight" (click)="highlightSelectionRemove()">Remove HighLight</button>
+        <button type="button" class="btn btn-danger btn-sm" id="btnRemoveHighLight" (click)="highlightSelectionRemove()">Remove Highlight</button>
         </div> -->
     </div>
   </div>
