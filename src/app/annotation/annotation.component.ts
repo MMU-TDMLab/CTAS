@@ -6,6 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Post } from '../posts/post.model';
 import { PostsService } from '../posts/posts.service';
 import { AuthService } from '../auth/auth.service';
+import { AnnotationService } from './annotation.service';
 
 @Component({
   selector: 'app-annotation',
@@ -20,7 +21,8 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   public postIWant;
   public highlighter = 'true';
   public annotation = '';
-  public complexWord = '';
+  public word = '';
+  // public complexWord = '';
   // public annotations = [];
   // public fileName = this.id;
   // private fileExtention: string;
@@ -30,10 +32,11 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   public userIsAuthenticated = false;
 
   constructor(
-    public postsService: PostsService,
     // private router: Router,
+    public postsService: PostsService,
     private authService: AuthService,
-    public route: ActivatedRoute
+    public route: ActivatedRoute,
+    private annotationService: AnnotationService
   ) {}
 
   ngOnInit() {
@@ -85,8 +88,8 @@ export class AnnotationComponent implements OnInit, OnDestroy {
 
 
   viewAnnotation(newNode) {
-    // console.log('hello');
     console.log(newNode);
+    // console.log('hello');
   }
 
   highlightSelection() {
@@ -96,7 +99,7 @@ export class AnnotationComponent implements OnInit, OnDestroy {
       } else {
         for (let i = 0; i < userSelection.rangeCount; i++) {
             this.highlightRange(userSelection.getRangeAt(i));
-            this.complexWord = userSelection.toString();
+            this.word = userSelection.toString();
             // this.annotation = this.complexWord;
             // console.log(this.complexWord);
            }
@@ -178,12 +181,13 @@ export class AnnotationComponent implements OnInit, OnDestroy {
       return;
     }
     this.annotation = this.form.value.annotation;
-    // this.authService.userLogin(this.form.value.annotation, this.form.value.password); // , this.form.value.role
-    this.form.reset();
+    this.annotationService.addWord(this.word, this.annotation);
+    // this.form.reset();
   }
 
   resetAlertBox() {
-    this.complexWord = '';
+    // this.complexWord = '';
+    this.word = '';
     this.annotation = '';
   }
 }

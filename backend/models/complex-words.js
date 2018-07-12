@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const uniqueVal = require('mongoose-unique-validator');
 
 const complexWordSchema = mongoose.Schema({
-  complexWord: {
+  word: {
     type: String,
     required: true,
     unique: true
@@ -13,6 +13,6 @@ const complexWordSchema = mongoose.Schema({
   },
 });
 
-userSchema.plugin(uniqueVal);
+complexWordSchema.plugin(uniqueVal);
 
-module.exports = mongoose.model('Complex', complexWordSchema);
+module.exports = mongoose.model('Word', complexWordSchema);

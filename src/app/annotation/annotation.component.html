@@ -28,10 +28,12 @@
               <button type="button" class="btn btn-warning btn-sm" id="btnHighLight" (click)="highlightSelection()">Highlight</button>
             </div>
           </ng-template>
-      <ng-template [ngIf]='complexWord'>
+          <ng-template [ngIf]='word'>
+      <!-- <ng-template [ngIf]='complexWord'> -->
         <form [formGroup]='form' (submit)="onAnnotate()">
           <div class="alert alert-warning alert-dismissible fade show" id="annotation" role="alert">
-            {{ complexWord }}
+            <!-- {{ complexWord }} -->
+            {{ word }}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)='resetAlertBox()'>
               <span aria-hidden="true">&times;</span>
             </button>

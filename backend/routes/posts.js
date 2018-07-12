@@ -2,8 +2,7 @@ const express = require('express');
 const multer = require('multer');
 
 const Post = require('../models/post');
-
-const User = require('../models/user'); // ********FOR NOW*********
+const User = require('../models/user');
 
 const authCheck = require('../middleware/check-auth');
 
