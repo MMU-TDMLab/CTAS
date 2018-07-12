@@ -4,6 +4,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { Post } from '../posts/post.model';
+import { ComplexWord } from '../annotation/complex-word.model';
 import { PostsService } from '../posts/posts.service';
 import { AuthService } from '../auth/auth.service';
 import { AnnotationService } from './annotation.service';
@@ -16,9 +17,13 @@ import { AnnotationService } from './annotation.service';
 export class AnnotationComponent implements OnInit, OnDestroy {
   form: FormGroup;
   posts: Post[] = [];
+  words: ComplexWord[] = [];
+  public thewords: any;
   public role: string;
   public id: string;
+  public setWord: string;
   public postIWant;
+  public wordIWant;
   public highlighter = 'true';
   public annotation = '';
   public word = '';
@@ -28,6 +33,7 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   // private fileExtention: string;
   public filePreview = '';
   private postsSub: Subscription;
+  private annotationSub: Subscription;
   private authStatus: Subscription;
   public userIsAuthenticated = false;
 
@@ -40,18 +46,25 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.role = this.authService.getUserRole();
     this.form = new FormGroup({
       annotation: new FormControl(null, {validators: [Validators.required, Validators.minLength(8), Validators.maxLength(250)]
       }),
     });
     this.id = this.route.snapshot.paramMap.get('postId');
-    // const fileExtention = this.fileName;
-    // const str = this.fileName;
-    // const nameWithoutExtension = str.replace(/\.[^/.]+$/, '');
-    // const res = nameWithoutExtension.replace(/http:localhost:3000\documents/g, 'red');
-    // this.fileName = this.fileExtention.split('.').pop();
-    // console.log('file ext ', nameWithoutExtension);
+    this.setWord = 'Lorem';
+
+    this.annotationService.getWords();
+    this.annotationSub = this.annotationService
+      .getWordUpdateListener()
+      .subscribe((thewords: ComplexWord[]) => {
+        this.thewords = thewords;
+        this.thewords.map(word => {
+          if (word.word === this.setWord) {
+            this.wordIWant = word.word;
+          }
+        });
+      });
+
     this.postsService.getPosts();
     this.postsSub = this.postsService
       .getPostUpdateListener()
@@ -63,6 +76,7 @@ export class AnnotationComponent implements OnInit, OnDestroy {
           }
         });
       });
+    this.role = this.authService.getUserRole();
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authStatus = this.authService
       .getAuthStatus()

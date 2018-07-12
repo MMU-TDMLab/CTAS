@@ -27,4 +27,15 @@ router.post("/new-word", (req, res, next) => {
     });
 });
 
+router.get("", (req, res, next) => {
+  Word.find()
+    .then(documents => {
+      // console.log('krishan', documents);
+      res.status(200).json({
+        message: 'Words fetched succesfully!',
+        words: documents
+      });
+    });
+});
+
 module.exports = router;

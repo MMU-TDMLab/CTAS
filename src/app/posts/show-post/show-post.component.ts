@@ -6,6 +6,7 @@ import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
+import { AnnotationService } from '../../annotation/annotation.service';
 
 @Component({
   selector: 'app-show-post',
