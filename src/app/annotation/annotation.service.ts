@@ -14,21 +14,20 @@ export class AnnotationService {
 
   getWords() {
     this.http
-      .get<{ word: string; complexWords: any }>('http://localhost:3000/api/words')
+      .get<{ message: string; words: any }>('http://localhost:3000/api/words')
       .pipe(
         map(wordData => {
-          return wordData.complexWords.map(word => {
-            // console.log('word data ', wordData);
+          return wordData.words.map(word => {
+            // console.log('hello: ', wordData);
             return {
               word: word.word,
-              annotation: word.annotation,
+              annotation: word.annotation
             };
           });
         })
       )
       .subscribe(result => {
         this.complexWords = result;
-        console.log('the result ', result);
         this.complexWordUpdate.next([...this.complexWords]);
       });
   }
@@ -38,13 +37,16 @@ export class AnnotationService {
   }
 
   addWord(word: string, annotation: string) {
-    const complexWord: ComplexWord = {word: word, annotation: annotation};
+    const complexWord: ComplexWord = { word: word, annotation: annotation };
     return this.http
       .post('http://localhost:3000/api/words/new-word', complexWord)
-      .subscribe(response => {
-        console.log(response);
-      }, error => {
-        console.log(error);
-      });
+      .subscribe(
+        response => {
+          console.log(response);
+        },
+        error => {
+          console.log(error);
+        }
+      );
   }
 }

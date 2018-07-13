@@ -22,8 +22,8 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   public role: string;
   public id: string;
   public setWord: string;
-  public postIWant;
-  public wordIWant;
+  public postIWant: string;
+  public wordIWant: string;
   public highlighter = 'true';
   public annotation = '';
   public word = '';
@@ -52,19 +52,27 @@ export class AnnotationComponent implements OnInit, OnDestroy {
     });
     this.id = this.route.snapshot.paramMap.get('postId');
     this.setWord = 'Lorem';
-
     this.annotationService.getWords();
     this.annotationSub = this.annotationService
       .getWordUpdateListener()
       .subscribe((thewords: ComplexWord[]) => {
         this.thewords = thewords;
         this.thewords.map(word => {
-          if (word.word === this.setWord) {
-            this.wordIWant = word.word;
-          }
+          // if (word.word === this.setWord) {
+          //   this.wordIWant = word.word;
+          // }
+          console.log(word);
+          // console.log(word.word);
         });
-      });
 
+        // this.postIWant.map(word => {
+        //   console.log(word);
+        //   if (word.word === this.setWord) {
+        //     console.log('let me know');
+        //   }
+        // });
+
+      });
     this.postsService.getPosts();
     this.postsSub = this.postsService
       .getPostUpdateListener()
@@ -103,10 +111,10 @@ export class AnnotationComponent implements OnInit, OnDestroy {
 
   viewAnnotation(newNode) {
     console.log(newNode);
-    // console.log('hello');
   }
 
   highlightSelection() {
+    console.log('shout at me ', this.postIWant);
       const userSelection = window.getSelection();
       if (userSelection.toString() === null) {
         return;
@@ -196,7 +204,7 @@ export class AnnotationComponent implements OnInit, OnDestroy {
     }
     this.annotation = this.form.value.annotation;
     this.annotationService.addWord(this.word, this.annotation);
-    // this.form.reset();
+    this.form.reset();
   }
 
   resetAlertBox() {
