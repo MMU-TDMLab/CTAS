@@ -7,29 +7,31 @@
 */
 
 function complexWordIdentification(text) {
-  // list of "complex words"
-  const complexWords = ['Hello', 'World', 'Complex Phrase'];
-  // array will be populated with results.
-  const results = [];
-  // loop through each complex word and see if it occurs in the text
-  for (let i = 0; i < complexWords.length; i++) {
-    // the complex word we are checking in this iteration
-    const complexWord = complexWords[i];
-    // a match (will be -1 if no match is found)
-    const match = text.search(complexWord);
-    // if a match is found then create an object and add it to the results
-    if (match !== -1) {
-      // the results object
-      const result = {
-        begin: match,
-        end: match + complexWord.length,
-        text: complexWord
-      };
-      // add the object to the results array
-      const index = results.length;
-      results[index] = result;
-    } // if
-  } // for i
-  // return the results array when done
-  return results;
-} // complexWordIdentification
+    // list of "complex words"
+    const complexWords = ['Hello', 'Lorem', 'ipsum'];
+    // array will be populated with results.
+    const results = [];
+    // loop through each complex word and see if it occurs in the text
+    for (let i = 0; i < complexWords.length; i++) {
+      // the complex word we are checking in this iteration
+      const complexWord = complexWords[i];
+      // a match (will be -1 if no match is found)
+      const match = text.search(complexWord);
+      // if a match is found then create an object and add it to the results
+      if (match !== -1) {
+        // the results object
+        const result = {
+          begin: match,
+          end: match + complexWord.length,
+          text: complexWord
+        };
+        // add the object to the results array
+        const index = results.length;
+        results[index] = result;
+        console.log(results);
+      } // if
+    } // for i
+    // return the results array when done
+    return results;
+  } // complexWordIdentification
+

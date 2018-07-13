@@ -22,16 +22,15 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   public role: string;
   public id: string;
   public setWord: string;
-  public postIWant: string;
+  public postIWant;
   public wordIWant: string;
+  public filePreview = '';
   public highlighter = 'true';
   public annotation = '';
   public word = '';
-  // public complexWord = '';
+  public theHardWords = [];
+  public wordWithAnnotation = [];
   // public annotations = [];
-  // public fileName = this.id;
-  // private fileExtention: string;
-  public filePreview = '';
   private postsSub: Subscription;
   private annotationSub: Subscription;
   private authStatus: Subscription;
@@ -58,20 +57,15 @@ export class AnnotationComponent implements OnInit, OnDestroy {
       .subscribe((thewords: ComplexWord[]) => {
         this.thewords = thewords;
         this.thewords.map(word => {
-          // if (word.word === this.setWord) {
-          //   this.wordIWant = word.word;
-          // }
-          console.log(word);
-          // console.log(word.word);
+          if (word.word === this.setWord) {
+            this.wordIWant = word.word;
+          }
+          this.theHardWords.push(word.word);
+          this.wordWithAnnotation.push(word);
+          // console.log(this.wordWithAnnotation);
+          // console.log(this.theHardWords);
+          // console.log(word);
         });
-
-        // this.postIWant.map(word => {
-        //   console.log(word);
-        //   if (word.word === this.setWord) {
-        //     console.log('let me know');
-        //   }
-        // });
-
       });
     this.postsService.getPosts();
     this.postsSub = this.postsService
@@ -108,13 +102,43 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   //     return (vertInView && horInView);
   // }
 
+    complexWordIdentification(text, words) {
+    // list of "complex words"
+    const complexWords = words;
+    // array will be populated with results.
+    const results = [];
+    // loop through each complex word and see if it occurs in the text
+    let match, regexp;
+
+    for (let i = 0; i < complexWords.length; i++) {
+      // the complex word we are checking in this iteration
+      const complexWord = complexWords[i];
+      // the complex word we are checking in this iteration
+      regexp = new RegExp(complexWord, 'g');
+
+      while ((match = regexp.exec(text)) !== null) {
+        // the results object
+        const result = {
+          begin: (regexp.lastIndex - complexWords[i].length),
+          end: regexp.lastIndex,
+          text: complexWord
+        };
+        // add the object to the results array
+        const index = results.length;
+        results[index] = result;
+        console.log(result);
+      }
+    }
+    // return the results array when done
+    return results;
+  }
 
   viewAnnotation(newNode) {
-    console.log(newNode);
+    // console.log(newNode);
   }
 
   highlightSelection() {
-    console.log('shout at me ', this.postIWant);
+    this.complexWordIdentification(this.postIWant, this.theHardWords);
       const userSelection = window.getSelection();
       if (userSelection.toString() === null) {
         return;
@@ -122,8 +146,6 @@ export class AnnotationComponent implements OnInit, OnDestroy {
         for (let i = 0; i < userSelection.rangeCount; i++) {
             this.highlightRange(userSelection.getRangeAt(i));
             this.word = userSelection.toString();
-            // this.annotation = this.complexWord;
-            // console.log(this.complexWord);
            }
       }
   }
@@ -153,6 +175,29 @@ export class AnnotationComponent implements OnInit, OnDestroy {
     // onAnnotate();
 }
 
+// highlightWord() {
+//   this.complexWordIdentification(this.postIWant, this.theHardWords);
+//     const userSelection = window.getSelection();
+//     if (userSelection.toString() === null) {
+//       return;
+//     } else {
+//       for (let i = 0; i < userSelection.rangeCount; i++) {
+//           this.highlightRange(userSelection.getRangeAt(i));
+//           this.word = userSelection.toString();
+//          }
+//     }
+// }
+
+// highLighter(range) {
+//   const newNode = document.createElement('a');
+//   newNode.id = this.guidGenerator();
+//     newNode.className = 'annotation_class';
+//     newNode.setAttribute(
+//        'style',
+//        'background-color: yellow; display: inline;'
+//     ),
+//     range.surroundContents(newNode);
+// }
 
 // highlightSelectionRemove(newNode) {
 //   const close = document.createElement('span');
@@ -188,10 +233,6 @@ export class AnnotationComponent implements OnInit, OnDestroy {
 //   range.surroundContents(element);
 //   console.log(element);
 // }
-
-
-// var str = // your string here
-// str = str.replace(/<\/?span[^>]*>/g,"");
 
   ngOnDestroy() {
     this.postsSub.unsubscribe();
