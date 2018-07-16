@@ -8,6 +8,7 @@ import { ComplexWord } from '../annotation/complex-word.model';
 import { PostsService } from '../posts/posts.service';
 import { AuthService } from '../auth/auth.service';
 import { AnnotationService } from './annotation.service';
+import { nodeChildrenAsMap } from '../../../node_modules/@angular/router/src/utils/tree';
 
 @Component({
   selector: 'app-annotation',
@@ -35,7 +36,6 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   private annotationSub: Subscription;
   private authStatus: Subscription;
   public userIsAuthenticated = false;
-  // public theText = [];
 
   constructor(
     // private router: Router,
@@ -127,15 +127,100 @@ export class AnnotationComponent implements OnInit, OnDestroy {
         // add the object to the results array
         const index = results.length;
         results[index] = result;
-        // this.highlightIt(result);
-        console.log(result.text);
-        // this.theText.push(result.text.toString());
+        // console.log(result.text);
+        // this.theText.push(result.text);
+
         // console.log(this.theText);
       }
     }
+    this.getWords(words);
+
     // return the results array when done
+
+    // document.querySelector('scrollable').innerHTML = this.highlightText( text, words );
+    // this.highlight(document.getElementById('#scrollable'), words);
     return results;
   }
+
+  // highlight = (root, words) => {
+  //   words.forEach(word => {
+  //     root.innerHTML = root.innerHTML.replace(word, word => `<a class="highlighted">${word}</a>`);
+  //   });
+  // }
+
+  ////////////
+  getWords(words) {
+    this.highlight(words);
+  }
+  // //  getWords = async () => {
+  // //   // Use API calls here or simply pass in Constants
+  // //   this.highlight(this.words);
+  // // }
+   highlight = (words) => {
+    const high = document.getElementById('scrollable');
+    const paragraph = high.innerHTML.split(' ');
+    const res = [];
+
+    paragraph.map(word => {
+      let t = word;
+      if (words.indexOf(word) > -1) {
+        t = '<a class="clickable" style="background-color: yellow;">' + word + '</a>';
+      }
+      res.push(t);
+    });
+    high.innerHTML = res.join(' ');
+    const elementsToMakeClickable = document.getElementsByClassName('clickable');
+    const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
+     elementsToMakeClickableArray.map( (element) => {
+      element.addEventListener('click', this.viewAnnotation.bind(this));
+    });
+  }
+
+  // (click)="this.viewAnnotation();"
+
+  //  highlight = (words) => {
+  //   const high = document.getElementById('scrollable');
+  //   let res = '';
+  //   words.map(word => {
+  //     res += '<a class="highlighted">'
+  //       + 		word
+  //         +	'</a>';
+  //     high.innerHTML.replace(word, res);
+  //   });
+  // }
+  /////////////////////
+
+  ///////////////
+  // highlightText(words) {
+  //   const newNode = document.createElement('a');
+  //         newNode.id = this.guidGenerator();
+  //         newNode.className = 'annotation_class';
+  //         newNode.setAttribute(
+  //         'style',
+  //         'background-color: yellow; display: inline;'
+  //         );
+  //         words.appendChild(newNode);
+  // }
+///////////////
+
+/////////
+  //  highlightText = ( text, words ) => {
+  //   return words.reduce(( text, word ) => {
+  //   return text.replace( new RegExp( word, 'g' ), `<a id="${this.guidGenerator()}" class="highlighted">${word}</a>` );
+  //   }, text );
+  //   }
+
+  /////////////
+  // highlightText = (node, words) => {
+  //   const fileText = node.innerHTML;
+  //   const highlighted_text = words.reduce((fileText, word) => {
+  //     return fileText.replace( new RegExp(word, 'g'), `<a id="${this.guidGenerator()}" class="highlighted">${word}</a>` );
+  //   }, fileText);
+  //   node = highlighted_text;
+  //   console.log(node);
+  //   // console.log(words);
+  //   // this.highlightText(document.querySelector('#text_snippet'), words);
+  // }
 
   // highlightIt(result) {
   //   const newNode = document.createElement('a');
@@ -148,11 +233,13 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   //         result.surroundContents(newNode);
   // }
 
-  viewAnnotation(newNode) {
+  viewAnnotation(this) {
     // console.log(newNode);
+    console.log('josh');
   }
 
   highlightSelection() {
+    // this.highlightText(this.postIWant, this.theHardWords);
     this.complexWordIdentification(this.postIWant, this.theHardWords);
       const userSelection = window.getSelection();
       if (userSelection.toString() === null) {
@@ -186,9 +273,32 @@ export class AnnotationComponent implements OnInit, OnDestroy {
     //   'this.viewAnnotation(newNode.id);'
     // ),
     range.surroundContents(newNode);
-    this.viewAnnotation(newNode.id);
+    // this.viewAnnotation(newNode.id);
     // onAnnotate();
 }
+
+// const guid = () => {
+//   const S4 = () => {
+//     return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+//   };
+//   return (S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4());
+// };
+// const words = [
+//   "Lorem",
+//   "ipsum",
+//   "foo",
+//   "bar",
+//   "baz"
+// ];
+// const highlight = ( node, words ) => {
+//   const text = node.innerHTML;
+//   const highlighted_text = words.reduce(( text, word ) => {
+//     return text.replace( new RegExp( word, 'g' ), `<a id="${guid()}" class="highlighted">${word}</a>` );
+//   }, text );
+//   node.innerHTML = highlighted_text;
+// };
+
+// highlight( document.querySelector( '#text_snippet' ), words );
 
 // highlightSelectionRemove(newNode) {
 //   const close = document.createElement('span');
