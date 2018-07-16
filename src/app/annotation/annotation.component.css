@@ -24,3 +24,8 @@
 #annotation {
   margin-top: 2.5em;
 }
+
+.highlighted {
+  background-color: yellow;
+  display: inline;
+}

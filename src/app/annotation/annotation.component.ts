@@ -35,6 +35,7 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   private annotationSub: Subscription;
   private authStatus: Subscription;
   public userIsAuthenticated = false;
+  // public theText = [];
 
   constructor(
     // private router: Router,
@@ -126,12 +127,26 @@ export class AnnotationComponent implements OnInit, OnDestroy {
         // add the object to the results array
         const index = results.length;
         results[index] = result;
-        console.log(result);
+        // this.highlightIt(result);
+        console.log(result.text);
+        // this.theText.push(result.text.toString());
+        // console.log(this.theText);
       }
     }
     // return the results array when done
     return results;
   }
+
+  // highlightIt(result) {
+  //   const newNode = document.createElement('a');
+  //         newNode.id = this.guidGenerator();
+  //         newNode.className = 'annotation_class';
+  //         newNode.setAttribute(
+  //         'style',
+  //         'background-color: yellow; display: inline;'
+  //         ),
+  //         result.surroundContents(newNode);
+  // }
 
   viewAnnotation(newNode) {
     // console.log(newNode);
@@ -174,30 +189,6 @@ export class AnnotationComponent implements OnInit, OnDestroy {
     this.viewAnnotation(newNode.id);
     // onAnnotate();
 }
-
-// highlightWord() {
-//   this.complexWordIdentification(this.postIWant, this.theHardWords);
-//     const userSelection = window.getSelection();
-//     if (userSelection.toString() === null) {
-//       return;
-//     } else {
-//       for (let i = 0; i < userSelection.rangeCount; i++) {
-//           this.highlightRange(userSelection.getRangeAt(i));
-//           this.word = userSelection.toString();
-//          }
-//     }
-// }
-
-// highLighter(range) {
-//   const newNode = document.createElement('a');
-//   newNode.id = this.guidGenerator();
-//     newNode.className = 'annotation_class';
-//     newNode.setAttribute(
-//        'style',
-//        'background-color: yellow; display: inline;'
-//     ),
-//     range.surroundContents(newNode);
-// }
 
 // highlightSelectionRemove(newNode) {
 //   const close = document.createElement('span');
