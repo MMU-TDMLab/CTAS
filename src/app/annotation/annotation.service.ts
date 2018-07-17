@@ -32,6 +32,32 @@ export class AnnotationService {
       });
   }
 
+  // getAnnotation(selectedWord: string) {
+  //   return this.http.get<{ _id: string, word: string, annotation: string }>(
+  //     'http://localhost:3000/api/words/' + selectedWord
+  //   );
+  // }
+
+  // getAnnotation(selectedWord: string) {
+  //   this.http
+  //     .get<{ message: string; words: any }>('http://localhost:3000/api/words')
+  //     .pipe(
+  //       map(wordData => {
+  //         return wordData.words.map(word => {
+  //           console.log('ANNOOO: ', wordData);
+  //           return {
+  //             word: word.word,
+  //             annotation: word.annotation
+  //           };
+  //         });
+  //       })
+  //     )
+  //     .subscribe(result => {
+  //       this.complexWords = result;
+  //       this.complexWordUpdate.next([...this.complexWords]);
+  //     });
+  // }
+
   getWordUpdateListener() {
     return this.complexWordUpdate.asObservable();
   }

@@ -13,12 +13,6 @@
           </div>
         </ng-template>
       </div>
-      <!-- <div id="highlighted">
-          {{ postIWant }}
-      </div> -->
-      <!-- <a id="highlighted">
-        {{ postIWant }}
-      </a> -->
       <div class="questions">
         Questions here:
         <br> Q1: Nam quam nunc, blandit vel
@@ -29,13 +23,17 @@
       </div>
     </div>
     <div class="col">
-        <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || userIsAuthenticated && this.role == 'admin'">
-            <div>
-              <button type="button" class="btn btn-warning btn-sm" id="btnHighLight" (click)="highlightSelection()">Highlight</button>
-            </div>
-          </ng-template>
-          <ng-template [ngIf]='word'>
-      <!-- <ng-template [ngIf]='complexWord'> -->
+      <div>
+        <button type="button" class="btn btn-warning btn-sm" id="btnShow" (click)="onShowHighlights()">Show Highlights</button>
+      </div>
+      <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || userIsAuthenticated && this.role == 'admin'">
+        <div>
+          <button type="button" class="btn btn-warning btn-sm" id="btnHighLight" (click)="highlightSelection()">Highlight Selected Text</button>
+          <!-- <button type="button" class="btn btn-warning btn-sm" id="btnHighLightRemove" (click)="deHighlightSelection()">Remove Highlight</button> -->
+        </div>
+      </ng-template>
+      <ng-template [ngIf]='word'>
+        <!-- <ng-template [ngIf]='complexWord'> -->
         <form [formGroup]='form' (submit)="onAnnotate()">
           <div class="alert alert-warning alert-dismissible fade show" id="annotation" role="alert">
             <!-- {{ complexWord }} -->
@@ -43,9 +41,9 @@
             <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)='resetAlertBox()'>
               <span aria-hidden="true">&times;</span>
             </button>
-          </div>
-          <div class="form-group">
-            <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Annotation Description" rows="3" formControlName="annotation"></textarea>
+            <div class="form-group">
+              <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="{{ showingAnnotation }}" rows="3" formControlName="annotation"></textarea>
+            </div>
           </div>
           <button class="btn btn-success btn-sm" id="postbtn" type="submit" [disabled]="!form.valid">Save Annotation</button>
         </form>
