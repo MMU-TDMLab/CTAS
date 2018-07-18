@@ -68,18 +68,23 @@ router.post("",
     //     // console.log('the user', user);
     //     console.log('user data ', req.userData);
     //     if (req.userData.role === 'admin' || req.userData.role === 'teacher') {
-          post.save().then(createdPost => {
-            // console.log(createdPost);
-            res.status(201).json({
-              message: "Post added successfully",
-              post: {
-                ...createdPost,
-                id: createdPost._id,
-              }
-            });
-          });
-      //   }
-      // });
+    post.save().then(createdPost => {
+        // console.log(createdPost);
+        res.status(201).json({
+          message: "Post added successfully",
+          post: {
+            ...createdPost,
+            id: createdPost._id,
+          }
+        });
+      })
+      .catch(error => {
+        res.status(500).json({
+          message: "Creating post failed!"
+        });
+      });
+    //   }
+    // });
   });
 
 router.put("/:id",
@@ -122,19 +127,24 @@ router.put("/:id",
           });
         } else {
           Post.updateOne({
-            _id: req.params.id,
-            poster: req.userData.userId
-          }, post).then(result => {
-            if (result.nModified > 0) {
-              res.status(200).json({
-                message: "Admin Update successful!"
+              _id: req.params.id,
+              poster: req.userData.userId
+            }, post).then(result => {
+              if (result.nModified > 0) {
+                res.status(200).json({
+                  message: "Admin Update successful!"
+                });
+              } else {
+                res.status(401).json({
+                  message: "Not authorised!"
+                });
+              }
+            })
+            .catch(error => {
+              res.status(500).json({
+                message: "Could not update post!"
               });
-            } else {
-              res.status(401).json({
-                message: "Not authorised!"
-              });
-            }
-          });
+            })
         }
       });
   });
@@ -146,6 +156,11 @@ router.get("", (req, res, next) => {
       res.status(200).json({
         message: 'Posts fetched succesfully!',
         posts: documents
+      });
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "Fetching posts failed!"
       });
     });
 });
@@ -160,6 +175,11 @@ router.get('/:id', (req, res, next) => {
       });
     }
   })
+  .catch(error => {
+    res.status(500).json({
+      message: "Fetching post failed!"
+    });
+  });
 })
 
 router.delete("/:id",
@@ -200,6 +220,11 @@ router.delete("/:id",
               });
             }
           })
+          .catch(error => {
+            res.status(500).json({
+              message: "Post not deleted!"
+            });
+          });
         }
       })
   });

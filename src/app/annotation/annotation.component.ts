@@ -2,13 +2,29 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+// import { Observable } from 'rxjs';
+// import { forkJoin } from 'rxjs';
+
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/forkJoin';
+
+// import { forkJoin } from 'rxjs/observable/forkJoin';
+// import { Observable, Subject, asapScheduler, pipe, of, from, interval, merge, fromEvent, SubscriptionLike, PartialObserver } from 'rxjs';
+// import { Observable } from 'rxjs/Observable';
+// import { Observable } from 'rxjs/Rx';
+// import 'rxjs/add/operator/forkJoin';
+// import 'rxjs/add/observable/forkJoin';
+// import { forkJoin } from 'rxjs/observable/forkJoin';
+
+// import { switchMap, map } from 'rxjs/operators';
+// import { fork } from 'rxjs/add/observable/forkJoin';
+
 
 import { Post } from '../posts/post.model';
 import { ComplexWord } from '../annotation/complex-word.model';
 import { PostsService } from '../posts/posts.service';
 import { AuthService } from '../auth/auth.service';
 import { AnnotationService } from './annotation.service';
-// import { nodeChildrenAsMap } from '../../../node_modules/@angular/router/src/utils/tree';
 
 @Component({
   selector: 'app-annotation',
@@ -19,6 +35,9 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   form: FormGroup;
   posts: Post[] = [];
   words: ComplexWord[] = [];
+  public isLoading: boolean;
+  public wordsLoaded: boolean;
+  public postLoaded: boolean;
   public thewords: any;
   public role: string;
   public id: string;
@@ -29,11 +48,9 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   public highlighter = 'true';
   public annotation = '';
   public word = '';
-  // public showingWord = '';
   public showingAnnotation: string;
   public theHardWords = [];
   public wordWithAnnotation = [];
-  // public annotations = [];
   private postsSub: Subscription;
   private annotationSub: Subscription;
   private authStatus: Subscription;
@@ -48,6 +65,9 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.isLoading = true;
+    this.wordsLoaded = false;
+    this.postLoaded = false;
     this.form = new FormGroup({
       annotation: new FormControl(null, {
         validators: [
@@ -58,28 +78,56 @@ export class AnnotationComponent implements OnInit, OnDestroy {
       })
     });
     this.id = this.route.snapshot.paramMap.get('postId');
-    // this.setWord = '';
     this.annotationService.getWords();
+    this.postsService.getPosts();
+
+// **************
+
+  //   Observable.forkJoin(
+  //     this.annotationService.getWordUpdateListener(),
+  //     this.postsService.getPostUpdateListener()
+  // ).subscribe((data) => {
+  //      // data[0] result from getWordUpdateListener
+  //      this.thewords = data[0];
+  //      this.thewords.map(word => {
+  //       console.log('hey');
+  //           this.theHardWords.push(word.word);
+  //           this.wordWithAnnotation.push(word);
+  //         });
+  //         // this.wordsLoaded = true;
+
+  //      // data[1] result from getPostUpdateListener
+  //     //  this.posts = data[1];
+  //      this.posts.map(post => {
+  //       console.log('hey1');
+  //           if (post.id === this.id) {
+  //             this.postIWant = post.fileText;
+  //           }
+  //         });
+  //         // this.postLoaded = true;
+  //         console.log('hey2');
+  //     this.isLoading = false;
+  //     this.complexWordIdentification(this.postIWant, this.theHardWords);
+  // }, (err) => {
+  //   console.log(err);
+  //     // error handling
+  // });
+
+  // **************
+
     this.annotationSub = this.annotationService
       .getWordUpdateListener()
       .subscribe((thewords: ComplexWord[]) => {
         this.thewords = thewords;
         this.thewords.map(word => {
-
-            // if (word.word === this.setWord) {
-            //   console.log(word.annotation);
-            // }
-
-          // if (word.word === this.setWord) {
-          //   this.wordIWant = word.word;
-          //   console.log(this.wordIWant);
-          // }
           this.theHardWords.push(word.word);
-          // console.log(word.word);
           this.wordWithAnnotation.push(word);
         });
+        this.wordsLoaded = true;
+        this.isLoading = this.postLoaded && this.wordsLoaded;
       });
     this.postsService.getPosts();
+
     this.postsSub = this.postsService
       .getPostUpdateListener()
       .subscribe((posts: Post[]) => {
@@ -89,7 +137,11 @@ export class AnnotationComponent implements OnInit, OnDestroy {
             this.postIWant = post.fileText;
           }
         });
+        this.postLoaded = true;
+        this.isLoading = !(this.postLoaded && this.wordsLoaded);
       });
+
+
     this.role = this.authService.getUserRole();
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authStatus = this.authService
@@ -98,14 +150,30 @@ export class AnnotationComponent implements OnInit, OnDestroy {
         this.userIsAuthenticated = isAuthenticated;
         this.role = this.authService.getUserRole();
       });
-    // this.complexWordIdentification = async (this.postIWant, this.theHardWords) => {
 
-    // }
+///////////////////
+      // this.annotationService.getWordUpdateListener().pipe(
+      //   switchMap(thewords => {
+      //     return this.postsService.getPostUpdateListener().pipe(
+      //       map(posts => ({ thewords, posts }))
+      //     );
+      //   }),
+      // )
+      // .subscribe(({ thewords, posts }) => {
+      //   this.posts.map(post => {
+      //   if (post.id === this.id) {
+      //       this.postIWant = post.fileText;
+      //     }
+      //   },
+      //   this.thewords.map(word => {
+      //     this.theHardWords.push(word.word);
+      //     this.wordWithAnnotation.push(word);
+      //   }));
+      //   this.complexWordIdentification(this.postIWant, this.theHardWords);
+      //   this.isLoading = false;
+      // });
+      //////////////
   }
-
-  // callComplexWordAsync = async () => {
-  //   this.complexWordIdentification(this.postIWant, this.theHardWords);
-  // }
 
   //   isAnyPartOfElementInViewport(el) {
 

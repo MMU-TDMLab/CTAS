@@ -84,6 +84,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       this.authStatus = this.authService.getAuthStatus().subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
         this.role = this.authService.getUserRole();
+        this.isLoading = false;
       });
   }
 

@@ -47,3 +47,7 @@
 #editBtn {
   margin-top: 0.5em;
 }
+
+mat-spinner {
+  margin: auto;
+}

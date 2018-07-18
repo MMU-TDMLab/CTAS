@@ -8,6 +8,6 @@ module.exports = (req, res, next) => {
     // , role: decodedToken.role
     next();
   } catch (error) {
-    res.status(401).son({message: 'Auth failed!' });
+    res.status(401).json({ message: 'You are not authenticated!' });
   }
 }

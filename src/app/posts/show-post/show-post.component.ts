@@ -78,6 +78,7 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   }
 
   onDelete(postId: string) {
+    // this.isLoading = true;
     this.postsService.deletePost(postId);
   }
 
