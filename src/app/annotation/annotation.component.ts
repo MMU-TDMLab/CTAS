@@ -224,10 +224,6 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   getWords(words) {
     this.highlight(words);
   }
-  //  getWords = async (words) => {
-  //   // Use API calls here or simply pass in Constants
-  //  this.highlight(words);
-  //  }
 
   highlight = words => {
     const high = document.getElementById('scrollable');
@@ -266,13 +262,6 @@ export class AnnotationComponent implements OnInit, OnDestroy {
     //   console.log('hey');
     // }
     // SHOW ANNOTATION** need to fix this later
-
-    // const userSelection = window.getSelection();
-    // for (let i = 0; i < userSelection.rangeCount; i++) {
-    //   this.highlightRange(userSelection.getRangeAt(i));
-    //   theWord = userSelection.toString();
-    //   // console.log(theWord);
-    // }
   }
 
   highlightSelection() {
@@ -285,6 +274,16 @@ export class AnnotationComponent implements OnInit, OnDestroy {
       for (let i = 0; i < userSelection.rangeCount; i++) {
         this.highlightRange(userSelection.getRangeAt(i));
         this.word = userSelection.toString();
+
+        ////////
+        const node = this.highlightRange(userSelection.getRangeAt(i)/*.toString()*/);
+        // Make the range into a variable so we can replace it
+        const range = userSelection.getRangeAt(i);
+
+        // Delete the current selection
+        range.deleteContents();
+        // Insert the copy
+        range.insertNode(node);
       }
     }
   }
@@ -315,93 +314,42 @@ export class AnnotationComponent implements OnInit, OnDestroy {
     newNode.id = this.guidGenerator();
     newNode.className = 'clickable';
     newNode.setAttribute('style', 'background-color: yellow; display: inline; text-decoration: underline;');
-    const elementsToMakeClickable = document.getElementsByClassName(
-      'clickable'
-    );
-    const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
-    elementsToMakeClickableArray.map(element => {
-      // element.addEventListener('click', this.viewAnnotation.bind(this, theWord), false);
-      element.addEventListener('click', this.viewAnnotation.bind(this));
-    });
-    range.surroundContents(newNode);
+    // const elementsToMakeClickable = document.getElementsByClassName(
+    //   'clickable'
+    // );
+    // const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
+    // elementsToMakeClickableArray.map(element => {
+    //   // element.addEventListener('click', this.viewAnnotation.bind(this, theWord), false);
+    //   element.addEventListener('click', this.viewAnnotation.bind(this));
+    // });
+    // range.surroundContents(newNode);
+
     // this.viewAnnotation(newNode.id);
+
+    ///////////
+    newNode.onclick = () => {
+      if (confirm('Are you sure you want to delete ' + range + '?')) {
+        this.deletenode(newNode);
+      } else {
+        alert(range + ' has not been deleted.');
+      }
+    };
+      // Add Text for replacement (for multiple nodes only)
+      // newNode.innerHTML += range;
+      newNode.appendChild(range.cloneContents());
+
+      // Apply Node around selection (used for individual nodes only)
+      // range.surroundContents(newNode);
+      return newNode;
+    //////////
   }
 
-  // removeHighlightSelection() {
-  //   // this.highlightText(this.postIWant, this.theHardWords);
-  //     const userSelection = window.getSelection();
-  //     if (userSelection.toString() === null) {
-  //       return;
-  //     } else {
-  //       for (let i = 0; i < userSelection.rangeCount; i++) {
-  //           this.removeHighlightRange(userSelection.getRangeAt(i));
-  //           this.word = userSelection.toString();
-  //          }
-  //     }
-  // }
-
-  // removeHighlightRange(range) {
-  //   // node.remove();
-  //   // const newNode = document.createElement('a');
-  //   // newNode.id = this.guidGenerator();
-  //   // newNode.className = 'clickable';
-  //   // newNode.setAttribute(
-  //   //    'style',
-  //   //    'background-color: yellow; display: inline;'
-  //   // );
-  //   console.log('hello');
-
-  //   const elementsToMakeClickable = document.getElementsByClassName('clickable');
-  //   const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
-  //    elementsToMakeClickableArray.map( (element) => {
-  //     document.getElementById("my-element").remove();
-  //     element.removeEventListener('click', this.viewAnnotation.bind(false));
-  //     // element.addEventListener('click', this.viewAnnotation.bind(this));
-  //   });
-  //   // range.surroundContents(node);
-  // }
-
-  // highlightSelectionRemove(newNode) {
-  //   const close = document.createElement('span');
-  //   close.id = 'close';
-  //   close.className = 'close_layer';
-  // }
-
-  // highlightSelectionRemove () {
-  //   const userSelection = window.getSelection();
-  //   for (let i = 0; i < userSelection.rangeCount; i++) {
-  //     this.removeHighLightRange(userSelection.getRangeAt(i));
-  //   }
-  // }
-
-  // removeHighLightRange(range) {
-  //   const element = document.getElementById('close');
-  //   // element.setAttribute(
-  //   //   'style',
-  //   //   'disabled;'
-  //   // );
-  //   element.parentNode.removeChild(element);
-  //   console.log(element);
-  // }
-
-  // removeHighLightRange(range) {
-  //   const element = document.getElementById('close');
-  //   element.setAttribute(
-  //     'style',
-  //     'disabled;'
-  //   );
-  //   let str = element;
-  //   str = str.replace(/<\/?span[^>]*>/g,'');
-  //   range.surroundContents(element);
-  //   console.log(element);
-  // }
-
-  // deHighlightSelection(id) {
-  //   // this.removeHighlightSelection();
-  //   console.log(id);
-  //   // document.getElementById().remove();
-  //   this.word = '';
-  // }
+  deletenode(node) {
+    const contents = document.createTextNode(node.innerText);
+    node.parentNode.replaceChild( contents, node);
+    this.resetAlertBox();
+    this.complexWordIdentification(this.postIWant, this.theHardWords);
+  }
 
   onShowHighlights() {
     document.getElementById('btnShow').style.visibility = 'hidden';
@@ -437,7 +385,7 @@ export class AnnotationComponent implements OnInit, OnDestroy {
         this.word = '';
     //   }
     // });
-
+    this.complexWordIdentification(this.postIWant, this.theHardWords);
   }
   // document.getElementById('postbtn').style.visibility = 'hidden';
 
