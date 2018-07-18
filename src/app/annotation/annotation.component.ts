@@ -29,7 +29,7 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   public highlighter = 'true';
   public annotation = '';
   public word = '';
-  public showingWord = '';
+  // public showingWord = '';
   public showingAnnotation: string;
   public theHardWords = [];
   public wordWithAnnotation = [];
@@ -170,12 +170,10 @@ export class AnnotationComponent implements OnInit, OnDestroy {
       let t = word;
       if (words.indexOf(word) > -1) {
         t =
-          '<a class="clickable" style="background-color: yellow;">' +
+          '<a class="clickable" style="background-color: yellow; text-decoration: underline;">' +
           word +
           '</a>';
-        // console.log(words.indexOf(word));
       }
-      // console.log(words);
       res.push(t);
     });
     high.innerHTML = res.join(' ');
@@ -187,6 +185,7 @@ export class AnnotationComponent implements OnInit, OnDestroy {
       // element.addEventListener('click', this.viewAnnotation.bind(this, theWord), false);
       element.addEventListener('click', this.viewAnnotation.bind(this));
     });
+    document.getElementById('btnHighLight').style.visibility = 'visible';
   }
 
   viewAnnotation(e) {
@@ -210,6 +209,7 @@ export class AnnotationComponent implements OnInit, OnDestroy {
 
   highlightSelection() {
     // this.highlightText(this.postIWant, this.theHardWords);
+    this.showingAnnotation = '';
     const userSelection = window.getSelection();
     if (userSelection.toString() === null) {
       return;
@@ -246,7 +246,7 @@ export class AnnotationComponent implements OnInit, OnDestroy {
     const newNode = document.createElement('a');
     newNode.id = this.guidGenerator();
     newNode.className = 'clickable';
-    newNode.setAttribute('style', 'background-color: yellow; display: inline;');
+    newNode.setAttribute('style', 'background-color: yellow; display: inline; text-decoration: underline;');
     const elementsToMakeClickable = document.getElementsByClassName(
       'clickable'
     );
@@ -256,7 +256,6 @@ export class AnnotationComponent implements OnInit, OnDestroy {
       element.addEventListener('click', this.viewAnnotation.bind(this));
     });
     range.surroundContents(newNode);
-    this.onAnnotate();
     // this.viewAnnotation(newNode.id);
   }
 
@@ -341,39 +340,40 @@ export class AnnotationComponent implements OnInit, OnDestroy {
     this.complexWordIdentification(this.postIWant, this.theHardWords);
   }
 
+  findAnnotation(e) {
+    this.setWord = e;
+    // this.showingWord = e;
+    this.word = e;
+    this.thewords.map(word => {
+      if (word.word === this.setWord) {
+        this.showingAnnotation = word.annotation;
+        // document.getElementById('postbtn').style.visibility = 'hidden';
+      }
+    });
+  }
+
   onAnnotate() {
     if (this.form.invalid) {
       return;
     }
-    this.annotation = this.form.value.annotation;
-    this.annotationService.addWord(this.word, this.annotation);
-    this.form.reset();
-    this.word = '';
-  }
-
-  findAnnotation(e) {
-    this.setWord = e;
-    this.showingWord = e;
-    this.word = e;
-    // console.log('set word', this.setWord);
-    // e.map(word => {
-    //   // let t = word;
-    // if (word.word === e) {
-    //   console.log(word.word);
-    //     // this.postIWant = post.fileText;
+    // console.log(this.setWord);
+    // this.thewords.map(word => {
+    //   if (word.word === this.setWord) {
+    //     console.log('yes man');
+    //     // return;
+    //   } else if (word.word === !this.setWord) {
+    //     console.log('boy oh boy');
+        this.annotation = this.form.value.annotation;
+        this.annotationService.addWord(this.word, this.annotation);
+        this.form.reset();
+        this.word = '';
     //   }
     // });
-    // this.annotationService.getAnnotation(e);
-    this.thewords.map(word => {
-      if (word.word === this.setWord) {
-        console.log(word.annotation);
-        this.showingAnnotation = word.annotation;
-      }
-  });
+
   }
+  // document.getElementById('postbtn').style.visibility = 'hidden';
 
   resetAlertBox() {
-    // this.complexWord = '';
     this.word = '';
     this.annotation = '';
   }

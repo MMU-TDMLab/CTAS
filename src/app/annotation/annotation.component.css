@@ -15,10 +15,15 @@
 
 #btnHighLight {
   margin-top: 2em;
+  visibility: hidden;
 }
 
 #btnShow {
   margin-top: 3em;
+}
+
+#postbtn {
+  margin-top: 0.25em;
 }
 
 #btnRemoveHighLight {
@@ -37,4 +42,8 @@
 .high {
   background-color: yellow;
   display: inline;
+}
+
+#editBtn {
+  margin-top: 0.5em;
 }

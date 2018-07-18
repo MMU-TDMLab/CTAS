@@ -33,20 +33,38 @@
         </div>
       </ng-template>
       <ng-template [ngIf]='word'>
-        <!-- <ng-template [ngIf]='complexWord'> -->
         <form [formGroup]='form' (submit)="onAnnotate()">
           <div class="alert alert-warning alert-dismissible fade show" id="annotation" role="alert">
-            <!-- {{ complexWord }} -->
-            {{ word }}
+            <strong>{{ word }}</strong>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)='resetAlertBox()'>
               <span aria-hidden="true">&times;</span>
             </button>
-            <div class="form-group">
-              <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="{{ showingAnnotation }}" rows="3" formControlName="annotation"></textarea>
-            </div>
           </div>
-          <button class="btn btn-success btn-sm" id="postbtn" type="submit" [disabled]="!form.valid">Save Annotation</button>
+          <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || userIsAuthenticated && this.role == 'admin'">
+            <div class="form-group">
+              <ng-template [ngIf]="userIsAuthenticated && showingAnnotation">
+                <div class="alert alert-info" role="alert">
+                  {{ showingAnnotation }}
+                  <!-- <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="{{ showingAnnotation }}" rows="3" formControlName="annotation"></textarea> -->
+                </div>
+              </ng-template>
+              <ng-template [ngIf]="userIsAuthenticated && !showingAnnotation">
+                <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Describe Word" rows="3" formControlName="annotation"></textarea>
+              </ng-template>
+            </div>
+          </ng-template>
+          <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' && form.valid || userIsAuthenticated && this.role == 'admin' && form.valid">
+            <button class="btn btn-success btn-sm" id="postbtn" type="submit" [disabled]="!form.valid">Save Annotation</button>
+          </ng-template>
+          <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' && showingAnnotation || userIsAuthenticated && this.role == 'admin' && showingAnnotation">
+            <button class="btn btn-success btn-sm" id="editBtn" type="submit">Edit Annotation</button>
+          </ng-template>
         </form>
+        <ng-template [ngIf]="userIsAuthenticated && this.role == 'student'">
+          <div class="alert alert-info" role="alert">
+            {{ showingAnnotation }}
+          </div>
+        </ng-template>
       </ng-template>
       <!-- <div>
         <button type="button" class="btn btn-danger btn-sm" id="btnRemoveHighLight" (click)="highlightSelectionRemove()">Remove Highlight</button>
