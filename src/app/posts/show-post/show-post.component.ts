@@ -38,14 +38,14 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this.isLoading = true;
+    this.isLoading = true;
     this.postsService.getPosts();
     this.role = this.authService.getUserRole();
     this.userId = this.authService.getUserId();
     this.postsSub = this.postsService
       .getPostUpdateListener()
       .subscribe((posts: Post[]) => {
-        // this.isLoading = false;
+        this.isLoading = false;
         this.posts = posts;
         this.posts.reverse();
       });

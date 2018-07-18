@@ -12,6 +12,9 @@
   padding-bottom: 1em;
 }
 
+mat-spinner {
+  margin: auto;
+}
 /* #file2 {
   visibility: hidden;
 } */

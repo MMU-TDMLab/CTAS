@@ -1,5 +1,6 @@
+<mat-spinner *ngIf="isLoading"></mat-spinner>
 <div class="container">
-  <form [formGroup]='form' (submit)="onLogin()">
+  <form [formGroup]='form' (submit)="onLogin()" *ngIf="!isLoading">
   <div class="row">
     <div class="col">
     </div>

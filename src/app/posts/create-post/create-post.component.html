@@ -1,6 +1,7 @@
+<mat-spinner *ngIf="isLoading"></mat-spinner>
 <div class="container">
-    <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || userIsAuthenticated && this.role == 'admin'">
-    <form [formGroup]='form' name="test">
+  <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || userIsAuthenticated && this.role == 'admin'">
+    <form [formGroup]='form' name="test" *ngIf="!isLoading">
       <div class="form-group">
         <input type="text" class="form-control" name="header" placeholder="Post Header" formControlName="header">
       </div>

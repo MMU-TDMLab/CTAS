@@ -1,5 +1,6 @@
+<mat-spinner *ngIf="isLoading"></mat-spinner>
 <div class="container">
-    <form [formGroup]='form'>
+    <form [formGroup]='form' *ngIf="!isLoading">
     <div class="row">
       <div class="col">
       </div>

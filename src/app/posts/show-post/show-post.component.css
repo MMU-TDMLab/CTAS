@@ -15,6 +15,10 @@
   font-family: courier;
   color: white;
 }
+
+mat-spinner {
+  margin: auto;
+}
 /* #btn {
   max-height: 3px;
 } */

@@ -19,6 +19,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   post: Post;
   form: FormGroup;
   role: string;
+  isLoading = false;
   private postId: string;
   private mode = 'create';
   public filePreview = '';
@@ -55,7 +56,9 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         this.mode = 'edit';
         this.btnText = 'Modify Post';
         this.postId = paramMap.get('postId');
+        this.isLoading = true;
         this.postsService.getPost(this.postId).subscribe(postData => {
+          this.isLoading = false;
           this.post = {
             id: postData._id,
             header: postData.header,
@@ -99,6 +102,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     if (this.form.invalid) {
       return;
     }
+    this.isLoading = true;
     if (this.mode === 'create') {
       this.postsService.addPost(
         this.form.value.header,

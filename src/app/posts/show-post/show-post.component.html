@@ -1,5 +1,6 @@
+<mat-spinner *ngIf="isLoading"></mat-spinner>
 <div class="container">
-  <ng-template [ngIf]="posts.length > 0">
+  <ng-template [ngIf]="posts.length > 0 && !isLoading">
     <div class="card" *ngFor="let post of posts; let $index=index;">
       <div id="accordion">
         <div class="card-body">
@@ -35,6 +36,6 @@
     </div>
   </ng-template>
   <div>
-    <p *ngIf="posts.length <= 0">No posts added yet!</p>
+    <p *ngIf="posts.length <= 0 && !isLoading">No posts added yet!</p>
   </div>
 </div>
