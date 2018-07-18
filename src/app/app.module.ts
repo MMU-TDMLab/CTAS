@@ -18,6 +18,7 @@ import { SignupComponent } from './signup/signup.component';
 import { AuthInterceptor } from './auth/auth-interceptor';
 import { AnnotationComponent } from './annotation/annotation.component';
 import { AnnotationService } from './annotation/annotation.service';
+import { ErrorInterceptor } from './error-interceptor';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { AnnotationService } from './annotation/annotation.service';
     HttpClientModule,
     FormsModule
   ],
-  providers: [PostsService, AnnotationService, AuthService, {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
+  providers: [PostsService, AnnotationService, AuthService, {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
