@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, windowWhen } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 
 import { ComplexWord } from './complex-word.model';
@@ -65,10 +65,10 @@ export class AnnotationService {
 
   getWordUpdateListener(): Observable<any> {
     return this.http.get<any>('http://localhost:3000/api/words');
-}
+  }
 
   // messageId: string,
-  addWord( word: string, annotation: string) {
+  addWord(word: string, annotation: string) {
     // id: messageId,
     const complexWord: ComplexWord = { word: word, annotation: annotation };
     return this.http
@@ -83,11 +83,34 @@ export class AnnotationService {
       );
   }
 
+  editWord(theWord: string, theAnnotation: string) {
+    let wordData: ComplexWord | FormData;
+    wordData = {
+      word: theWord,
+      annotation: theAnnotation
+    };
+    this.http
+      .put('http://localhost:3000/api/words/update-word' + theWord, wordData)
+      .subscribe(response => {
+        const updatedWords = [...this.complexWords];
+        const oldWordIndex = updatedWords.findIndex(w => w.word === theWord);
+        const makeWord: ComplexWord = {
+          word: theWord,
+          annotation: theAnnotation
+        };
+        updatedWords[oldWordIndex] = makeWord;
+        this.complexWords = updatedWords;
+        this.complexWordUpdate.next([...this.complexWords]);
+      });
+  }
+
   deleteWord(deleteWord: string) {
     this.http
       .delete('http://localhost:3000/api/words/delete-word' + deleteWord)
       .subscribe(() => {
-        const result = this.complexWords.filter(word => word.word !== deleteWord);
+        const result = this.complexWords.filter(
+          word => word.word !== deleteWord
+        );
         this.complexWords = result;
         this.complexWordUpdate.next([...this.complexWords]);
       });

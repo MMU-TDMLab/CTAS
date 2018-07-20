@@ -41,30 +41,58 @@ router.get("", (req, res, next) => {
     });
 });
 
+router.put('/update-word/:word', (req, res, next) => {
+  // const word = {
+  //   word: req.body.word,
+  //   annotation: req.body.annotation,
+  // }
+
+  // , word
+  Word.update({
+      word: req.params.word
+    }).then(result => {
+      // console.log(result);
+      if (result.nModified > 0) {
+        res.status(200).json({
+          message: "Update successful!"
+        });
+      } else {
+        res.status(401).json({
+          message: "Not authorised!"
+        });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "Could not update post!"
+      });
+    })
+});
+
 router.delete("/delete-word:word",
   // authCheck,
   (req, res, next) => {
     // User.findOne({
     //     role: 'admin'
     //   })
-      // .then(user => {
-      //   console.log(user);
-        // if (!req.userData.role === 'admin') {
-          Word.deleteOne({
-            word: req.params.word,
-          }).then(result => {
-            if (result.n > 0) {
-              res.status(200).json({
-                message: "Deletion successful!"
-              });
-            } else {
-              res.status(401).json({
-                message: "Not authorised!"
-              });
-            }
-          })
-        // }
-      })
-  // });
+    // .then(user => {
+    //   console.log(user);
+    // if (!req.userData.role === 'admin') {
+    Word.deleteOne({
+      word: req.params.word,
+    }).then(result => {
+      if (result.n > 0) {
+        res.status(200).json({
+          message: "Deletion successful!"
+        });
+      } else {
+        res.status(401).json({
+          message: "Not authorised!"
+        });
+      }
+    })
+    // }
+  })
+// });
 
 module.exports = router;

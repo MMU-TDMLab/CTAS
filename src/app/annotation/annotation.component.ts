@@ -2,25 +2,16 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-// import { Observable } from 'rxjs';
-// import { forkJoin } from 'rxjs';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { Observable } from 'rxjs/Observable';
+import { map, switchMap } from '../../../node_modules/rxjs/operators';
 import 'rxjs/add/observable/forkJoin';
-// import { forkJoin } from 'rxjs/observable/forkJoin';
-// import { Observable, Subject, asapScheduler, pipe, of, from, interval, merge, fromEvent, SubscriptionLike, PartialObserver } from 'rxjs';
-// import { Observable } from 'rxjs/Observable';
-// import { Observable } from 'rxjs/Rx';
-// import 'rxjs/add/operator/forkJoin';
-// import 'rxjs/add/observable/forkJoin';
-// import { fork } from 'rxjs/add/observable/forkJoin';
 
 import { Post } from '../posts/post.model';
 import { ComplexWord } from '../annotation/complex-word.model';
 import { PostsService } from '../posts/posts.service';
 import { AuthService } from '../auth/auth.service';
 import { AnnotationService } from './annotation.service';
-import { map, switchMap } from '../../../node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-annotation',
@@ -39,9 +30,9 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   public id: string;
   public setWord: string;
   public postIWant: string;
-  public filePreview = '';
-  public highlighter = 'true';
-  public annotation = '';
+  public filePreview: string;
+  public annotation: string;
+  public editAnnotation: string;
   public word;
   public showingAnnotation: string;
   public theHardWords = [];
@@ -50,6 +41,7 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   private annotationSub: Subscription;
   private authStatus: Subscription;
   public userIsAuthenticated = false;
+  public editing: boolean;
   // public messageId: string;
 
   constructor(
@@ -61,6 +53,10 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.editing = false;
+    this.filePreview = '';
+    this.annotation = '';
+    this.editAnnotation = '';
     this.form = new FormGroup({
       annotation: new FormControl(null, {
         validators: [
@@ -68,7 +64,14 @@ export class AnnotationComponent implements OnInit, OnDestroy {
           Validators.minLength(8),
           Validators.maxLength(250)
         ]
-      })
+      }),
+      // editAnnotation: new FormControl(null, {
+      //   validators: [
+      //     Validators.required,
+      //     Validators.minLength(8),
+      //     Validators.maxLength(250)
+      //   ]
+      // }),
     });
     this.id = this.route.snapshot.paramMap.get('postId');
     this.annotationService.getWords();
@@ -206,15 +209,26 @@ export class AnnotationComponent implements OnInit, OnDestroy {
         // console.log(this.theText);
       }
     }
-    // this.getWords(words);
-    this.highlight(words);
+    this.getWords(words);
+    // this.highlight(words);
     // return the results array when done
     return results;
   }
 
-  getWords(words) {
-    this.highlight(words);
+  getWords = words => {
+    //   // Use API calls here or simply pass in Constants
+    //  this.highlight(words);
+     const high = document.getElementById('scrollable');
+     if (high.innerHTML === null) {
+     } else {
+      this.highlight(words);
+     }
   }
+
+  // getWords(words) {
+    // this.highlight(words);
+  // }
+
 
   highlight = words => {
 
@@ -371,7 +385,8 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   }
 
   onAnnotate() {
-    if (this.form.invalid) {
+    // if (this.form.get('annotation').valid) {
+      if (!this.form.valid) {
       return;
     }
     // console.log(this.setWord);
@@ -395,9 +410,29 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   }
   // document.getElementById('postbtn').style.visibility = 'hidden';
 
+  onEditWord() {
+    this.editing = true;
+    document.getElementById('editBtn').style.visibility = 'hidden';
+    document.getElementById('deleteBtn').style.visibility = 'hidden';
+  }
+
+  onEditSub() {
+    this.editing = false;
+    document.getElementById('editBtn').style.visibility = 'visible';
+    document.getElementById('deleteBtn').style.visibility = 'visible';
+    let theWord: string;
+    let theAnnotation: string;
+    theWord = this.word;
+    theAnnotation = this.annotation;
+    // theAnnotation = this.editAnnotation;
+    this.annotationService.editWord(theWord, theAnnotation);
+  }
+
   resetAlertBox() {
     this.word = '';
     this.annotation = '';
+    // this.editAnnotation = '';
+    this.editing = false;
   }
 
   onDelete() {
@@ -411,4 +446,6 @@ export class AnnotationComponent implements OnInit, OnDestroy {
     this.postsSub.unsubscribe();
     this.authStatus.unsubscribe();
   }
+
+  // get annotationFromForm() { return this.form.get('annotation'); }
 }

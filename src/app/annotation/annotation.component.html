@@ -1,13 +1,13 @@
 <div class="container">
-    <mat-spinner *ngIf="isLoading"></mat-spinner>
-    <ng-container *ngIf="!isLoading">
-  <div class="row">
-    <div class="col">
-      <!-- Empty here -->
-    </div>
-    <div class="col-6">
-      <!-- Get post by ID Request on backend -->
-      <div *ngFor="let post of posts;">
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <ng-container *ngIf="!isLoading">
+    <div class="row">
+      <div class="col">
+        <!-- Empty here -->
+      </div>
+      <div class="col-6">
+        <!-- Get post by ID Request on backend -->
+        <div *ngFor="let post of posts;">
           <ng-template [ngIf]="post.id === id">
             {{ post.header }}
             <!-- style="overflow-y: scroll; height:500px;" -->
@@ -16,13 +16,14 @@
             </div>
           </ng-template>
         </div>
-        <div class="questions">
-          Questions here:
-          <br> Q1: Nam quam nunc, blandit vel
-          <br> Q2: Duis leo. Sed fringilla mauris sit amet nibh.
-          <br> Q3: Etiam rhoncus. Maecenas tempus
-          <br> Q4: Aliquam lorem ante, dapibus in
-          <br> Q5: Aenean leo ligula, porttitor eu
+        <div class="questions" *ngFor="let word of words;">
+          {{ word.word }}
+          <!-- Please Answer these Questions here:
+          <br> Q1: How much did the annotation on the word {{ theHardWords[0] }} help you?
+          <br> Q2: How much did the annotation on the word {{ theHardWords[1] }} help you?
+          <br> Q3: How much did the annotation on the word {{ theHardWords[2] }} help you?
+          <br> Q4: How much did the annotation on the word {{ theHardWords[3] }} help you?
+          <br> Q5: How much did the annotation on the word {{ theHardWords[4] }} help you? -->
         </div>
       </div>
       <div class="col">
@@ -45,26 +46,32 @@
             </div>
             <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || userIsAuthenticated && this.role == 'admin'">
               <div class="form-group">
-                <ng-template [ngIf]="userIsAuthenticated && showingAnnotation">
+                <ng-template [ngIf]="userIsAuthenticated && showingAnnotation && !editing">
                   <div class="alert alert-info" role="alert">
                     {{ showingAnnotation }}
-                    <!-- <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="{{ showingAnnotation }}" rows="3" formControlName="annotation"></textarea> -->
                   </div>
+                </ng-template>
+                <ng-template [ngIf]="userIsAuthenticated && showingAnnotation && editing">
+                  <div class="alert alert-info" role="alert">
+                    <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="{{ showingAnnotation }}" rows="3" formControlName="annotation"></textarea>
+                  </div>
+                  <button class="btn btn-success btn-sm" id="saveEditBtn" type="button" (click)='onEditSub()' [disabled]="!form.valid">Save Edited Annotation</button>
                 </ng-template>
                 <ng-template [ngIf]="userIsAuthenticated && !showingAnnotation">
                   <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Describe Word" rows="3" formControlName="annotation"></textarea>
                 </ng-template>
               </div>
+              <!-- annotationFromForm.valid -->
             </ng-template>
             <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' && form.valid || userIsAuthenticated && this.role == 'admin' && form.valid">
               <button class="btn btn-success btn-sm" id="postbtn" type="submit" [disabled]="!form.valid">Save Annotation</button>
             </ng-template>
             <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' && showingAnnotation || userIsAuthenticated && this.role == 'admin' && showingAnnotation">
-              <button class="btn btn-success btn-sm" id="editBtn" type="button">Edit Annotation</button>
+              <button class="btn btn-secondary btn-sm" id="editBtn" type="button" (click)='onEditWord()'>Edit Annotation</button>
             </ng-template>
             <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' && showingAnnotation || userIsAuthenticated && this.role == 'admin' && showingAnnotation">
-                <button class="btn btn-success btn-sm" id="deleteBtn" type="button" (click)='onDelete()'>Delete Annotation</button>
-              </ng-template>
+              <button class="btn btn-danger btn-sm" id="deleteBtn" type="button" (click)='onDelete()'>Delete Annotation</button>
+            </ng-template>
           </form>
           <ng-template [ngIf]="userIsAuthenticated && this.role == 'student'">
             <div class="alert alert-info" role="alert">
@@ -78,4 +85,4 @@
       </div>
     </div>
   </ng-container>
-  </div>
+</div>
