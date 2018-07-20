@@ -43,7 +43,7 @@ export class ShowPostComponent implements OnInit, OnDestroy {
     this.role = this.authService.getUserRole();
     this.userId = this.authService.getUserId();
     this.postsSub = this.postsService
-      .getPostUpdateListener()
+      .getPostUpdateListenerTwo()
       .subscribe((posts: Post[]) => {
         this.isLoading = false;
         this.posts = posts;

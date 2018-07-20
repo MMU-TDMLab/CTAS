@@ -7,7 +7,7 @@
     </div>
     <div class="col-6">
       <!-- Get post by ID Request on backend -->
-      <div *ngFor="let post of posts; let $index=index;">
+      <div *ngFor="let post of posts;">
           <ng-template [ngIf]="post.id === id">
             {{ post.header }}
             <!-- style="overflow-y: scroll; height:500px;" -->
@@ -60,8 +60,11 @@
               <button class="btn btn-success btn-sm" id="postbtn" type="submit" [disabled]="!form.valid">Save Annotation</button>
             </ng-template>
             <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' && showingAnnotation || userIsAuthenticated && this.role == 'admin' && showingAnnotation">
-              <button class="btn btn-success btn-sm" id="editBtn" type="submit">Edit Annotation</button>
+              <button class="btn btn-success btn-sm" id="editBtn" type="button">Edit Annotation</button>
             </ng-template>
+            <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' && showingAnnotation || userIsAuthenticated && this.role == 'admin' && showingAnnotation">
+                <button class="btn btn-success btn-sm" id="deleteBtn" type="button" (click)='onDelete()'>Delete Annotation</button>
+              </ng-template>
           </form>
           <ng-template [ngIf]="userIsAuthenticated && this.role == 'student'">
             <div class="alert alert-info" role="alert">

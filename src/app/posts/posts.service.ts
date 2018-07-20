@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
 
 import { Post } from './post.model';
 
@@ -36,9 +37,13 @@ export class PostsService {
       });
   }
 
-  getPostUpdateListener() {
+  getPostUpdateListenerTwo() {
     return this.postsUpdated.asObservable();
   }
+
+  getPostUpdateListener(): Observable<any> {
+    return this.http.get<any>('http://localhost:3000/api/posts');
+}
 
   getPost(id: string) {
     return this.http.get<{ _id: string, header: string, message: string, filePath: string, fileText: string, poster: string }>(

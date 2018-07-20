@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
 
 import { ComplexWord } from './complex-word.model';
 
@@ -18,8 +19,8 @@ export class AnnotationService {
       .pipe(
         map(wordData => {
           return wordData.words.map(word => {
-            // console.log('hello: ', wordData);
             return {
+              // id: word.id,
               word: word.word,
               annotation: word.annotation
             };
@@ -58,11 +59,17 @@ export class AnnotationService {
   //     });
   // }
 
-  getWordUpdateListener() {
+  getWordUpdateListenerTwo() {
     return this.complexWordUpdate.asObservable();
   }
 
-  addWord(word: string, annotation: string) {
+  getWordUpdateListener(): Observable<any> {
+    return this.http.get<any>('http://localhost:3000/api/words');
+}
+
+  // messageId: string,
+  addWord( word: string, annotation: string) {
+    // id: messageId,
     const complexWord: ComplexWord = { word: word, annotation: annotation };
     return this.http
       .post('http://localhost:3000/api/words/new-word', complexWord)
@@ -74,5 +81,15 @@ export class AnnotationService {
           console.log(error);
         }
       );
+  }
+
+  deleteWord(deleteWord: string) {
+    this.http
+      .delete('http://localhost:3000/api/words/delete-word' + deleteWord)
+      .subscribe(() => {
+        const result = this.complexWords.filter(word => word.word !== deleteWord);
+        this.complexWords = result;
+        this.complexWordUpdate.next([...this.complexWords]);
+      });
   }
 }

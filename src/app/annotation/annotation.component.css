@@ -48,6 +48,10 @@
   margin-top: 0.5em;
 }
 
+#deleteBtn {
+  margin-top: 0.5em;
+}
+
 mat-spinner {
   margin: auto;
 }

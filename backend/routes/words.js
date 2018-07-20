@@ -2,10 +2,12 @@ const express = require('express');
 // const multer = require('multer');
 
 // const Post = require('../models/post');
-// const User = require('../models/user');
+const User = require('../models/user');
 const Word = require('../models/complex-words');
+const authCheck = require('../middleware/check-auth');
 
 const router = express.Router();
+
 // authCheck,
 router.post("/new-word", (req, res, next) => {
   const word = new Word({
@@ -15,15 +17,15 @@ router.post("/new-word", (req, res, next) => {
   word.save()
     .then(result => {
       res.status(201).json({
-        message: "Complex Word has been added successfully",
+        message: "Complex Word has been added successfully!",
         result: result
       });
     })
     .catch(err => {
-      console.log(err);
+      // console.log(err);
       res.status(500).json({
-        message: 'word not added',
-        error: err
+        message: 'Word was not added!'
+        // error: err
       })
     });
 });
@@ -31,12 +33,38 @@ router.post("/new-word", (req, res, next) => {
 router.get("", (req, res, next) => {
   Word.find()
     .then(documents => {
-      // console.log('krishan', documents);
+      // console.log('hey', documents);
       res.status(200).json({
         message: 'Words fetched succesfully!',
         words: documents
       });
     });
 });
+
+router.delete("/delete-word:word",
+  // authCheck,
+  (req, res, next) => {
+    // User.findOne({
+    //     role: 'admin'
+    //   })
+      // .then(user => {
+      //   console.log(user);
+        // if (!req.userData.role === 'admin') {
+          Word.deleteOne({
+            word: req.params.word,
+          }).then(result => {
+            if (result.n > 0) {
+              res.status(200).json({
+                message: "Deletion successful!"
+              });
+            } else {
+              res.status(401).json({
+                message: "Not authorised!"
+              });
+            }
+          })
+        // }
+      })
+  // });
 
 module.exports = router;
