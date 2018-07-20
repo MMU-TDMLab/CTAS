@@ -63,7 +63,7 @@
               </div>
               <!-- annotationFromForm.valid -->
             </ng-template>
-            <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' && form.valid || userIsAuthenticated && this.role == 'admin' && form.valid">
+            <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' && form.valid && !editing|| userIsAuthenticated && this.role == 'admin' && form.valid && !editing">
               <button class="btn btn-success btn-sm" id="postbtn" type="submit" [disabled]="!form.valid">Save Annotation</button>
             </ng-template>
             <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' && showingAnnotation || userIsAuthenticated && this.role == 'admin' && showingAnnotation">
