@@ -22,7 +22,7 @@ mongoose.connect(`mongodb://${config.name}:${config.pw}@ds161700.mlab.com:61700/
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-  extended: false
+  extended: true
 }));
 
 

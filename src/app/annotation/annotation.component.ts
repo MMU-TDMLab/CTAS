@@ -399,7 +399,10 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     let theWord: string;
     let theAnnotation: string;
     theWord = this.word;
-    theAnnotation = this.annotation;
+    theAnnotation = this.form.value.annotation;
+    console.log(theWord);
+    console.log(theAnnotation);
+
     this.annotationService.editWord(theWord, theAnnotation);
   }
 

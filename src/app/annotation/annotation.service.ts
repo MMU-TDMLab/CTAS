@@ -83,32 +83,32 @@ export class AnnotationService {
       );
   }
 
-  editWord(theWord: string, theAnnotation: string) {
-    // let wordData: ComplexWord | FormData;
-    // wordData = {
-    //   word: theWord,
-    //   annotation: theAnnotation
-    // };
-    this.http
-      .put('http://localhost:3000/api/words/update' + theWord, theAnnotation)
-      .subscribe(response => {
-        const updatedWords = [...this.complexWords];
-        const oldWordIndex = updatedWords.findIndex(w => w.word === theWord);
-        const makeWord: ComplexWord = {
-          word: theWord,
-          annotation: theAnnotation
-        };
-        updatedWords[oldWordIndex] = makeWord;
-        this.complexWords = updatedWords;
-        this.complexWordUpdate.next([...this.complexWords]);
-      });
-  }
-
   // editWord(theWord: string, theAnnotation: string) {
-  //   return this.http
+  //   // let wordData: ComplexWord | FormData;
+  //   // wordData = {
+  //   //   word: theWord,
+  //   //   annotation: theAnnotation
+  //   // };
+  //   this.http
   //     .put('http://localhost:3000/api/words/update' + theWord, theAnnotation)
-  //     .toPromise();
+  //     .subscribe(response => {
+  //       const updatedWords = [...this.complexWords];
+  //       const oldWordIndex = updatedWords.findIndex(w => w.word === theWord);
+  //       const makeWord: ComplexWord = {
+  //         word: theWord,
+  //         annotation: theAnnotation
+  //       };
+  //       updatedWords[oldWordIndex] = makeWord;
+  //       this.complexWords = updatedWords;
+  //       this.complexWordUpdate.next([...this.complexWords]);
+  //     });
   // }
+
+  editWord(theWord: string, theAnnotation: string) {
+    return this.http
+      .put('http://localhost:3000/api/words/update/' + theWord, theAnnotation)
+      .toPromise();
+  }
 
   deleteWord(deleteWord: string) {
     this.http

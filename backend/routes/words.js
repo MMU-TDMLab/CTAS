@@ -63,35 +63,58 @@ router.get("", (req, res, next) => {
 
 // });
 
-router.put('/update:word', (req, res, next) => {
-  const word = new Word ({
-    word: req.body.word,
-    annotation: req.body.annotation,
-  });
+// router.put('/update/:word', (req, res, next) => {
+//   // const word = new Word ({
+//   //   word: req.body.word,
+//   //   annotation: req.body.annotation,
+//   // });
+//   const {
+//     word,
+//     annotation,
+//   } = req.body;
 
-  // , word
-  // update
-  Word.updateOne({
-      word: req.params.word
-    }, word).then(result => {
-      // console.log(result);
-      if (result.nModified > 0) {
-        res.status(200).json({
-          message: "Update successful!"
-        });
-      } else {
-        res.status(401).json({
-          message: "Not authorised!"
-        });
-      }
-    })
-    .catch(error => {
-      console.log(error);
-      res.status(500).json({
-        message: "Could not update post!"
+//   // , word
+//   // update
+//   Word.updateOne({
+//       word: req.params.word,
+//       // annotation: req.params.annotation
+//     }).then(result => {
+//       if (result.nModified > 0) {
+//         res.status(200).json({
+//           message: "Update successful!"
+//         });
+//       } else {
+//         res.status(401).json({
+//           message: "Not authorised!"
+//         });
+//       }
+//     })
+//     .catch(error => {
+//       console.log(error);
+//       res.status(500).json({
+//         message: "Could not update post!"
+//       });
+//     })
+// });
+
+router.put('/update/:word', (req, res, next) => {
+  Word.findOneAndUpdate({
+    word: req.params.word
+  },
+  { $set: { annotation: req.params.annotation }},
+  { upsert: true },
+  (err, newWord) => {
+    if (err) {
+      console.log('error occured');
+    } else {
+      console.log(newWord);
+      res.status(204).json({
+        message: "Update successful!"
       });
-    })
+    }
+  });
 });
+
 
 router.delete("/delete-word:word",
   // authCheck,
