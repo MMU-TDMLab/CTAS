@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -18,7 +18,7 @@ import { AnnotationService } from './annotation.service';
   templateUrl: './annotation.component.html',
   styleUrls: ['./annotation.component.css']
 })
-export class AnnotationComponent implements OnInit, OnDestroy {
+export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
   form: FormGroup;
   posts: Post[] = [];
   words: ComplexWord[] = [];
@@ -30,7 +30,6 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   public id: string;
   public setWord: string;
   public postIWant: string;
-  public filePreview: string;
   public annotation: string;
   public editAnnotation: string;
   public word;
@@ -42,10 +41,8 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   private authStatus: Subscription;
   public userIsAuthenticated = false;
   public editing: boolean;
-  // public messageId: string;
 
   constructor(
-    // private router: Router,
     public postsService: PostsService,
     private authService: AuthService,
     public route: ActivatedRoute,
@@ -54,7 +51,6 @@ export class AnnotationComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.editing = false;
-    this.filePreview = '';
     this.annotation = '';
     this.editAnnotation = '';
     this.form = new FormGroup({
@@ -101,7 +97,7 @@ export class AnnotationComponent implements OnInit, OnDestroy {
     //     posts.map(post => {
     //       if (post._id === this.id) {
     //         this.postIWant = post.fileText;
-    //         // console.log(this.postIWant);
+    //         console.log(this.postIWant);
     //       }
     //     });
     //     this.isLoading = false;
@@ -116,9 +112,10 @@ export class AnnotationComponent implements OnInit, OnDestroy {
 
     this.annotationSub = this.annotationService
       .getWordUpdateListenerTwo()
-      .subscribe((thewords: ComplexWord[]) => {
-        this.thewords = thewords;
-        this.thewords.map(word => {
+      .subscribe((theHardWords: ComplexWord[]) => {
+        this.theHardWords = theHardWords;
+        this.theHardWords.map(word => {
+          // this.thewords.push(word.word);
           this.theHardWords.push(word.word);
           this.wordWithAnnotation.push(word);
         });
@@ -209,21 +206,23 @@ export class AnnotationComponent implements OnInit, OnDestroy {
         // console.log(this.theText);
       }
     }
-    this.getWords(words);
-    // this.highlight(words);
+    // this.getWords(words);
+    this.highlight(words);
     // return the results array when done
     return results;
   }
 
-  getWords = words => {
-    //   // Use API calls here or simply pass in Constants
-    //  this.highlight(words);
-     const high = document.getElementById('scrollable');
-     if (high.innerHTML === null) {
-     } else {
-      this.highlight(words);
-     }
-  }
+  //////
+  // getWords = words => {
+  //   //   // Use API calls here or simply pass in Constants
+  //   //  this.highlight(words);
+  //    const high = document.getElementById('scrollable');
+  //    if (high.innerHTML === null) {
+  //    } else {
+  //     this.highlight(words);
+  //    }
+  // }
+  /////
 
   // getWords(words) {
     // this.highlight(words);
@@ -258,7 +257,6 @@ export class AnnotationComponent implements OnInit, OnDestroy {
     );
     const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
     elementsToMakeClickableArray.map(element => {
-      // element.addEventListener('click', this.viewAnnotation.bind(this, theWord), false);
       element.addEventListener('click', this.viewAnnotation.bind(this));
     });
     document.getElementById('btnHighLight').style.visibility = 'visible';
@@ -291,7 +289,7 @@ export class AnnotationComponent implements OnInit, OnDestroy {
         );
         // Make the range into a variable so we can replace it
         const range = userSelection.getRangeAt(i);
-        console.log(range);
+        // console.log(range);
 
         // Delete the current selection
         range.deleteContents();
@@ -330,19 +328,6 @@ export class AnnotationComponent implements OnInit, OnDestroy {
       'style',
       'background-color: yellow; display: inline; text-decoration: underline;'
     );
-    // const elementsToMakeClickable = document.getElementsByClassName(
-    //   'clickable'
-    // );
-    // const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
-    // elementsToMakeClickableArray.map(element => {
-    //   // element.addEventListener('click', this.viewAnnotation.bind(this, theWord), false);
-    //   element.addEventListener('click', this.viewAnnotation.bind(this));
-    // });
-    // range.surroundContents(newNode);
-
-    // this.viewAnnotation(newNode.id);
-
-    ///////////
     newNode.onclick = () => {
       if (confirm('Are you sure you want to delete ' + range + '?')) {
         this.deletenode(newNode);
@@ -351,13 +336,9 @@ export class AnnotationComponent implements OnInit, OnDestroy {
       }
     };
     // Add Text for replacement (for multiple nodes only)
-    // newNode.innerHTML += range;
     newNode.appendChild(range.cloneContents());
-
     // Apply Node around selection (used for individual nodes only)
-    // range.surroundContents(newNode);
     return newNode;
-    //////////
   }
 
   deletenode(node) {
@@ -374,12 +355,10 @@ export class AnnotationComponent implements OnInit, OnDestroy {
 
   findAnnotation(e) {
     this.setWord = e;
-    // this.showingWord = e;
     this.word = e;
-    this.thewords.map(word => {
+    this.theHardWords.map(word => {
       if (word.word === this.setWord) {
         this.showingAnnotation = word.annotation;
-        // document.getElementById('postbtn').style.visibility = 'hidden';
       }
     });
   }
@@ -393,12 +372,10 @@ export class AnnotationComponent implements OnInit, OnDestroy {
     // this.thewords.map(word => {
     //   if (word.word === this.setWord) {
     //     console.log('yes man');
-    //     // return;
+    //     return;
     //   } else if (word.word === !this.setWord) {
     //     console.log('boy oh boy');
 
-    // this.messageId = '';
-    // , this.messageId
     this.annotation = this.form.value.annotation;
     this.annotationService.addWord(this.word, this.annotation);
     this.form.reset();
@@ -408,7 +385,6 @@ export class AnnotationComponent implements OnInit, OnDestroy {
     this.complexWordIdentification(this.postIWant, this.theHardWords);
     this.highlight(this.theHardWords);
   }
-  // document.getElementById('postbtn').style.visibility = 'hidden';
 
   onEditWord() {
     this.editing = true;
@@ -424,27 +400,37 @@ export class AnnotationComponent implements OnInit, OnDestroy {
     let theAnnotation: string;
     theWord = this.word;
     theAnnotation = this.annotation;
-    // theAnnotation = this.editAnnotation;
     this.annotationService.editWord(theWord, theAnnotation);
   }
 
   resetAlertBox() {
     this.word = '';
     this.annotation = '';
-    // this.editAnnotation = '';
+    this.form.reset();
     this.editing = false;
   }
 
   onDelete() {
     let deleteWord: string;
     deleteWord = this.word;
-    // this.isLoading = true;
     this.annotationService.deleteWord(deleteWord);
+    this.callme();
+  }
+
+  callme() {
+    console.log(this.theHardWords);
   }
 
   ngOnDestroy() {
     this.postsSub.unsubscribe();
     this.authStatus.unsubscribe();
+  }
+
+  ngAfterViewInit(): void {
+    // this.getWords(this.theHardWords);
+    // this.highlight(this.theHardWords);
+    // this.complexWordIdentification(this.postIWant, this.theHardWords);
+    // throw new Error('Method not implemented.');
   }
 
   // get annotationFromForm() { return this.form.get('annotation'); }

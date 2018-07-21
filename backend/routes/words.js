@@ -41,16 +41,39 @@ router.get("", (req, res, next) => {
     });
 });
 
-router.put('/update-word/:word', (req, res, next) => {
-  // const word = {
-  //   word: req.body.word,
-  //   annotation: req.body.annotation,
-  // }
+// router.put('/update/:word', (req, res, next) => {
+
+//   const reqWord = req.params.word;
+
+//   let word = word.filter(word => {
+//     return word.word == reqWord;
+//   })[0];
+
+//   const index = word.indexOf(word);
+
+//   const keys = Object.keys(req.body);
+
+//   keys.forEach(key => {
+//     word[key] = req.body[key];
+//   });
+
+//   word[index] = word;
+
+//   res.json(word[index]);
+
+// });
+
+router.put('/update:word', (req, res, next) => {
+  const word = new Word ({
+    word: req.body.word,
+    annotation: req.body.annotation,
+  });
 
   // , word
-  Word.update({
+  // update
+  Word.updateOne({
       word: req.params.word
-    }).then(result => {
+    }, word).then(result => {
       // console.log(result);
       if (result.nModified > 0) {
         res.status(200).json({
@@ -63,6 +86,7 @@ router.put('/update-word/:word', (req, res, next) => {
       }
     })
     .catch(error => {
+      console.log(error);
       res.status(500).json({
         message: "Could not update post!"
       });
