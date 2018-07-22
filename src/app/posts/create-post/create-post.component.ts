@@ -122,6 +122,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       );
       this.router.navigate(['/module']);
     }
+    this.isLoading = false;
     this.form.reset();
     // this.fileInput.nativeElement.value = undefined;
     // this.fileInput.nativeElement.updateValue('');

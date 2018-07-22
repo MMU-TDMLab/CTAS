@@ -71,7 +71,7 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     this.id = this.route.snapshot.paramMap.get('postId');
     this.annotationService.getWords();
-    this.postsService.getPosts();
+    // this.postsService.getPosts();
 
     ////////////////
     // Observable.
@@ -179,7 +179,7 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  complexWordIdentification = async (text, words) => {
+  complexWordIdentification = (text, words) => {
     // list of "complex words"
     const complexWords = words;
     // array will be populated with results.
@@ -230,13 +230,6 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   highlight = words => {
-
-  //   if (document.getElementById('scrollable') != null) {
-  //     let high = document.getElementById('scrollable').innerHTML;
-  // } else {
-  //   let high = document.getElementById('scrollable');
-  // }
-
     const high = document.getElementById('scrollable');
     const paragraph = high.innerHTML.split(' ');
     const res = [];
@@ -383,7 +376,7 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     //   }
     // });
     this.complexWordIdentification(this.postIWant, this.theHardWords);
-    this.highlight(this.theHardWords);
+    // this.highlight(this.theHardWords);
   }
 
   onEditWord() {
@@ -427,6 +420,7 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy() {
     this.postsSub.unsubscribe();
     this.authStatus.unsubscribe();
+    this.annotationSub.unsubscribe();
   }
 
   ngAfterViewInit(): void {

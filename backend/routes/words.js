@@ -101,7 +101,7 @@ router.put('/update/:word', (req, res, next) => {
   Word.findOneAndUpdate({
     word: req.params.word
   },
-  { $set: { annotation: req.params.annotation }},
+  { $set: { annotation: req.body.annotation }},
   { upsert: true },
   (err, newWord) => {
     if (err) {
@@ -110,7 +110,12 @@ router.put('/update/:word', (req, res, next) => {
       console.log(newWord);
       res.status(204).json({
         message: "Update successful!"
-      });
+      }).catch(error => {
+          console.log(error);
+          res.status(500).json({
+              message: "Could not update post!"
+          });
+        })
     }
   });
 });
