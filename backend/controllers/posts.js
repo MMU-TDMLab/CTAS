@@ -50,7 +50,7 @@ exports.updatePost = (req, res, next) => {
           _id: req.params.id,
           poster: req.userData.userId
         }, post).then(result => {
-          if (result.nModified > 0) {
+          if (result.n > 0) {
             res.status(200).json({
               message: "Update successful!"
             });
@@ -65,7 +65,7 @@ exports.updatePost = (req, res, next) => {
             _id: req.params.id,
             poster: req.userData.userId
           }, post).then(result => {
-            if (result.nModified > 0) {
+            if (result.n > 0) {
               res.status(200).json({
                 message: "Admin Update successful!"
               });
