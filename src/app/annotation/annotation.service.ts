@@ -6,6 +6,10 @@ import { Observable } from 'rxjs/Observable';
 
 import { ComplexWord } from './complex-word.model';
 
+import { environment } from '../../environments/environment';
+
+const BACKEND_URL = environment.apiUrl + '/words/';
+
 @Injectable({ providedIn: 'root' })
 export class AnnotationService {
   private complexWords: ComplexWord[] = [];
@@ -15,7 +19,7 @@ export class AnnotationService {
 
   getWords() {
     this.http
-      .get<{ message: string; words: any }>('http://localhost:3000/api/words')
+      .get<{ message: string; words: any }>(BACKEND_URL)
       .pipe(
         map(wordData => {
           return wordData.words.map(word => {
@@ -64,7 +68,7 @@ export class AnnotationService {
   }
 
   getWordUpdateListener(): Observable<any> {
-    return this.http.get<any>('http://localhost:3000/api/words');
+    return this.http.get<any>(BACKEND_URL);
   }
 
   // messageId: string,
@@ -72,7 +76,7 @@ export class AnnotationService {
     // id: messageId,
     const complexWord: ComplexWord = { word: word, annotation: annotation };
     return this.http
-      .post('http://localhost:3000/api/words/new-word', complexWord)
+      .post(BACKEND_URL + '/new-word', complexWord)
       .subscribe(
         response => {
           console.log(response);
@@ -90,7 +94,7 @@ export class AnnotationService {
       annotation: theAnnotation
     };
     this.http
-      .put('http://localhost:3000/api/words/update' + theWord, theAnnotation)
+      .put(BACKEND_URL + '/update' + theWord, theAnnotation)
       .subscribe(response => {
         const updatedWords = [...this.complexWords];
         const oldWordIndex = updatedWords.findIndex(w => w.word === theWord);
@@ -112,7 +116,7 @@ export class AnnotationService {
 
   deleteWord(deleteWord: string) {
     this.http
-      .delete('http://localhost:3000/api/words/delete-word' + deleteWord)
+      .delete(BACKEND_URL + '/delete-word' + deleteWord)
       .subscribe(() => {
         const result = this.complexWords.filter(
           word => word.word !== deleteWord

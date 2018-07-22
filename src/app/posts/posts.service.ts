@@ -5,6 +5,9 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 
 import { Post } from './post.model';
+import { environment } from '../../environments/environment';
+
+const BACKEND_URL = environment.apiUrl + '/posts/';
 
 @Injectable({ providedIn: 'root' })
 export class PostsService {
@@ -15,7 +18,7 @@ export class PostsService {
 
   getPosts() {
     this.http
-      .get<{ message: string; posts: any }>('http://localhost:3000/api/posts')
+      .get<{ message: string; posts: any }>(BACKEND_URL)
       .pipe(
         map(postData => {
           return postData.posts.map(post => {
@@ -42,12 +45,12 @@ export class PostsService {
   }
 
   getPostUpdateListener(): Observable<any> {
-    return this.http.get<any>('http://localhost:3000/api/posts');
+    return this.http.get<any>(BACKEND_URL);
 }
 
   getPost(id: string) {
     return this.http.get<{ _id: string, header: string, message: string, filePath: string, fileText: string, poster: string }>(
-      'http://localhost:3000/api/posts/' + id
+      BACKEND_URL + id
     );
   }
 
@@ -59,7 +62,7 @@ export class PostsService {
     postData.append('fileText', fileText);
     this.http
       .post<{ message: string; post: Post }>(
-        'http://localhost:3000/api/posts',
+        BACKEND_URL,
         postData
       )
       .subscribe(responseData => {
@@ -96,7 +99,7 @@ export class PostsService {
       };
     }
     this.http
-      .put('http://localhost:3000/api/posts/' + id, postData)
+      .put(BACKEND_URL + id, postData)
       .subscribe(response => {
         const updatedPosts = [...this.posts];
         const oldPostIndex = updatedPosts.findIndex(p => p.id === id);
@@ -116,7 +119,7 @@ export class PostsService {
 
   deletePost(postId: string) {
     this.http
-      .delete('http://localhost:3000/api/posts/' + postId)
+      .delete(BACKEND_URL + postId)
       .subscribe(() => {
         const updatedPosts = this.posts.filter(post => post.id !== postId);
         this.posts = updatedPosts;
