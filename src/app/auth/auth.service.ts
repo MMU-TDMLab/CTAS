@@ -41,7 +41,7 @@ export class AuthService {
     this.http
       .post('http://localhost:3000/api/user/signup', authData)
       .subscribe(() => {
-        this.router.navigate(['/login']);
+        this.router.navigate(['/auth/login']);
       }, error => {
         this.authStatus.next(false);
       });
@@ -96,7 +96,7 @@ export class AuthService {
     this.clearAuthData();
     this.userId = null;
     this.role = null;
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 
   // tslint:disable-next-line:max-line-length
