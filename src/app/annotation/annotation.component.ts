@@ -393,10 +393,8 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     let theAnnotation: string;
     theWord = this.word;
     theAnnotation = this.form.value.annotation;
-    console.log(theWord);
-    console.log(theAnnotation);
-
     this.annotationService.editWord(theWord, theAnnotation);
+    this.resetAlertBox();
   }
 
   resetAlertBox() {
@@ -410,11 +408,11 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     let deleteWord: string;
     deleteWord = this.word;
     this.annotationService.deleteWord(deleteWord);
-    this.callme();
-  }
-
-  callme() {
-    console.log(this.theHardWords);
+    const index = this.theHardWords.indexOf(deleteWord);
+    this.theHardWords.splice(index);
+    this.word = '';
+    console.log('tell me now ', this.theHardWords);
+    // this.complexWordIdentification(this.postIWant, this.theHardWords);
   }
 
   ngOnDestroy() {

@@ -13,6 +13,13 @@ router.post("/new-word", WordController.newWord);
 
 router.get("", WordController.findWords);
 
+router.put('/update:word', WordController.updateWord);
+
+
+router.delete("/delete-word:word", WordController.deleteWord
+  // authCheck,
+  );
+
 // router.put('/update/:word', (req, res, next) => {
 
 //   const reqWord = req.params.word;
@@ -68,12 +75,5 @@ router.get("", WordController.findWords);
 //       });
 //     })
 // });
-
-router.put('/update/:word', WordController.updateWord);
-
-
-router.delete("/delete-word:word", WordController.deleteWord
-  // authCheck,
-  );
 
 module.exports = router;

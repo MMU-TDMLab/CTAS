@@ -55,3 +55,9 @@
 mat-spinner {
   margin: auto;
 }
+
+#flexible {
+    /* position:fixed;
+    top:6em;
+    right: 10em; */
+}

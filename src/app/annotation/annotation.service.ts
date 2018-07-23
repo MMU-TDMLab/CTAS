@@ -88,13 +88,16 @@ export class AnnotationService {
   }
 
   editWord(theWord: string, theAnnotation: string) {
-    let wordData: ComplexWord;
-    wordData = {
-      word: theWord,
+    // let wordData: ComplexWord;
+    // wordData = {
+    //   word: theWord,
+    //   annotation: theAnnotation
+    // };
+    const anno = {
       annotation: theAnnotation
     };
     this.http
-      .put(BACKEND_URL + '/update' + theWord, theAnnotation)
+      .put(BACKEND_URL + '/update' + theWord, anno)
       .subscribe(response => {
         const updatedWords = [...this.complexWords];
         const oldWordIndex = updatedWords.findIndex(w => w.word === theWord);

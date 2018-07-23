@@ -35,20 +35,20 @@ exports.updateWord = (req, res, next) => {
     word: req.params.word
   },
   { $set: { annotation: req.body.annotation }},
-  { upsert: true },
-  (err, newWord) => {
+  { upsert: false },
+  // (err, newWord) => {
+  (err) => {
     if (err) {
-      console.log('error occured');
+      console.log('Error Occured');
     } else {
-      console.log(newWord);
-      res.status(204).json({
+      res.status(200).json({
         message: "Update successful!"
-      }).catch(error => {
-          console.log(error);
-          res.status(500).json({
-              message: "Could not update post!"
-          });
-        })
+      })
+      // .catch(error => {
+      //     res.status(500).json({
+      //         message: "Could not update post!"
+      //     });
+      //   })
     }
   });
 }
