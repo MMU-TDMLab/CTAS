@@ -1,20 +1,23 @@
 const DocumentWord = require('../models/document-words');
+const Post = require('../models/post');
 
 exports.newWord = (req, res, next) => {
-  const word = new Word({
+  const word = new DocumentWord({
     word: req.body.word,
     annotation: req.body.annotation,
+    document_id: req.body.id,
   });
+  // console.log(req.body);
   word.save()
     .then(result => {
-      res.status(201).json({
-        message: "Complex Word has been added successfully!",
+      res.status(200).json({
+        message: "Document Word has been added successfully!",
         result: result
       });
     })
     .catch(err => {
       res.status(500).json({
-        message: 'Word was not added!'
+        message: 'Document Word was not added!'
         // error: err
       })
     });
@@ -24,7 +27,7 @@ exports.findWords = (req, res, next) => {
   DocumentWord.find()
     .then(documents => {
       res.status(200).json({
-        message: 'Words fetched succesfully!',
+        message: 'Document Words fetched succesfully!',
         words: documents
       });
     });

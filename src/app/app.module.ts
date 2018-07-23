@@ -19,9 +19,7 @@ import { ErrorInterceptor } from './error-interceptor';
 import { ErrorComponent } from './error/error.component';
 import { AngularMaterialModule } from './angular-material.module';
 import { PostsModule } from './posts/posts.module';
-
-
-
+import { DocService } from './annotation/document.service';
 
 @NgModule({
   declarations: [
@@ -44,7 +42,7 @@ import { PostsModule } from './posts/posts.module';
     PostsModule,
   ],
   providers: [
-    PostsService, AnnotationService, AuthService,
+    PostsService, AnnotationService, AuthService, DocService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],

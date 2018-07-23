@@ -11,6 +11,10 @@ const documentWordSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  document_id:
+  { type: mongoose.Schema.Types.ObjectId,
+    ref: 'Post', required: true
+  }
 });
 
 documentWordSchema.plugin(uniqueVal);

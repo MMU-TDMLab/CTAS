@@ -9,9 +9,11 @@ import 'rxjs/add/observable/forkJoin';
 
 import { Post } from '../posts/post.model';
 import { ComplexWord } from '../annotation/complex-word.model';
+import { DocWord } from './document-word.model';
 import { PostsService } from '../posts/posts.service';
 import { AuthService } from '../auth/auth.service';
 import { AnnotationService } from './annotation.service';
+import { DocService } from './document.service';
 
 @Component({
   selector: 'app-annotation',
@@ -22,6 +24,7 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
   form: FormGroup;
   posts: Post[] = [];
   words: ComplexWord[] = [];
+  docWord: DocWord[] = [];
   public isLoading = true;
   public wordsLoaded: boolean;
   public postLoaded: boolean;
@@ -34,11 +37,13 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
   public editAnnotation: string;
   public word;
   public showingAnnotation: string;
+  public docWords = [];
   public theHardWords = [];
   public wordWithAnnotation = [];
   private postsSub: Subscription;
   private annotationSub: Subscription;
   private authStatus: Subscription;
+  private docSub: Subscription;
   public userIsAuthenticated = false;
   public editing: boolean;
 
@@ -46,7 +51,8 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     public postsService: PostsService,
     private authService: AuthService,
     public route: ActivatedRoute,
-    private annotationService: AnnotationService
+    private annotationService: AnnotationService,
+    private docService: DocService
   ) {}
 
   ngOnInit() {
@@ -119,8 +125,8 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
           this.wordWithAnnotation.push(word);
         });
       });
-    this.postsService.getPosts();
 
+    this.postsService.getPosts();
     this.postsSub = this.postsService
       .getPostUpdateListenerTwo()
       .subscribe((posts: Post[]) => {
@@ -128,6 +134,19 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
         this.posts.map(post => {
           if (post.id === this.id) {
             this.postIWant = post.fileText;
+          }
+        });
+      });
+
+    this.docService.getWords();
+    this.docSub = this.docService
+      .getWordUpdateListenerTwo()
+      .subscribe((docWord: DocWord[]) => {
+        this.docWords = docWord;
+        this.docWords.map(doc => {
+          if (doc.document_id === this.id) {
+            console.log('doc id ', doc.document_id, 'postid ', this.id);
+            this.docWords.push(doc.word);
           }
         });
       });
@@ -179,6 +198,7 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   complexWordIdentification = (text, words) => {
+    console.log(...this.docWords);
     // list of "complex words"
     const complexWords = words;
     // array will be populated with results.
@@ -229,6 +249,32 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   highlight = words => {
+    const high = document.getElementById('scrollable');
+    const paragraph = high.innerHTML.split(' ');
+    const res = [];
+
+    paragraph.map(word => {
+      let t = word;
+      if (words.indexOf(word) > -1) {
+        t =
+          '<a class="clickable" style="background-color: yellow; text-decoration: underline;">' +
+          word +
+          '</a>';
+      }
+      res.push(t);
+    });
+    high.innerHTML = res.join(' ');
+    const elementsToMakeClickable = document.getElementsByClassName(
+      'clickable'
+    );
+    const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
+    elementsToMakeClickableArray.map(element => {
+      element.addEventListener('click', this.viewAnnotation.bind(this));
+    });
+    document.getElementById('btnHighLight').style.visibility = 'visible';
+  }
+
+  documentSpecificWords = words => {
     const high = document.getElementById('scrollable');
     const paragraph = high.innerHTML.split(' ');
     const res = [];
@@ -343,14 +389,24 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
   onShowHighlights() {
     document.getElementById('btnShow').style.visibility = 'hidden';
     this.complexWordIdentification(this.postIWant, this.theHardWords);
+    this.documentSpecificWords(this.docWords);
   }
 
   findAnnotation(e) {
     this.setWord = e;
     this.word = e;
+    this.docService.getWords();
+    this.annotationService.getWords();
+
     this.theHardWords.map(word => {
       if (word.word === this.setWord) {
         this.showingAnnotation = word.annotation;
+      }
+    });
+
+    this.docWords.map(word => {
+      if (word.word === this.setWord) {
+      this.showingAnnotation = word.annotation;
       }
     });
   }
@@ -409,7 +465,9 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.annotationService.deleteWord(deleteWord);
     const index = this.theHardWords.indexOf(deleteWord);
     this.theHardWords.splice(index);
+    this.theHardWords.slice(index);
     this.word = '';
+    this.docService.getWords();
     this.annotationService.getWords();
     console.log('tell me now ', this.theHardWords);
     // this.complexWordIdentification(this.postIWant, this.theHardWords);
