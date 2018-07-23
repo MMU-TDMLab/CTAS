@@ -115,7 +115,6 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((theHardWords: ComplexWord[]) => {
         this.theHardWords = theHardWords;
         this.theHardWords.map(word => {
-          // this.thewords.push(word.word);
           this.theHardWords.push(word.word);
           this.wordWithAnnotation.push(word);
         });
@@ -411,6 +410,7 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     const index = this.theHardWords.indexOf(deleteWord);
     this.theHardWords.splice(index);
     this.word = '';
+    this.annotationService.getWords();
     console.log('tell me now ', this.theHardWords);
     // this.complexWordIdentification(this.postIWant, this.theHardWords);
   }

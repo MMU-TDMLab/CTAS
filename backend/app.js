@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const postsRoutes = require('./routes/posts');
 const userRoutes = require('./routes/user');
 const wordsRoutes = require('./routes/words');
+const documentsWordsRoutes = require('./routes/documentWords');
 
 //load config file
 const config = require('../config/config');
@@ -40,5 +41,6 @@ app.use((req, res, next) => {
 app.use('/api/posts', postsRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/words', wordsRoutes);
+app.use('/api/documentWords', documentsWordsRoutes);
 
 module.exports = app;
