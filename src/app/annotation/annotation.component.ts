@@ -28,7 +28,7 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
   public isLoading = true;
   public wordsLoaded: boolean;
   public postLoaded: boolean;
-  public thewords: any;
+  public thewords: string[];
   public role: string;
   public id: string;
   public setWord: string;
@@ -56,6 +56,7 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.id = this.route.snapshot.paramMap.get('postId');
     this.editing = false;
     this.annotation = '';
     this.editAnnotation = '';
@@ -75,7 +76,6 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
       //   ]
       // }),
     });
-    this.id = this.route.snapshot.paramMap.get('postId');
     this.annotationService.getWords();
     // this.postsService.getPosts();
 
@@ -119,9 +119,10 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.annotationSub = this.annotationService
       .getWordUpdateListenerTwo()
       .subscribe((theHardWords: ComplexWord[]) => {
+        this.thewords = [];
         this.theHardWords = theHardWords;
         this.theHardWords.map(word => {
-          this.theHardWords.push(word.word);
+          this.thewords.push(word.word);
           this.wordWithAnnotation.push(word);
         });
       });
@@ -198,7 +199,8 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   complexWordIdentification = (text, words) => {
-    console.log(...this.docWords);
+    // console.log(this.theHardWords);
+    // console.log(...this.docWords);
     // list of "complex words"
     const complexWords = words;
     // array will be populated with results.
@@ -226,7 +228,6 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
     // this.getWords(words);
-    this.highlight(words);
     // return the results array when done
     return results;
   }
@@ -387,8 +388,9 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onShowHighlights() {
-    document.getElementById('btnShow').style.visibility = 'hidden';
-    this.complexWordIdentification(this.postIWant, this.theHardWords);
+    // document.getElementById('btnShow').style.visibility = 'hidden';
+    this.highlight(this.thewords);
+    // this.complexWordIdentification(this.postIWant, this.thewords);
     this.documentSpecificWords(this.docWords);
   }
 
@@ -430,7 +432,9 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.word = '';
     //   }
     // });
-    this.complexWordIdentification(this.postIWant, this.theHardWords);
+    this.docService.getWords();
+    this.annotationService.getWords();
+    this.complexWordIdentification(this.postIWant, this.thewords);
     // this.highlight(this.theHardWords);
   }
 
@@ -463,13 +467,15 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     let deleteWord: string;
     deleteWord = this.word;
     this.annotationService.deleteWord(deleteWord);
-    const index = this.theHardWords.indexOf(deleteWord);
-    this.theHardWords.splice(index);
-    this.theHardWords.slice(index);
-    this.word = '';
     this.docService.getWords();
     this.annotationService.getWords();
-    console.log('tell me now ', this.theHardWords);
+    const index = this.thewords.indexOf(deleteWord);
+    this.thewords.splice(index);
+
+    // this.thewords.slice(index);
+    this.word = '';
+    console.log('tell me now ', this.thewords);
+    this.ngOnInit();
     // this.complexWordIdentification(this.postIWant, this.theHardWords);
   }
 
@@ -477,6 +483,7 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.postsSub.unsubscribe();
     this.authStatus.unsubscribe();
     this.annotationSub.unsubscribe();
+    this.docSub.unsubscribe();
   }
 
   ngAfterViewInit(): void {

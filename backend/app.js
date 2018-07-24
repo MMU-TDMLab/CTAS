@@ -8,7 +8,7 @@ const wordsRoutes = require('./routes/words');
 const documentsWordsRoutes = require('./routes/documentWords');
 
 //load config file
-const config = require('../config/config');
+// const config = require('../config/config');
 
 const app = express();
 

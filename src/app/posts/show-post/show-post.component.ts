@@ -23,18 +23,13 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   private annoClicked = false;
   private authStatus: Subscription;
   public userIsAuthenticated = false;
-  // trustTwo = null;
-  // trustedUrl = null;
 
   constructor(
     public postsService: PostsService,
     private router: Router,
     private authService: AuthService,
-    // public sanitizer: DomSanitizer,
     public route: ActivatedRoute
   ) {
-    // this.trustTwo = sanitizer.bypassSecurityTrustResourceUrl(this.posts.filePath);
-    // this.trustedUrl = sanitizer.bypassSecurityTrustUrl(this.);
   }
 
   ngOnInit() {

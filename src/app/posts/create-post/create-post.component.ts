@@ -1,8 +1,7 @@
-import { Component, OnInit, Sanitizer, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-// import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 import { PostsService } from '../posts.service';
 import { Post } from '../post.model';
@@ -15,7 +14,6 @@ import { AuthService } from '../../auth/auth.service';
   styleUrls: ['./create-post.component.css']
 })
 export class CreatePostComponent implements OnInit, OnDestroy {
-  // @ViewChild('fileInput') fileInput: ElementRef;
   post: Post;
   form: FormGroup;
   role: string;
@@ -26,13 +24,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   private authStatus: Subscription;
   public userIsAuthenticated = false;
   public btnText = 'Create Post';
-  // public test1: any;
-  // trustTwo = null;
 
   constructor(public postsService: PostsService, public route: ActivatedRoute, private authService: AuthService, public router: Router ) {}
-    // public sanitizer: DomSanitizer
-    // this.trustTwo = sanitizer.bypassSecurityTrustResourceUrl(this.filePreview);
-    // this.trustedUrl = sanitizer.bypassSecurityTrustUrl(this.filePreview);
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -43,8 +36,11 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         validators: [Validators.required, Validators.minLength(3), Validators.maxLength(200)]
       }),
       file: new FormControl(null, {
-        validators: [Validators.required]
+        // validators: [Validators.required]
       }),
+      fileContent: new FormControl(null, {
+        // validators: [Validators.required]
+      })
       // test1: new FormControl('', {
       //   validators: [Validators.required]
       // })
