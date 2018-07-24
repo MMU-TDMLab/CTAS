@@ -379,10 +379,15 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.annotationService.addWord(this.word, this.annotation);
     this.form.reset();
     this.word = '';
-    // this.docService.getWords();
-    // this.annotationService.getWords();
     this.ngOnInit();
-    // this.highlight(this.thewords);
+    this.docService.getWords();
+    this.annotationService.getWords();
+    this.theHardWords.map(word => {
+      this.thewords = word.word;
+    });
+    this.docWords.map(word => {
+      this.docWords = word.word;
+    });
   }
 
   onEditWord() {
