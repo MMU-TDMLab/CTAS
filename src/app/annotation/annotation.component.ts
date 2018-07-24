@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy, AfterViewInit, ElementRef, EventEmitter, Output } from '@angular/core';
+import { Subscription, combineLatest } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs/observable/forkJoin';
@@ -52,7 +52,7 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     private authService: AuthService,
     public route: ActivatedRoute,
     private annotationService: AnnotationService,
-    private docService: DocService
+    private docService: DocService,
   ) {}
 
   ngOnInit() {
@@ -68,16 +68,9 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
           Validators.maxLength(250)
         ]
       }),
-      // editAnnotation: new FormControl(null, {
-      //   validators: [
-      //     Validators.required,
-      //     Validators.minLength(8),
-      //     Validators.maxLength(250)
-      //   ]
-      // }),
     });
     this.annotationService.getWords();
-    // this.postsService.getPosts();
+    this.postsService.getPosts();
 
     ////////////////
     // Observable.
@@ -103,7 +96,6 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     //     posts.map(post => {
     //       if (post._id === this.id) {
     //         this.postIWant = post.fileText;
-    //         console.log(this.postIWant);
     //       }
     //     });
     //     this.isLoading = false;
@@ -127,7 +119,6 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       });
 
-    this.postsService.getPosts();
     this.postsSub = this.postsService
       .getPostUpdateListenerTwo()
       .subscribe((posts: Post[]) => {
@@ -199,21 +190,17 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   complexWordIdentification = (text, words) => {
-    // console.log(this.theHardWords);
-    // console.log(...this.docWords);
     // list of "complex words"
     const complexWords = words;
     // array will be populated with results.
     const results = [];
     // loop through each complex word and see if it occurs in the text
     let match, regexp;
-
     for (let i = 0; i < complexWords.length; i++) {
       // the complex word we are checking in this iteration
       const complexWord = complexWords[i];
       // the complex word we are checking in this iteration
       regexp = new RegExp(complexWord, 'g');
-
       while ((match = regexp.exec(text)) !== null) {
         // the results object
         const result = {
@@ -224,32 +211,13 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
         // add the object to the results array
         const index = results.length;
         results[index] = result;
-        // console.log(this.theText);
       }
     }
-    // this.getWords(words);
     // return the results array when done
     return results;
   }
 
-  //////
-  // getWords = words => {
-  //   //   // Use API calls here or simply pass in Constants
-  //   //  this.highlight(words);
-  //    const high = document.getElementById('scrollable');
-  //    if (high.innerHTML === null) {
-  //    } else {
-  //     this.highlight(words);
-  //    }
-  // }
-  /////
-
-  // getWords(words) {
-    // this.highlight(words);
-  // }
-
-
-  highlight = words => {
+  highlight(words) {
     const high = document.getElementById('scrollable');
     const paragraph = high.innerHTML.split(' ');
     const res = [];
@@ -304,13 +272,6 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
   viewAnnotation(e) {
     const word = e.target.textContent;
     this.findAnnotation(word);
-
-    // this.annotationService.getAnnotation(word);
-    // console.log('hey', this.theHardWords);
-    // if (this.theHardWords === word) {
-    //   console.log('hey');
-    // }
-    // SHOW ANNOTATION** need to fix this later
   }
 
   highlightSelection() {
@@ -322,14 +283,11 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
       for (let i = 0; i < userSelection.rangeCount; i++) {
         this.highlightRange(userSelection.getRangeAt(i));
         this.word = userSelection.toString();
-        ////////
         const node = this.highlightRange(
           userSelection.getRangeAt(i) /*.toString()*/
         );
         // Make the range into a variable so we can replace it
         const range = userSelection.getRangeAt(i);
-        // console.log(range);
-
         // Delete the current selection
         range.deleteContents();
         // Insert the copy
@@ -390,7 +348,6 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
   onShowHighlights() {
     // document.getElementById('btnShow').style.visibility = 'hidden';
     this.highlight(this.thewords);
-    // this.complexWordIdentification(this.postIWant, this.thewords);
     this.documentSpecificWords(this.docWords);
   }
 
@@ -418,24 +375,14 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
       if (!this.form.valid) {
       return;
     }
-    // console.log(this.setWord);
-    // this.thewords.map(word => {
-    //   if (word.word === this.setWord) {
-    //     console.log('yes man');
-    //     return;
-    //   } else if (word.word === !this.setWord) {
-    //     console.log('boy oh boy');
-
     this.annotation = this.form.value.annotation;
     this.annotationService.addWord(this.word, this.annotation);
     this.form.reset();
     this.word = '';
-    //   }
-    // });
-    this.docService.getWords();
-    this.annotationService.getWords();
-    this.complexWordIdentification(this.postIWant, this.thewords);
-    // this.highlight(this.theHardWords);
+    // this.docService.getWords();
+    // this.annotationService.getWords();
+    this.ngOnInit();
+    // this.highlight(this.thewords);
   }
 
   onEditWord() {
@@ -471,12 +418,8 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.annotationService.getWords();
     const index = this.thewords.indexOf(deleteWord);
     this.thewords.splice(index);
-
-    // this.thewords.slice(index);
     this.word = '';
-    console.log('tell me now ', this.thewords);
     this.ngOnInit();
-    // this.complexWordIdentification(this.postIWant, this.theHardWords);
   }
 
   ngOnDestroy() {
@@ -486,12 +429,7 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.docSub.unsubscribe();
   }
 
-  ngAfterViewInit(): void {
-    // this.getWords(this.theHardWords);
-    // this.highlight(this.theHardWords);
-    // this.complexWordIdentification(this.postIWant, this.theHardWords);
-    // throw new Error('Method not implemented.');
-  }
+  ngAfterViewInit(): void {}
 
   // get annotationFromForm() { return this.form.get('annotation'); }
 }

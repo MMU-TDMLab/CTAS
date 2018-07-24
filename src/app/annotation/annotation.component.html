@@ -7,18 +7,18 @@
       </div>
       <div class="col-6">
         <!-- Get post by ID Request on backend -->
-        <div *ngFor="let post of posts;">
-          <ng-template [ngIf]="post.id === id">
-            <strong>{{ post.header }}</strong>
-            <!-- style="overflow-y: scroll; height:500px;" -->
-            <div id="scrollable">
-              {{ postIWant }}
-            </div>
-          </ng-template>
-        </div>
+            <div *ngFor="let post of posts;">
+                <ng-template [ngIf]="post.id === id">
+                  <strong>{{ post.header }}</strong>
+                  <!-- style="overflow-y: scroll; height:500px;" -->
+                    <div id="scrollable">
+                      {{ postIWant }}
+                    </div>
+                </ng-template>
+              </div>
         <!-- <div class="questions" *ngFor="let word of theHardWords;"> -->
-          <!-- {{ theHardWords[].word }} -->
-          <!-- Please Answer these Questions here:
+        <!-- {{ theHardWords[].word }} -->
+        <!-- Please Answer these Questions here:
           <br> Q1: How much did the annotation on the word {{ theHardWords[0] }} help you?
           <br> Q2: How much did the annotation on the word {{ theHardWords[1] }} help you?
           <br> Q3: How much did the annotation on the word {{ theHardWords[2] }} help you?
