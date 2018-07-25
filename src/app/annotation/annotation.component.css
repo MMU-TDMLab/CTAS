@@ -3,18 +3,31 @@
   padding-left: 3em;
 }
 
+#stronger {
+  padding-right: 5px;
+  font-family: "Times New Roman", Times, serif;
+  font-size: large;
+}
+
+.myStyle {
+  font-family: "Times New Roman", Times, serif;
+  line-height: 1.5;
+  font-size: 16px;
+  font-weight: 550;
+}
+
 #scrollable {
-  /* padding-top: 2em; */
   margin-top: 2em;
   margin-bottom: 2em;
-  /* outline: 5px dotted green; */
   outline: 2px solid black;
   outline-offset: 12px;
-  /* outline-style:outset; */
+  font-family: "Times New Roman", Times, serif;
+  line-height: 2.0;
+  font-size: 14px;
 }
 
 #btnHighLight {
-  margin-top: 2em;
+  margin-top: 2.9em;
   visibility: hidden;
 }
 
@@ -24,10 +37,6 @@
 
 #postbtn {
   margin-top: 0.25em;
-}
-
-#btnRemoveHighLight {
-  margin-top: 2em;
 }
 
 #annotation {
