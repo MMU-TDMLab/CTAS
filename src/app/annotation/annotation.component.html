@@ -27,9 +27,9 @@
         <!-- </div> -->
       </div>
       <div class="col" id="flexible">
-        <div>
+        <!-- <div>
           <button type="button" class="btn btn-warning btn-sm" id="btnShow" (click)="onShowHighlights()">Show Highlights</button>
-        </div>
+        </div> -->
         <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || userIsAuthenticated && this.role == 'admin'">
           <div>
             <button type="button" class="btn btn-warning btn-sm" id="btnHighLight" (click)="highlightSelection()">Highlight Selected Text</button>

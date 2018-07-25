@@ -143,7 +143,6 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       });
       this.isLoading = false;
-
     ////
     // this.annotationService.getWordUpdateListenerTwo().pipe(
     //   switchMap(thewords => {
@@ -187,6 +186,10 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
         this.userIsAuthenticated = isAuthenticated;
         this.role = this.authService.getUserRole();
       });
+      setTimeout(() => {
+        this.highlight(this.thewords);
+        this.documentSpecificWords(this.docWords);
+      }, 2000);
   }
 
   complexWordIdentification = (text, words) => {
@@ -345,11 +348,11 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.complexWordIdentification(this.postIWant, this.theHardWords);
   }
 
-  onShowHighlights() {
-    // document.getElementById('btnShow').style.visibility = 'hidden';
-    this.highlight(this.thewords);
-    this.documentSpecificWords(this.docWords);
-  }
+  // onShowHighlights() {
+  //   document.getElementById('btnShow').style.visibility = 'hidden';
+  //   this.highlight(this.thewords);
+  //   this.documentSpecificWords(this.docWords);
+  // }
 
   findAnnotation(e) {
     this.setWord = e;
@@ -388,6 +391,10 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.docWords.map(word => {
       this.docWords = word.word;
     });
+    setTimeout(() => {
+    this.highlight(this.thewords);
+    this.documentSpecificWords(this.docWords);
+  }, 200);
   }
 
   onEditWord() {
@@ -425,6 +432,10 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.thewords.splice(index);
     this.word = '';
     this.ngOnInit();
+    setTimeout(() => {
+      this.highlight(this.thewords);
+      this.documentSpecificWords(this.docWords);
+    }, 200);
   }
 
   ngOnDestroy() {
