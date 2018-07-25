@@ -8,27 +8,13 @@
       <div class="input-group">
         <textarea class="form-control" rows="3" name="message" placeholder="Post Message" formControlName="message"></textarea>
       </div>
-      <div class="form-group">
-          <input class="form-control-file" type="file" id="file1" ng-model="test1" (change)="onFilePicked($event)">
-          <!-- {{ filePreview }} -->
-        <!-- <input #fileInput class="form-control-file" type="file" id="file1" formControlName="test1" (change)="onFilePicked($event)"> -->
+      <div class="input-group">
+        <textarea class="form-control" rows="3" name="body" placeholder="Post Body" formControlName="body"></textarea>
+      </div>
+      <div class="input-group">
+        <textarea class="form-control" rows="3" name="references" placeholder="Post References" formControlName="references"></textarea>
       </div>
       <button class="btn btn-success btn-sm" id="postbtn" type="button" [disabled]="!form.valid" (click)="onSavePost()">{{ btnText }}</button>
     </form>
-    </ng-template>
+  </ng-template>
 </div>
-
-<!-- <input #fileInput class="form-control-file" type="file" id="file1" formControlName="fileInput" (change)="onFilePicked($event)"> -->
-
-<!-- <div>
-  <button ng-click="angular.copy(file1)" #filePicker id="file2" type="reset">Remove files</button>
-</div> -->
-
-<!-- (click)="filePicker.click()" -->
-
-<!-- <object [data]="trustTwo" type="application/pdf">
-  <embed [src]="trustTwo" type="application/pdf" />
-</object> -->
-
-<!-- <embed [src]='trustTwo' width="800px" height="2100px" type='application/pdf'> -->
-<!-- <embed src="http://example.com/the.pdf" width="500" height="375" type='application/pdf'> -->

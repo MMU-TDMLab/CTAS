@@ -2,12 +2,11 @@ const Post = require('../models/post');
 const User = require('../models/user');
 
 exports.createPost = (req, res, next) => {
-  const url = req.protocol + '://' + req.get('host');
   const post = new Post({
     header: req.body.header,
     message: req.body.message,
-    filePath: url + '/documents/' + req.file.filename,
-    fileText: req.body.fileText,
+    body: req.body.body,
+    references: req.body.references,
     poster: req.userData.userId,
   });
   post.save().then(createdPost => {
@@ -27,17 +26,17 @@ exports.createPost = (req, res, next) => {
 }
 
 exports.updatePost = (req, res, next) => {
-  let filePath = req.body.filePath;
-  if (req.file) {
-    const url = req.protocol + '://' + req.get('host');
-    filePath = url + '/documents/' + req.file.filename
-  }
+  // let filePath = req.body.filePath;
+  // if (req.file) {
+  //   const url = req.protocol + '://' + req.get('host');
+  //   filePath = url + '/documents/' + req.file.filename
+  // }
   const post = new Post({
     _id: req.body.id,
     header: req.body.header,
     message: req.body.message,
-    filePath: filePath,
-    fileText: req.body.fileText,
+    body: req.body.body,
+    references: req.body.references,
     poster: req.userData.userId,
   });
   User.findOne({

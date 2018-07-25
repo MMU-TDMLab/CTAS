@@ -20,7 +20,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   isLoading = false;
   private postId: string;
   private mode = 'create';
-  public filePreview = '';
   private authStatus: Subscription;
   public userIsAuthenticated = false;
   public btnText = 'Create Post';
@@ -33,14 +32,20 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         validators: [Validators.required, Validators.minLength(3), Validators.maxLength(15)]
       }),
       message: new FormControl(null, {
-        validators: [Validators.required, Validators.minLength(3), Validators.maxLength(200)]
+        validators: [Validators.required, Validators.minLength(3), Validators.maxLength(250)]
       }),
-      file: new FormControl(null, {
-        // validators: [Validators.required]
+      body: new FormControl(null, {
+        validators: [Validators.required, Validators.minLength(3), Validators.maxLength(10000)]
       }),
-      fileContent: new FormControl(null, {
-        // validators: [Validators.required]
-      })
+      references: new FormControl(null, {
+        validators: [Validators.required, Validators.minLength(3), Validators.maxLength(250)]
+      }),
+      // file: new FormControl(null, {
+      //   // validators: [Validators.required]
+      // }),
+      // fileContent: new FormControl(null, {
+      //   // validators: [Validators.required]
+      // })
       // test1: new FormControl('', {
       //   validators: [Validators.required]
       // })
@@ -59,15 +64,15 @@ export class CreatePostComponent implements OnInit, OnDestroy {
             id: postData._id,
             header: postData.header,
             message: postData.message,
-            filePath: postData.filePath,
-            fileText: postData.fileText,
+            body: postData.body,
+            references: postData.references,
             poster: postData.poster
           };
           this.form.setValue({
             header: this.post.header,
             message: this.post.message,
-            file: this.post.filePath,
-            fileContent: this.filePreview
+            body: this.post.body,
+            references: this.post.references
           });
         });
       } else {
@@ -84,17 +89,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       });
   }
 
-  onFilePicked(event: Event) {
-    const filePicked = (event.target as HTMLInputElement).files[0];
-    this.form.patchValue({ file: filePicked });
-    this.form.get('file').updateValueAndValidity();
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.filePreview = reader.result;
-    };
-    reader.readAsText(filePicked);
-  }
-
   onSavePost() {
     if (this.form.invalid) {
       return;
@@ -104,8 +98,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       this.postsService.addPost(
         this.form.value.header,
         this.form.value.message,
-        this.form.value.file,
-        this.filePreview,
+        this.form.value.body,
+        this.form.value.references,
         this.postId
       );
     } else {
@@ -113,18 +107,13 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         this.postId,
         this.form.value.header,
         this.form.value.message,
-        this.form.value.file,
-        this.filePreview
+        this.form.value.body,
+        this.form.value.references
       );
       this.router.navigate(['/module']);
     }
     this.isLoading = false;
     this.form.reset();
-    // this.fileInput.nativeElement.value = undefined;
-    // this.fileInput.nativeElement.updateValue('');
-    // this.form.nativeElement.reset();
-    // this.myInputVariable.nativeElement.value = '';
-    // this.form.value.file.nativeElement.value = '';
   }
   ngOnDestroy() {
     this.authStatus.unsubscribe();

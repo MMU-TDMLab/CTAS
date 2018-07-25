@@ -9,11 +9,11 @@ const postSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  filePath: {
+  body: {
     type: String,
     required: true
   },
-  fileText: {
+  references: {
     type: String,
     required: true
   },

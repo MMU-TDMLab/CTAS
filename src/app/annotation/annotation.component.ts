@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ElementRef, EventEmitter, Output } from '@angular/core';
-import { Subscription, combineLatest } from 'rxjs';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { Observable } from 'rxjs/Observable';
-import { map, switchMap } from '../../../node_modules/rxjs/operators';
-import 'rxjs/add/observable/forkJoin';
+// import { forkJoin } from 'rxjs/observable/forkJoin';
+// import { Observable } from 'rxjs/Observable';
+// import { map, switchMap } from '../../../node_modules/rxjs/operators';
+// import 'rxjs/add/observable/forkJoin';
 
 import { Post } from '../posts/post.model';
 import { ComplexWord } from '../annotation/complex-word.model';
@@ -125,7 +125,7 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
         this.posts = posts;
         this.posts.map(post => {
           if (post.id === this.id) {
-            this.postIWant = post.fileText;
+            this.postIWant = post.body;
           }
         });
       });
@@ -348,12 +348,6 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.complexWordIdentification(this.postIWant, this.theHardWords);
   }
 
-  // onShowHighlights() {
-  //   document.getElementById('btnShow').style.visibility = 'hidden';
-  //   this.highlight(this.thewords);
-  //   this.documentSpecificWords(this.docWords);
-  // }
-
   findAnnotation(e) {
     this.setWord = e;
     this.word = e;
@@ -378,6 +372,11 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
       if (!this.form.valid) {
       return;
     }
+    // if (confirm('Are you sure you want to add  ')) {
+    //   this.deletenode(newNode);
+    // } else {
+    //   alert(' has not been deleted.');
+    // }
     this.annotation = this.form.value.annotation;
     this.annotationService.addWord(this.word, this.annotation);
     this.form.reset();

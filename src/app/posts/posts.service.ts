@@ -26,8 +26,8 @@ export class PostsService {
               header: post.header,
               message: post.message,
               id: post._id,
-              filePath: post.filePath,
-              fileText: post.fileText,
+              body: post.body,
+              references: post.references,
               poster: post.poster
             };
           });
@@ -49,17 +49,17 @@ export class PostsService {
 }
 
   getPost(id: string) {
-    return this.http.get<{ _id: string, header: string, message: string, filePath: string, fileText: string, poster: string }>(
+    return this.http.get<{ _id: string, header: string, message: string, body: string, references: string, poster: string }>(
       BACKEND_URL + id
     );
   }
 
-  addPost(header: string, message: string, file: File, fileText: string, poster: string) {
+  addPost(header: string, message: string, body: string, references: string, poster: string) {
     const postData = new FormData();
     postData.append('header', header);
     postData.append('message', message);
-    postData.append('file', file);
-    postData.append('fileText', fileText);
+    postData.append('body', body);
+    postData.append('references', references);
     this.http
       .post<{ message: string; post: Post }>(
         BACKEND_URL,
@@ -70,8 +70,8 @@ export class PostsService {
           id: responseData.post.id,
           header: header,
           message: message,
-          filePath: responseData.post.filePath,
-          fileText: fileText,
+          body: body,
+          references: references,
           poster: poster
         };
         this.posts.push(post);
@@ -79,25 +79,16 @@ export class PostsService {
       });
   }
 
-  updatePost(id: string, header: string, message: string, file: File | string, fileText: string) {
-    let postData: Post | FormData;
-    if (typeof(file) === 'object') {
-      postData = new FormData();
-      postData.append('id', id);
-      postData.append('header', header);
-      postData.append('message', message);
-      postData.append('file', file);
-      postData.append('fileText', fileText);
-    } else {
+  updatePost(id: string, header: string, message: string, body: string, references: string) {
+    let postData: Post;
         postData = {
         id: id,
         header: header,
         message: message,
-        filePath: file,
-        fileText: fileText,
+        body: body,
+        references: references,
         poster: null
       };
-    }
     this.http
       .put(BACKEND_URL + id, postData)
       .subscribe(response => {
@@ -107,8 +98,8 @@ export class PostsService {
           id: id,
           header: header,
           message: message,
-          filePath: '',
-          fileText: '',
+          body: body,
+          references: references,
           poster: null
         };
         updatedPosts[oldPostIndex] = post;

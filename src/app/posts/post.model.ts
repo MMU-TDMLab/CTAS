@@ -2,7 +2,7 @@ export interface Post {
   id: string;
   header: string;
   message: string;
-  fileText: string;
-  filePath: string;
+  body: string;
+  references: string;
   poster: string;
 }

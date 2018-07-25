@@ -12,27 +12,21 @@
           <div id="demo{{$index}}" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="card-body">
               {{ post.message }}
-              <!-- <br>
-              {{ post.filePath }} -->
               <hr>
               <a class="btn btn-dark btn-sm" id="btnPro" (click)="onAnnotation(post.id)"> View Document
                 <i class="far fa-file-alt"></i>
               </a>
             </div>
           </div>
-            <ng-template [ngIf]="userIsAuthenticated && userId == post.poster || userIsAuthenticated && this.role == 'admin'">
-                <hr>
-                <button class="btn btn-outline-primary btn-sm" id="editBtn" (click)="onEdit(post.id)">Edit</button>
-                <button class="btn btn-outline-danger btn-sm" id="deleteBtn" (click)="onDelete(post.id)">Delete</button>
-            </ng-template>
+          <ng-template [ngIf]="userIsAuthenticated && userId == post.poster || userIsAuthenticated && this.role == 'admin'">
+            <hr>
+            <button class="btn btn-outline-primary btn-sm" id="editBtn" (click)="onEdit(post.id)">Edit</button>
+            <button class="btn btn-outline-danger btn-sm" id="deleteBtn" (click)="onDelete(post.id)">Delete</button>
+          </ng-template>
         </div>
       </div>
       <div>
-          <!-- <object [data]="post.filePath" type="application/pdf">
-            <embed [src]="post.filePath" type="application/pdf" />
-        </object> -->
-          <!-- <embed [src]='trustTwo' width="800px" height="2100px" type='application/pdf'> -->
-        </div>
+      </div>
     </div>
   </ng-template>
   <div>
