@@ -9,7 +9,7 @@
         <!-- Get post by ID Request on backend -->
         <div *ngFor="let post of posts;">
           <ng-template [ngIf]="post.id === id">
-            <strong id="stronger" >{{ post.header }}</strong>
+            <strong id="stronger">{{ post.header }}</strong>
             <!-- style="overflow-y: scroll; height:500px;" -->
             <div id="scrollable">
               {{ postIWant }}
@@ -17,9 +17,11 @@
             <div class="myStyle">
               References to the above paper and or extra reading material can be found below:
             </div>
-            <div class="myStyle">
-              {{ post.references }}
+            <br>
+            <div>
+              {{ reference }}
             </div>
+            <br>
           </ng-template>
         </div>
       </div>
@@ -29,7 +31,10 @@
         </div> -->
         <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || userIsAuthenticated && this.role == 'admin'">
           <div>
-            <button type="button" class="btn btn-warning btn-sm" id="btnHighLight" (click)="highlightSelection()">Highlight Selected Text</button>
+            <a class="btn btn-warning btn-sd" id="btnHighLight" (click)="highlightSelection()">
+              <i class="fas fa-highlighter"></i>
+              Selected Text
+            </a>
           </div>
         </ng-template>
         <ng-template [ngIf]='word'>

@@ -14,6 +14,7 @@ import { PostsService } from '../posts/posts.service';
 import { AuthService } from '../auth/auth.service';
 import { AnnotationService } from './annotation.service';
 import { DocService } from './document.service';
+// import { post } from '../../../node_modules/@types/selenium-webdriver/http';
 
 @Component({
   selector: 'app-annotation',
@@ -46,6 +47,7 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
   private docSub: Subscription;
   public userIsAuthenticated = false;
   public editing: boolean;
+  public reference = '';
 
   constructor(
     public postsService: PostsService,
@@ -126,6 +128,7 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
         this.posts.map(post => {
           if (post.id === this.id) {
             this.postIWant = post.body;
+            this.reference = post.references;
           }
         });
       });
@@ -189,6 +192,7 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
       setTimeout(() => {
         this.highlight(this.thewords);
         this.documentSpecificWords(this.docWords);
+        this.urlify(this.reference);
       }, 2000);
   }
 
@@ -436,6 +440,15 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
       this.documentSpecificWords(this.docWords);
     }, 200);
   }
+
+  urlify(reference) {
+    const text = reference;
+    const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    // const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex, (url) => {
+      return '<a href="' + url + '">' + url + '</a>';
+  });
+}
 
   ngOnDestroy() {
     this.postsSub.unsubscribe();
