@@ -14,7 +14,6 @@ import { PostsService } from '../posts/posts.service';
 import { AuthService } from '../auth/auth.service';
 import { AnnotationService } from './annotation.service';
 import { DocService } from './document.service';
-// import { post } from '../../../node_modules/@types/selenium-webdriver/http';
 
 @Component({
   selector: 'app-annotation',

@@ -26,11 +26,6 @@ exports.createPost = (req, res, next) => {
 }
 
 exports.updatePost = (req, res, next) => {
-  // let filePath = req.body.filePath;
-  // if (req.file) {
-  //   const url = req.protocol + '://' + req.get('host');
-  //   filePath = url + '/documents/' + req.file.filename
-  // }
   const post = new Post({
     _id: req.body.id,
     header: req.body.header,
@@ -43,7 +38,6 @@ exports.updatePost = (req, res, next) => {
       role: 'admin'
     })
     .then(user => {
-      // console.log('req userdata ', req.userData.role);
       if (!req.userData.role === 'admin') {
         Post.updateOne({
           _id: req.params.id,

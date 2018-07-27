@@ -4,10 +4,10 @@ const express = require('express');
 // const User = require('../models/user');
 // const Word = require('../models/complex-words');
 // const authCheck = require('../middleware/check-auth');
+const router = express.Router();
 
 const WordController = require('../controllers/words');
 
-const router = express.Router();
 
 router.post("/new-word", WordController.newWord);
 
