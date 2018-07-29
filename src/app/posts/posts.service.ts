@@ -79,6 +79,28 @@ export class PostsService {
       });
   }
 
+  // addPost(id: string, header: string, message: string, body: string, references: string, poster: string) {
+  //   let postData: Post;
+  //   postData = {
+  //   id: id,
+  //   header: header,
+  //   message: message,
+  //   body: body,
+  //   references: references,
+  //   poster: poster
+  // };
+  //   this.http
+  //     .post(BACKEND_URL, postData)
+  //     .subscribe(
+  //       response => {
+  //         console.log(response);
+  //       },
+  //       error => {
+  //         console.log(error);
+  //       }
+  //     );
+  // }
+
   updatePost(id: string, header: string, message: string, body: string, references: string) {
     let postData: Post;
         postData = {
