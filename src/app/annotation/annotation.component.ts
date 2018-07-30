@@ -1,11 +1,7 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChildren, AfterViewInit, ViewChild, AfterContentInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-// import { forkJoin } from 'rxjs/observable/forkJoin';
-// import { Observable } from 'rxjs/Observable';
-// import { map, switchMap } from '../../../node_modules/rxjs/operators';
-// import 'rxjs/add/observable/forkJoin';
+import { ActivatedRoute } from '@angular/router';
 
 import { Post } from '../posts/post.model';
 import { ComplexWord } from '../annotation/complex-word.model';
@@ -20,7 +16,9 @@ import { DocService } from './document.service';
   templateUrl: './annotationTest.component.html',
   styleUrls: ['./annotation.component.css']
 })
-export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AnnotationComponent implements OnInit, OnDestroy, AfterViewInit, AfterContentInit {
+  @ViewChildren('thePostTest') thePostTest: ElementRef;
+  // @ViewChild('thePostTest') thePostTest: ElementRef;
   form: FormGroup;
   posts: Post[] = [];
   words: ComplexWord[] = [];
@@ -48,12 +46,8 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
   public editing: boolean;
   public reference = '';
 
-  constructor(
-    public postsService: PostsService,
-    private authService: AuthService,
-    public route: ActivatedRoute,
-    private annotationService: AnnotationService,
-    private docService: DocService,
+  constructor( public postsService: PostsService, private authService: AuthService, public route: ActivatedRoute,
+    private annotationService: AnnotationService, private docService: DocService, private elRef: ElementRef
   ) {}
 
   ngOnInit() {
@@ -72,42 +66,6 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     this.annotationService.getWords();
     this.postsService.getPosts();
-
-    ////////////////
-    // Observable.
-    // forkJoin(
-    //   this.annotationService.getWordUpdateListener(),
-    //   this.postsService.getPostUpdateListener()
-    // ).subscribe(
-    //   data => {
-    //     // console.log(data);
-    //     // data[0] result from getWordUpdateListener
-    //     const words = data[0].words;
-    //     // console.log(data[0].words);
-    //     // this.thewords = data[0];
-    //     words.map(word => {
-    //       this.theHardWords.push(word.word);
-    //       this.wordWithAnnotation.push(word);
-    //     });
-    //     // data[1] result from getPostUpdateListener
-    //     // this.posts = data2;
-    //     // const posts: Post[] = [] = data[1].posts;
-    //     // console.log(posts);
-    //     const posts = data[1].posts;
-    //     posts.map(post => {
-    //       if (post._id === this.id) {
-    //         this.postIWant = post.fileText;
-    //       }
-    //     });
-    //     this.isLoading = false;
-    //     this.complexWordIdentification(this.postIWant, this.theHardWords);
-    //   },
-    //   err => {
-    //     console.log(err);
-    //     // error handling
-    //   }
-    // );
-    // **************
 
     this.annotationSub = this.annotationService
       .getWordUpdateListenerTwo()
@@ -144,109 +102,48 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         });
       });
-      this.isLoading = false;
-    ////
-    // this.annotationService.getWordUpdateListenerTwo().pipe(
-    //   switchMap(thewords => {
-    //     // console.log(thewords);
-    //     return this.postsService.getPostUpdateListenerTwo().pipe(
-    //       map(posts => ({ thewords, posts }))
-    //     );
-    //   }),
-    // ).subscribe(({ thewords, posts }) => {
-    //   this.posts.map(post => {
-    //     if (post.id === this.id) {
-    //       this.postIWant = post.fileText;
-    //     }
-    //     console.log(post);
-    //   },
-    //     this.thewords.map(word => {
-    //       this.theHardWords.push(word.word);
-    //       this.wordWithAnnotation.push(word);
-    //     }
-    //     ));
-    //       this.complexWordIdentification(this.postIWant, this.theHardWords);
-    //     });
-    // .subscribe(({ thewords, posts }) => {
-    //   this.theHardWords = thewords.word;
-    //   this.theHardWords.push(thewords.word);
-    //   this.wordWithAnnotation.push(thewords);
-    //   console.log(post.id);
-    //     if (posts.id === this.id) {
-    //       this.postIWant = posts.fileText;
-    //     }
-    //   // console.log(this.theHardWords);
-    //   // this.complexWordIdentification(this.postIWant, this.theHardWords);
-    //   this.isLoading = false;
-    // });
 
-    this.role = this.authService.getUserRole();
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authStatus = this.authService
+      this.role = this.authService.getUserRole();
+      this.userIsAuthenticated = this.authService.getIsAuth();
+      this.authStatus = this.authService
       .getAuthStatus()
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
         this.role = this.authService.getUserRole();
       });
+      this.isLoading = false;
+
       setTimeout(() => {
         this.highlight(this.thewords);
-        this.documentSpecificWords(this.docWords);
-        this.urlify(this.reference);
-      }, 2000);
-  }
-
-  complexWordIdentification = (text, words) => {
-    // list of "complex words"
-    const complexWords = words;
-    // array will be populated with results.
-    const results = [];
-    // loop through each complex word and see if it occurs in the text
-    let match, regexp;
-    for (let i = 0; i < complexWords.length; i++) {
-      // the complex word we are checking in this iteration
-      const complexWord = complexWords[i];
-      // the complex word we are checking in this iteration
-      regexp = new RegExp(complexWord, 'g');
-      while ((match = regexp.exec(text)) !== null) {
-        // the results object
-        const result = {
-          begin: regexp.lastIndex - complexWords[i].length,
-          end: regexp.lastIndex,
-          text: complexWord
-        };
-        // add the object to the results array
-        const index = results.length;
-        results[index] = result;
-      }
-    }
-    // return the results array when done
-    return results;
+        // this.documentSpecificWords(this.docWords);
+        // this.urlify(this.reference);
+      }, 800);
   }
 
   highlight(words) {
-    const high = document.getElementById('scrollable');
-    const paragraph = high.innerHTML.split(' ');
-    const res = [];
+      const high = document.getElementById('scrollable');
+      const paragraph = high.innerHTML.split(' ');
+      const res = [];
 
-    paragraph.map(word => {
-      let t = word;
-      if (words.indexOf(word) > -1) {
-        t =
-          '<a class="clickable" style="background-color: yellow; text-decoration: underline;">' +
-          word +
-          '</a>';
-      }
-      res.push(t);
-    });
-    high.innerHTML = res.join(' ');
-    const elementsToMakeClickable = document.getElementsByClassName(
-      'clickable'
-    );
-    const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
-    elementsToMakeClickableArray.map(element => {
-      element.addEventListener('click', this.viewAnnotation.bind(this));
-    });
-    document.getElementById('btnHighLight').style.visibility = 'visible';
+        paragraph.map(word => {
+          let t = word;
+          if (words.indexOf(word) > -1) {
+            t =
+              '<a class="clickable" style="background-color: yellow; text-decoration: underline;">' +
+              word +
+              '</a>';
+          }
+          res.push(t);
+        });
+        high.innerHTML = res.join(' ');
+        const elementsToMakeClickable = document.getElementsByClassName(
+          'clickable'
+        );
+        const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
+        elementsToMakeClickableArray.map(element => {
+          element.addEventListener('click', this.viewAnnotation.bind(this));
+        });
+        document.getElementById('btnHighLight').style.visibility = 'visible';
   }
 
   documentSpecificWords = words => {
@@ -348,7 +245,6 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
     const contents = document.createTextNode(node.innerText);
     node.parentNode.replaceChild(contents, node);
     this.resetAlertBox();
-    this.complexWordIdentification(this.postIWant, this.theHardWords);
   }
 
   findAnnotation(e) {
@@ -371,15 +267,9 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onAnnotate() {
-    // if (this.form.get('annotation').valid) {
       if (!this.form.valid) {
       return;
     }
-    // if (confirm('Are you sure you want to add  ')) {
-    //   this.deletenode(newNode);
-    // } else {
-    //   alert(' has not been deleted.');
-    // }
     this.annotation = this.form.value.annotation;
     this.annotationService.addWord(this.word, this.annotation);
     this.form.reset();
@@ -449,14 +339,22 @@ export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {
   });
 }
 
+  ngAfterViewInit() {
+  // console.log(this.thePostTest.nativeElement.value);
+  const div = this.elRef.nativeElement.querySelector('#thePostTest');
+  console.log('first ', div);
+}
+
+// for transcluded content
+ngAfterContentInit() {
+  const div = this.elRef.nativeElement.querySelector('#thePostTest');
+  console.log('last ', div);
+}
+
   ngOnDestroy() {
     this.postsSub.unsubscribe();
     this.authStatus.unsubscribe();
     this.annotationSub.unsubscribe();
     this.docSub.unsubscribe();
   }
-
-  ngAfterViewInit(): void {}
-
-  // get annotationFromForm() { return this.form.get('annotation'); }
 }

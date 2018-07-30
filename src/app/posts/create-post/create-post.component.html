@@ -3,16 +3,16 @@
   <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || userIsAuthenticated && this.role == 'admin'">
     <form [formGroup]='form' name="test" *ngIf="!isLoading">
       <div class="form-group">
-        <input type="text" class="form-control" name="header" placeholder="Post Header" formControlName="header">
+        <input type="text" class="form-control" name="header" placeholder="Post Title" formControlName="header">
       </div>
       <div class="input-group">
-        <textarea class="form-control" rows="3" name="message" placeholder="Post Message" formControlName="message"></textarea>
+        <textarea class="form-control" rows="3" name="message" placeholder="Info (Description)" formControlName="message"></textarea>
       </div>
       <div class="input-group">
-        <textarea class="form-control" rows="3" name="body" placeholder="Post Body" formControlName="body"></textarea>
+        <textarea class="form-control" rows="3" name="body" placeholder="Body (Content)" formControlName="body"></textarea>
       </div>
       <div class="input-group">
-        <textarea class="form-control" rows="3" name="references" placeholder="Post References" formControlName="references"></textarea>
+        <textarea class="form-control" rows="3" name="references" placeholder="References (Links to external web pages/books)" formControlName="references"></textarea>
       </div>
       <button class="btn btn-success btn-sm" id="postbtn" type="button" [disabled]="!form.valid" (click)="onSavePost()">{{ btnText }}</button>
     </form>
