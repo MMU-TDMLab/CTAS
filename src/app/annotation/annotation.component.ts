@@ -17,7 +17,7 @@ import { DocService } from './document.service';
 
 @Component({
   selector: 'app-annotation',
-  templateUrl: './annotation.component.html',
+  templateUrl: './annotationTest.component.html',
   styleUrls: ['./annotation.component.css']
 })
 export class AnnotationComponent implements OnInit, AfterViewInit, OnDestroy {

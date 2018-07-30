@@ -61,12 +61,24 @@
   margin-top: 1.25em;
 }
 
+.container {
+  display: flex;
+  max-width: 1200px;
+}
+
 mat-spinner {
   margin: auto;
 }
 
-/* #flexible { */
-    /* position:fixed;
-    top:6em;
-    right: 10em; */
-/* } */
+.column.left {
+  flex: 0 0 230px;
+}
+
+.column.center {
+  flex: 0 0 450px;
+}
+
+.column.right {
+  margin-left: 2em;
+  flex: 0 0 230px;
+}
