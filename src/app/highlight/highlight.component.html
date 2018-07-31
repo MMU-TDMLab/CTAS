@@ -1,11 +1,18 @@
-<p class="definition" [appHardWordHighlight]="hardWords" #paragraph *ngIf="!loading; else spinner">
-    hello my name is charles
+<div class="container">
+  <p class="column left">
+    <!-- Empty here -->
   </p>
-
+  <p class="definition" [appHardWordHighlight]="hardWords" #paragraph *ngIf="!loading; else spinner">
+    <!-- {{ postIWant }} -->
+    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis officia quidem, asperiores excepturi aliquam maxime dolorem
+	illo inventore, nesciunt error odio iure quibusdam quae accusantium provident similique esse rem repellendus eligendi facere
+	minus perspiciatis molestias nobis adipisci. Nostrum blanditiis numquam minima! Facilis ut eaque odio ea quibusdam culpa,
+	quis ducimus.
+  </p>
+  <p class="actions">
+    <button *ngIf="selectedText" (click)="createDefinition()">New definition</button>
+  </p>
   <ng-template #spinner>
     <div class="spinner"></div>
   </ng-template>
-
-  <div class="actions">
-    <button *ngIf="selectedText" (click)="createDefinition()">New definition</button>
-  </div>
+</div>

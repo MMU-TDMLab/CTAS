@@ -1,6 +1,8 @@
 import { Component, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { Location } from '@angular/common';
+
 import { HighlightService } from '../highlight.service';
 import { FormControl } from '@angular/forms';
 
@@ -21,6 +23,7 @@ export class DefinitionComponent {
     private router: Router,
     private cdRef: ChangeDetectorRef,
     public service: HighlightService,
+    private _location: Location
   ) {
     this.router.onSameUrlNavigation = 'reload';
 
@@ -34,4 +37,7 @@ export class DefinitionComponent {
         this.cdRef.detectChanges();
       });
   }
+  backClicked() {
+    this._location.back();
+}
 }

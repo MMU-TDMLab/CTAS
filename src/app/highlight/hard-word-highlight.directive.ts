@@ -8,6 +8,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class HardWordHighlightDirective implements OnInit {
 
   // The list of words to highlight
+  // tslint:disable-next-line:no-input-rename
   @Input('appHardWordHighlight') words: {
     word: string,
     definition: string
@@ -48,6 +49,7 @@ export class HardWordHighlightDirective implements OnInit {
       this.renderer.setProperty(span, 'innerText', item.word);
       // Set the title to the definition (hover over the word to see it)
       this.renderer.setProperty(span, 'title', item.definition);
+      // tslint:disable-next-line:max-line-length
       // Workaround : because we append already compiled code to a paragraph, we need to be able to call the function. To do that, we can bind a function to the window.
       this.renderer.setAttribute(span, 'onclick', `window.routeTo('${item.word}')`);
       // replace the hard word with the enriched span (innerHTML = HTML inside the span, outerHTML = the span itself)

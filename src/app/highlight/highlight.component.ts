@@ -44,7 +44,7 @@ export class HighlightComponent implements OnInit, OnDestroy {
         map(words => {
         this.loading = true;
         return words;
-      }), delay(500))
+      }), delay(400))
       // Treat the observable : show the paragraph and store the words to send to the directive
       .subscribe(words => {
         this.hardWords = words;
@@ -54,19 +54,18 @@ export class HighlightComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.id = this.route.snapshot.paramMap.get('postId');
-
-    // this.postsSub = this.postsService
-    // .getPostUpdateListener()
-    // .subscribe((posts: Post[]) => {
-    //   console.log(this.id);
-    //     this.posts = posts;
-    //     this.posts.map(post => {
-    //       if (post.id === this.id) {
-    //         this.postIWant = post.body;
-    //         this.reference = post.references;
-    //       }
-    //     });
-    //   });
+    this.postsService.getPosts();
+    this.postsSub = this.postsService
+    .getPostUpdateListenerTwo()
+    .subscribe((posts: Post[]) => {
+        this.posts = posts;
+        this.posts.map(post => {
+          if (post.id === this.id) {
+            this.postIWant = post.body;
+            this.reference = post.references;
+          }
+        });
+      });
   }
 
   /**

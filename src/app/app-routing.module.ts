@@ -18,9 +18,9 @@ const appRoutes: Routes = [
   { path: 'module', component: ModuleComponent, canActivate: [AuthGuard]  },
   { path: 'edit/:postId', component: ModuleComponent, canActivate: [AuthGuard]  },
   // { path: 'annotation', component: AnnotationComponent, canActivate: [AuthGuard] },
-  { path: 'annotation/:postId', component: AnnotationComponent, canActivate: [AuthGuard] },
-  { path: 'highlight/:postId', component: HighlightComponent },
-  { path: 'highlight/:postId/:word', component: DefinitionComponent },
+  // { path: 'annotation/:postId', component: AnnotationComponent, canActivate: [AuthGuard] },
+  { path: 'highlight/:postId', component: HighlightComponent, canActivate: [AuthGuard] },
+  { path: 'highlight/:postId/:word', component: DefinitionComponent, canActivate: [AuthGuard] },
   { path: 'auth', loadChildren: './auth/auth.module#AuthModule'}
 ];
 

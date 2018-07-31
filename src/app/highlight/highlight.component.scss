@@ -1,8 +1,28 @@
+.highlight {
+  background: rgba(255, 255, 0, 0.5);
+  cursor: pointer;
+}
+
+.container {
+  display: flex;
+  max-width: 1200px;
+}
+
+.column.left {
+  flex: 0 0 230px;
+}
+
 .definition {
   padding: 12px;
   border: 1px solid #ccc;
   margin: 24px;
   line-height: 1.5em;
+  flex: 0 0 450px;
+}
+
+.column.right {
+  margin-left: 2em;
+  flex: 0 0 230px;
 }
 
 button {
