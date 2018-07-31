@@ -75,6 +75,7 @@ mat-spinner {
 }
 
 .column.center {
+  font-family: Lato;
   flex: 0 0 450px;
 }
 

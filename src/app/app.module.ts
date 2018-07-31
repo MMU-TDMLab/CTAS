@@ -20,6 +20,7 @@ import { ErrorComponent } from './error/error.component';
 import { AngularMaterialModule } from './angular-material.module';
 import { PostsModule } from './posts/posts.module';
 import { DocService } from './annotation/document.service';
+// import { HardWordHighlightDirective } from './annotation/hard-word-highlight.directive';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { DocService } from './annotation/document.service';
     CourseComponent,
     ModuleComponent,
     AnnotationComponent,
-    ErrorComponent
+    ErrorComponent,
+    // HardWordHighlightDirective
   ],
   imports: [
     BrowserModule,

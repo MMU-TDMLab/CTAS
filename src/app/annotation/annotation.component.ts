@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChildren, AfterViewInit, ViewChild, AfterContentInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+// , ElementRef, ViewChildren, AfterViewInit, ViewChild, AfterContentInit
 import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -13,11 +14,12 @@ import { DocService } from './document.service';
 
 @Component({
   selector: 'app-annotation',
-  templateUrl: './annotationTest.component.html',
+  templateUrl: './annotation.component.html',
   styleUrls: ['./annotation.component.css']
 })
-export class AnnotationComponent implements OnInit, OnDestroy, AfterViewInit, AfterContentInit {
-  @ViewChildren('thePostTest') thePostTest: ElementRef;
+// AfterViewInit, AfterContentInit
+export class AnnotationComponent implements OnInit, OnDestroy {
+  // @ViewChildren('thePostTest') thePostTest: ElementRef;
   // @ViewChild('thePostTest') thePostTest: ElementRef;
   form: FormGroup;
   posts: Post[] = [];
@@ -47,8 +49,9 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewInit, Af
   public reference = '';
 
   constructor( public postsService: PostsService, private authService: AuthService, public route: ActivatedRoute,
-    private annotationService: AnnotationService, private docService: DocService, private elRef: ElementRef
+    private annotationService: AnnotationService, private docService: DocService
   ) {}
+  // private elRef: ElementRef
 
   ngOnInit() {
     this.id = this.route.snapshot.paramMap.get('postId');
@@ -117,7 +120,7 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewInit, Af
         this.highlight(this.thewords);
         // this.documentSpecificWords(this.docWords);
         // this.urlify(this.reference);
-      }, 800);
+      }, 1000);
   }
 
   highlight(words) {
@@ -339,17 +342,17 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewInit, Af
   });
 }
 
-  ngAfterViewInit() {
-  // console.log(this.thePostTest.nativeElement.value);
-  const div = this.elRef.nativeElement.querySelector('#thePostTest');
-  console.log('first ', div);
-}
+//   ngAfterViewInit() {
+//   // console.log(this.thePostTest.nativeElement.value);
+//   const div = this.elRef.nativeElement.querySelector('#thePostTest');
+//   console.log('first ', div);
+// }
 
-// for transcluded content
-ngAfterContentInit() {
-  const div = this.elRef.nativeElement.querySelector('#thePostTest');
-  console.log('last ', div);
-}
+// // for transcluded content
+// ngAfterContentInit() {
+//   const div = this.elRef.nativeElement.querySelector('#thePostTest');
+//   console.log('last ', div);
+// }
 
   ngOnDestroy() {
     this.postsSub.unsubscribe();
