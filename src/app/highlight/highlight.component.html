@@ -1,0 +1,11 @@
+<p class="definition" [appHardWordHighlight]="hardWords" #paragraph *ngIf="!loading; else spinner">
+    {{ postIWant }}
+  </p>
+
+  <ng-template #spinner>
+    <div class="spinner"></div>
+  </ng-template>
+
+  <div class="actions">
+    <button *ngIf="selectedText" (click)="createDefinition()">New definition</button>
+  </div>

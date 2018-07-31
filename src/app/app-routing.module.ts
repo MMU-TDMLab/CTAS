@@ -6,6 +6,8 @@ import { CourseComponent } from './course/course.component';
 import { ModuleComponent } from './course/module/module.component';
 import { AuthGuard } from './auth/auth.guard';
 import { AnnotationComponent } from './annotation/annotation.component';
+import { HighlightComponent } from './highlight/highlight.component';
+import { DefinitionComponent } from './highlight/definition/definition.component';
 
 
 
@@ -17,6 +19,8 @@ const appRoutes: Routes = [
   { path: 'edit/:postId', component: ModuleComponent, canActivate: [AuthGuard]  },
   { path: 'annotation', component: AnnotationComponent, canActivate: [AuthGuard] },
   { path: 'annotation/:postId', component: AnnotationComponent, canActivate: [AuthGuard] },
+  { path: 'highlight', component: HighlightComponent },
+  { path: 'highlight/:word', component: DefinitionComponent },
   { path: 'auth', loadChildren: './auth/auth.module#AuthModule'}
 ];
 

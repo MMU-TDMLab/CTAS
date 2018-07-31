@@ -1,0 +1,6 @@
+<input type="text" [formControl]="definition" placeholder="New definition for {{ word }}">
+
+<div class="actions">
+  <button class="edit" (click)="service.editDefinition(word, definition.value)">Edit definition</button>
+  <button class="delete"(click)="service.deleteDefinition(word)">Delete definition</button>
+</div>

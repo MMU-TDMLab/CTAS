@@ -1,0 +1,33 @@
+button {
+  padding: 12px;
+  background: #ddd;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+  &.delete {
+    background: rgba(255, 0, 0, 0.2);
+    border-color: rgba(255, 0, 0, 0.3);
+  }
+  &.edit {
+    background: rgba(0, 0, 255, 0.2);
+    border-color: rgba(0, 0, 255, 0.3);
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 24px;
+  button:not(:last-child) {
+    margin-right: 12px;
+  }
+}
+
+input {
+  margin: 24px;
+  margin-bottom: -16px;
+  padding: 12px;
+  width: 215px;
+}

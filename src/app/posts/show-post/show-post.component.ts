@@ -72,6 +72,15 @@ export class ShowPostComponent implements OnInit, OnDestroy {
     this.annoClicked = false;
   }
 
+  // onAnnotation(postId: string) {
+  //   if (this.annoClicked === false) {
+  //     this.annoClicked = true;
+  //     this.router.navigate(['/highlight', postId]);
+  //   }
+  //   this.annoClicked = false;
+  // }
+
+
   onDelete(postId: string) {
     // this.isLoading = true;
     this.postsService.deletePost(postId);

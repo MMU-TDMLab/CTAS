@@ -20,7 +20,10 @@ import { ErrorComponent } from './error/error.component';
 import { AngularMaterialModule } from './angular-material.module';
 import { PostsModule } from './posts/posts.module';
 import { DocService } from './annotation/document.service';
-// import { HardWordHighlightDirective } from './annotation/hard-word-highlight.directive';
+import { HardWordHighlightDirective } from './highlight/hard-word-highlight.directive';
+import { HighlightService } from './highlight/highlight.service';
+import { DefinitionComponent } from './highlight/definition/definition.component';
+import { HighlightComponent } from './highlight/highlight.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +34,9 @@ import { DocService } from './annotation/document.service';
     ModuleComponent,
     AnnotationComponent,
     ErrorComponent,
-    // HardWordHighlightDirective
+    DefinitionComponent,
+    HighlightComponent,
+    HardWordHighlightDirective
   ],
   imports: [
     BrowserModule,
@@ -44,7 +49,7 @@ import { DocService } from './annotation/document.service';
     PostsModule,
   ],
   providers: [
-    PostsService, AnnotationService, AuthService, DocService,
+    PostsService, AnnotationService, AuthService, DocService, HighlightService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
