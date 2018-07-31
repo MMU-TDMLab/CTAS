@@ -1,4 +1,4 @@
-import { Component, ViewChild, HostListener, OnInit } from '@angular/core';
+import { Component, ViewChild, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { HighlightService } from './highlight.service';
 import { map, delay } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { PostsService } from '../posts/posts.service';
   templateUrl: './highlight.component.html',
   styleUrls: ['./highlight.component.scss']
 })
-export class HighlightComponent implements OnInit {
+export class HighlightComponent implements OnInit, OnDestroy {
   public reference = '';
   private postsSub: Subscription;
   posts: Post[] = [];
@@ -44,7 +44,7 @@ export class HighlightComponent implements OnInit {
         map(words => {
         this.loading = true;
         return words;
-      }), delay(1000))
+      }), delay(500))
       // Treat the observable : show the paragraph and store the words to send to the directive
       .subscribe(words => {
         this.hardWords = words;
@@ -54,17 +54,19 @@ export class HighlightComponent implements OnInit {
 
   ngOnInit() {
     this.id = this.route.snapshot.paramMap.get('postId');
-    this.postsSub = this.postsService
-      .getPostUpdateListenerTwo()
-      .subscribe((posts: Post[]) => {
-        this.posts = posts;
-        this.posts.map(post => {
-          if (post.id === this.id) {
-            this.postIWant = post.body;
-            this.reference = post.references;
-          }
-        });
-      });
+
+    // this.postsSub = this.postsService
+    // .getPostUpdateListener()
+    // .subscribe((posts: Post[]) => {
+    //   console.log(this.id);
+    //     this.posts = posts;
+    //     this.posts.map(post => {
+    //       if (post.id === this.id) {
+    //         this.postIWant = post.body;
+    //         this.reference = post.references;
+    //       }
+    //     });
+    //   });
   }
 
   /**
@@ -72,7 +74,7 @@ export class HighlightComponent implements OnInit {
    */
   createDefinition() {
     this.service.createDefinition(this.selectedText);
-    this.router.navigate(['/highlight', this.selectedText]);
+    this.router.navigate(['highlight/', this.id , this.selectedText]);
   }
 
   /**
@@ -82,4 +84,8 @@ export class HighlightComponent implements OnInit {
    */
   @HostListener('document:click')
   checkSelection() {}
+
+  ngOnDestroy() {
+    this.postsSub.unsubscribe();
+  }
 }

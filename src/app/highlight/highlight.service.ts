@@ -1,5 +1,14 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
+
+import { ComplexWord } from '../annotation/complex-word.model';
+import { environment } from '../../environments/environment';
+
+const BACKEND_URL = environment.apiUrl + '/words/';
 
 @Injectable()
 export class HighlightService {
@@ -14,7 +23,7 @@ export class HighlightService {
     definition: string
   }[]> = new BehaviorSubject(this.hardWords);
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   /**
    * Returns the definitions
@@ -22,6 +31,10 @@ export class HighlightService {
   getDefinitions() {
     // Transform the subject in an observable, so that it can be monitored
     return this.words.asObservable();
+  }
+
+  getWordUpdateListener(): Observable<any> {
+    return this.http.get<any>(BACKEND_URL);
   }
 
   /**

@@ -17,10 +17,10 @@ const appRoutes: Routes = [
   { path: 'course', component: CourseComponent, canActivate: [AuthGuard] },
   { path: 'module', component: ModuleComponent, canActivate: [AuthGuard]  },
   { path: 'edit/:postId', component: ModuleComponent, canActivate: [AuthGuard]  },
-  { path: 'annotation', component: AnnotationComponent, canActivate: [AuthGuard] },
+  // { path: 'annotation', component: AnnotationComponent, canActivate: [AuthGuard] },
   { path: 'annotation/:postId', component: AnnotationComponent, canActivate: [AuthGuard] },
-  { path: 'highlight', component: HighlightComponent },
-  { path: 'highlight/:word', component: DefinitionComponent },
+  { path: 'highlight/:postId', component: HighlightComponent },
+  { path: 'highlight/:postId/:word', component: DefinitionComponent },
   { path: 'auth', loadChildren: './auth/auth.module#AuthModule'}
 ];
 
