@@ -1,18 +1,18 @@
 <div class="container">
-  <p class="column left">
+  <div class="column left">
     <!-- Empty here -->
-  </p>
-  <p class="definition" [appHardWordHighlight]="hardWords" #paragraph *ngIf="!loading; else spinner">
-    <!-- {{ postIWant }} -->
-    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis officia quidem, asperiores excepturi aliquam maxime dolorem
-	illo inventore, nesciunt error odio iure quibusdam quae accusantium provident similique esse rem repellendus eligendi facere
-	minus perspiciatis molestias nobis adipisci. Nostrum blanditiis numquam minima! Facilis ut eaque odio ea quibusdam culpa,
-	quis ducimus.
-  </p>
-  <p class="actions">
-    <button *ngIf="selectedText" (click)="createDefinition()">New definition</button>
-  </p>
-  <ng-template #spinner>
-    <div class="spinner"></div>
-  </ng-template>
-</div>
+  </div>
+  <div class="definition" [appHardWordHighlight]="hardWords" #paragraph *ngIf="!loading && postIWant; else spinner">
+    {{ postIWant }}
+    <!-- According to Renaissance accounts, gigantic, triangular fossil teeth often found embedded in rocky formations were once believed to be the petrified tongues, or glossopetrae, of dragons and snakes. This interpretation was corrected in 1667 by Danish naturalist Nicolas Steno, who recognized them as shark teeth, and famously produced a depiction of a shark's head bearing such teeth. He described his findings in the book The Head of a Shark Dissected, which also contained an illustration of a megalodon tooth.edit A drawing of a swimming shark showing the front left underside view Restoration of megalodon with a similar appearance to the great white shark One interpretation on how megalodon appeared was that it was a robust-looking shark, and may have had a similar build to the great white shark. -->
+  </div>
+    <ng-template #spinner>
+      <div class="spinner"></div>
+    </ng-template>
+    <div class="column right">
+      <div class="actions">
+        <button *ngIf="selectedText" (click)="createDefinition()">New definition</button>
+      </div>
+      <app-definition [style.display]="definitionComponent.word ? 'block' : 'none'"></app-definition>
+      </div>
+  </div>

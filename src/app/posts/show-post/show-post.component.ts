@@ -64,21 +64,21 @@ export class ShowPostComponent implements OnInit, OnDestroy {
     }
   }
 
-  // onAnnotation(postId: string) {
-  //   if (this.annoClicked === false) {
-  //     this.annoClicked = true;
-  //     this.router.navigate(['/annotation', postId]);
-  //   }
-  //   this.annoClicked = false;
-  // }
-
   onAnnotation(postId: string) {
     if (this.annoClicked === false) {
       this.annoClicked = true;
-      this.router.navigate(['/highlight', postId]);
+      this.router.navigate(['/annotation', postId]);
     }
     this.annoClicked = false;
   }
+
+  // onAnnotation(postId: string) {
+  //   if (this.annoClicked === false) {
+  //     this.annoClicked = true;
+  //     this.router.navigate(['/highlight', postId]);
+  //   }
+  //   this.annoClicked = false;
+  // }
 
 
   onDelete(postId: string) {

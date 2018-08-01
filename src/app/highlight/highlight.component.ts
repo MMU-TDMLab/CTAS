@@ -1,29 +1,41 @@
 import { Component, ViewChild, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { HighlightService } from './highlight.service';
 import { map, delay } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
-
 import { Subscription } from 'rxjs';
+
 import { Post } from '../posts/post.model';
+import { ComplexWord } from '../annotation/complex-word.model';
 import { PostsService } from '../posts/posts.service';
+import { AnnotationService } from '../annotation/annotation.service';
+import { HighlightService } from './highlight.service';
+import { DefinitionComponent } from './definition/definition.component';
 @Component({
   selector: 'app-highlight',
   templateUrl: './highlight.component.html',
   styleUrls: ['./highlight.component.scss']
 })
 export class HighlightComponent implements OnInit, OnDestroy {
-  public reference = '';
+  // ****
   private postsSub: Subscription;
+  private annotationSub: Subscription;
   posts: Post[] = [];
+  words: ComplexWord[] = [];
   public id: string;
   public postIWant: string;
+  public thewords: string[];
+  public theHardWords = [];
+  public wordWithAnnotation = [];
+  public reference = '';
+  // ****
 
   // Words that will be sent to the directive. They're updated from the service (see below)
   hardWords: {
     word: string,
     definition: string
   }[];
+
+  @ViewChild(DefinitionComponent) definitionComponent: DefinitionComponent;
 
   // Boolean used to show the spinner. This is required to refresh the directive.
   loading = false;
@@ -34,8 +46,9 @@ export class HighlightComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private service: HighlightService, private router: Router,
-    public postsService: PostsService, public route: ActivatedRoute) {
+    public service: HighlightService, private router: Router,
+    public postsService: PostsService, public route: ActivatedRoute,
+    public annotationService: AnnotationService) {
     // Get the first definitions
     this.service.getDefinitions()
       // Pipe the Observable (= do something before treating it)
@@ -44,7 +57,7 @@ export class HighlightComponent implements OnInit, OnDestroy {
         map(words => {
         this.loading = true;
         return words;
-      }), delay(400))
+      }), delay(1))
       // Treat the observable : show the paragraph and store the words to send to the directive
       .subscribe(words => {
         this.hardWords = words;
@@ -54,7 +67,9 @@ export class HighlightComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.id = this.route.snapshot.paramMap.get('postId');
+    this.annotationService.getWords();
     this.postsService.getPosts();
+
     this.postsSub = this.postsService
     .getPostUpdateListenerTwo()
     .subscribe((posts: Post[]) => {
@@ -66,6 +81,17 @@ export class HighlightComponent implements OnInit, OnDestroy {
           }
         });
       });
+
+      this.annotationSub = this.annotationService
+      .getWordUpdateListenerTwo()
+      .subscribe((theHardWords: ComplexWord[]) => {
+        this.thewords = [];
+        this.theHardWords = theHardWords;
+        this.theHardWords.map(word => {
+          this.thewords.push(word.word);
+          this.wordWithAnnotation.push(word);
+        });
+      });
   }
 
   /**
@@ -73,18 +99,18 @@ export class HighlightComponent implements OnInit, OnDestroy {
    */
   createDefinition() {
     this.service.createDefinition(this.selectedText);
-    this.router.navigate(['highlight/', this.id , this.selectedText]);
+    this.service.wordChange.next(this.selectedText);
   }
 
   /**
    * Angular hack : this allows us to check if the user has selected text everytime a click is performed.
    * The button to create a definition will then appear, because the getter will be ran during the change detection.
-   * As said, this is a hack, if you don't get it, just forget it for now
    */
   @HostListener('document:click')
   checkSelection() {}
 
   ngOnDestroy() {
     this.postsSub.unsubscribe();
+    this.annotationSub.unsubscribe();
   }
 }

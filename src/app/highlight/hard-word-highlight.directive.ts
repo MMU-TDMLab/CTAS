@@ -2,6 +2,8 @@ import { Directive, ElementRef, Input, Renderer2, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
+import { HighlightService } from '../highlight/highlight.service';
+
 @Directive({
   selector: '[appHardWordHighlight]'
 })
@@ -21,10 +23,13 @@ export class HardWordHighlightDirective implements OnInit {
     private el: ElementRef,
     private renderer: Renderer2,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private highlightService: HighlightService
   ) {
-    // Store the HTML paragraph to work on it
-    this.paragraph = el.nativeElement;
+    setTimeout(() => {
+      // Store the HTML paragraph to work on it
+      this.paragraph = el.nativeElement;
+    }, 200);
   }
 
   ngOnInit() {
@@ -32,9 +37,8 @@ export class HardWordHighlightDirective implements OnInit {
     this.highlightWords();
 
     // Bind an event to the window (see below)
-    window['routeTo'] = (word) => {
-      // this.router.navigate([`/${word}`]);
-      this.router.navigate([`./${word}`], { relativeTo: this.route });
+    window['propagateWordEvent'] = (word) => {
+      this.highlightService.wordChange.next(word);
     };
   }
 

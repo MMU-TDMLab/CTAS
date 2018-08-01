@@ -14,7 +14,7 @@ const BACKEND_URL = environment.apiUrl + '/words/';
 export class HighlightService {
 
   private hardWords = [{
-    word: 'Lorem',
+    word: 'Renaissance',
     definition: 'First word of the Lorem Ipsum placeholder'
   }];
 
@@ -22,6 +22,8 @@ export class HighlightService {
     word: string,
     definition: string
   }[]> = new BehaviorSubject(this.hardWords);
+
+  wordChange: BehaviorSubject<string> = new BehaviorSubject(null);
 
   constructor(private http: HttpClient) { }
 

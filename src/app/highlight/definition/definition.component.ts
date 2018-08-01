@@ -1,7 +1,5 @@
-import { Component, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { Component, ViewChild } from '@angular/core';
 import { filter } from 'rxjs/operators';
-import { Location } from '@angular/common';
 
 import { HighlightService } from '../highlight.service';
 import { FormControl } from '@angular/forms';
@@ -19,25 +17,18 @@ export class DefinitionComponent {
   @ViewChild('newDef', { read: HTMLInputElement }) newDef: HTMLInputElement;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private cdRef: ChangeDetectorRef,
     public service: HighlightService,
-    private _location: Location
   ) {
-    this.router.onSameUrlNavigation = 'reload';
-
     this.definition = new FormControl('');
 
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(event => {
-        this.word = this.route.snapshot.params.word;
-        this.definition.setValue(this.service.getDefinitionForWord(this.word));
-        this.cdRef.detectChanges();
-      });
+    // Once we receive a word change event, set the current word and the value of the form control
+    this.service.wordChange
+    // this is used to ignore the subscribe if the word is undefined
+    .pipe(filter(word => !!word))
+    .subscribe(word => {
+      this.word = word;
+      // Set the value of the input
+      this.definition.setValue(this.service.getDefinitionForWord(this.word));
+    });
   }
-  backClicked() {
-    this._location.back();
-}
 }

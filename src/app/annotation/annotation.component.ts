@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewChecked } from '@angular/core';
 // , ElementRef, ViewChildren, AfterViewInit, ViewChild, AfterContentInit
 import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -17,8 +17,8 @@ import { DocService } from './document.service';
   templateUrl: './annotation.component.html',
   styleUrls: ['./annotation.component.css']
 })
-// AfterViewInit, AfterContentInit
-export class AnnotationComponent implements OnInit, OnDestroy {
+// AfterViewInit, AfterContentInit AfterContentInit,
+export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked {
   // @ViewChildren('thePostTest') thePostTest: ElementRef;
   // @ViewChild('thePostTest') thePostTest: ElementRef;
   form: FormGroup;
@@ -26,8 +26,6 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   words: ComplexWord[] = [];
   docWord: DocWord[] = [];
   public isLoading = true;
-  public wordsLoaded: boolean;
-  public postLoaded: boolean;
   public thewords: string[];
   public role: string;
   public id: string;
@@ -48,8 +46,13 @@ export class AnnotationComponent implements OnInit, OnDestroy {
   public editing: boolean;
   public reference = '';
 
-  constructor( public postsService: PostsService, private authService: AuthService, public route: ActivatedRoute,
-    private annotationService: AnnotationService, private docService: DocService
+  constructor(
+    public postsService: PostsService,
+    private authService: AuthService,
+    public route: ActivatedRoute,
+    private annotationService: AnnotationService,
+    private docService: DocService,
+    // private cdRef: ChangeDetectorRef
   ) {}
   // private elRef: ElementRef
 
@@ -100,7 +103,7 @@ export class AnnotationComponent implements OnInit, OnDestroy {
         this.docWords = docWord;
         this.docWords.map(doc => {
           if (doc.document_id === this.id) {
-            console.log('doc id ', doc.document_id, 'postid ', this.id);
+            // console.log('doc id ', doc.document_id, 'postid ', this.id);
             this.docWords.push(doc.word);
           }
         });
@@ -116,40 +119,45 @@ export class AnnotationComponent implements OnInit, OnDestroy {
       });
       this.isLoading = false;
 
-      setTimeout(() => {
-        this.highlight(this.thewords);
-        // this.documentSpecificWords(this.docWords);
-        // this.urlify(this.reference);
-      }, 1000);
+      // setTimeout(() => {
+      //   this.highlight(this.thewords);
+      // }, 2000);
+      // this.documentSpecificWords(this.docWords);
+      // this.urlify(this.reference);
   }
 
   highlight(words) {
-      const high = document.getElementById('scrollable');
-      const paragraph = high.innerHTML.split(' ');
-      const res = [];
+    try {
+    const high = document.getElementById('scrollable');
+    const paragraph = high.innerHTML.split(' ');
+    const res = [];
 
-        paragraph.map(word => {
-          let t = word;
-          if (words.indexOf(word) > -1) {
-            t =
-              '<a class="clickable" style="background-color: yellow; text-decoration: underline;">' +
-              word +
-              '</a>';
-          }
-          res.push(t);
-        });
-        high.innerHTML = res.join(' ');
-        const elementsToMakeClickable = document.getElementsByClassName(
-          'clickable'
-        );
-        const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
-        elementsToMakeClickableArray.map(element => {
-          element.addEventListener('click', this.viewAnnotation.bind(this));
-        });
-        document.getElementById('btnHighLight').style.visibility = 'visible';
+      paragraph.map(word => {
+        let t = word;
+        if (words.indexOf(word) > -1) {
+          t =
+            '<a class="clickable" style="background-color: yellow; text-decoration: underline;">' +
+            word +
+            '</a>';
+        }
+        res.push(t);
+      });
+      high.innerHTML = res.join(' ');
+      const elementsToMakeClickable = document.getElementsByClassName(
+        'clickable'
+      );
+      const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
+      elementsToMakeClickableArray.map(element => {
+        element.addEventListener('click', this.viewAnnotation.bind(this));
+      });
+      document.getElementById('btnHighLight').style.visibility = 'visible';
+    } catch (e) {
+      // console.log(e);
+    }
   }
 
   documentSpecificWords = words => {
+    try {
     const high = document.getElementById('scrollable');
     const paragraph = high.innerHTML.split(' ');
     const res = [];
@@ -173,11 +181,15 @@ export class AnnotationComponent implements OnInit, OnDestroy {
       element.addEventListener('click', this.viewAnnotation.bind(this));
     });
     document.getElementById('btnHighLight').style.visibility = 'visible';
+  } catch (e) {
+    // console.log(e);
+  }
   }
 
   viewAnnotation(e) {
     const word = e.target.textContent;
     this.findAnnotation(word);
+    // console.log(this.docWords);
   }
 
   highlightSelection() {
@@ -343,16 +355,23 @@ export class AnnotationComponent implements OnInit, OnDestroy {
 }
 
 //   ngAfterViewInit() {
+//     setTimeout(() => {
+//       this.highlight(this.thewords);
+//     }, 2000);
 //   // console.log(this.thePostTest.nativeElement.value);
-//   const div = this.elRef.nativeElement.querySelector('#thePostTest');
-//   console.log('first ', div);
 // }
 
 // // for transcluded content
 // ngAfterContentInit() {
-//   const div = this.elRef.nativeElement.querySelector('#thePostTest');
-//   console.log('last ', div);
+  // setTimeout(() => {
+  //         this.highlight(this.thewords);
+  //       }, 1000);
 // }
+
+ngAfterViewChecked() {
+    this.highlight(this.thewords);
+    this.documentSpecificWords(this.docWords);
+}
 
   ngOnDestroy() {
     this.postsSub.unsubscribe();
