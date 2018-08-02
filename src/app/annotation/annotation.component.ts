@@ -281,6 +281,7 @@ export class AnnotationComponent
     if (!this.form.valid) {
       return;
     }
+    if (confirm('Are you sure you want to save ' + this.word + ' to all documents?')) {
     this.annotation = this.form.value.annotation;
     this.annotationService.addWord(this.word, this.annotation);
     this.form.reset();
@@ -295,6 +296,9 @@ export class AnnotationComponent
       this.highlight(this.thewords);
       this.documentSpecificWords(this.docWords);
     }, 400);
+    } else {
+      alert(this.word + ' has not been saved.');
+    }
   }
 
   addToDoc() {

@@ -69,7 +69,7 @@
           </ng-template>
           <ng-template [ngIf]="userIsAuthenticated && form.valid && !editing && (this.role == 'teacher' ||  this.role == 'admin')">
             <button class="btn btn-success btn-sm" id="postbtn" type="button" (click)='onAnnotate()' [disabled]="!form.valid">Save To All Documents</button>
-            <button class="btn btn-success btn-sm" id="postbtn" type="button" (click)='addToDoc()' [disabled]="!form.valid">Save To This Document</button>
+            <button class="btn btn-success btn-sm" id="postDocbtn" type="button" (click)='addToDoc()' [disabled]="!form.valid">Save To This Document</button>
           </ng-template>
           <ng-template [ngIf]="userIsAuthenticated && !editing && showingAnnotation && docTrue && (this.role == 'teacher' ||  this.role == 'admin')">
             <button class="btn btn-secondary btn-sm" id="editBtn" type="button" (click)='onEditWord()'>Edit Annotation</button>
