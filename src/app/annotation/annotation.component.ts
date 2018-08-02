@@ -118,12 +118,6 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
         this.role = this.authService.getUserRole();
       });
       this.isLoading = false;
-
-      // setTimeout(() => {
-      //   this.highlight(this.thewords);
-      // }, 2000);
-      // this.documentSpecificWords(this.docWords);
-      // this.urlify(this.reference);
   }
 
   highlight(words) {
@@ -189,7 +183,6 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
   viewAnnotation(e) {
     const word = e.target.textContent;
     this.findAnnotation(word);
-    // console.log(this.docWords);
   }
 
   highlightSelection() {
@@ -295,14 +288,37 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.theHardWords.map(word => {
       this.thewords = word.word;
     });
-    this.docWords.map(word => {
-      this.docWords = word.word;
-    });
+    // this.docWords.map(word => {
+    //   this.docWords = word.word;
+    // });
     setTimeout(() => {
     this.highlight(this.thewords);
     this.documentSpecificWords(this.docWords);
-  }, 200);
+  }, 400);
   }
+
+  addToDoc() {
+    if (!this.form.valid) {
+    return;
+  }
+  this.annotation = this.form.value.annotation;
+  this.docService.addWord(this.word, this.annotation, this.id);
+  this.form.reset();
+  this.word = '';
+  this.ngOnInit();
+  this.docService.getWords();
+  this.annotationService.getWords();
+  // this.theHardWords.map(word => {
+  //   this.thewords = word.word;
+  // });
+  this.docWords.map(word => {
+    this.docWords = word.word;
+  });
+  setTimeout(() => {
+  this.highlight(this.thewords);
+  this.documentSpecificWords(this.docWords);
+}, 400);
+}
 
   onEditWord() {
     this.editing = true;
@@ -342,7 +358,7 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
     setTimeout(() => {
       this.highlight(this.thewords);
       this.documentSpecificWords(this.docWords);
-    }, 200);
+    }, 400);
   }
 
   urlify(reference) {
@@ -354,19 +370,6 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
   });
 }
 
-//   ngAfterViewInit() {
-//     setTimeout(() => {
-//       this.highlight(this.thewords);
-//     }, 2000);
-//   // console.log(this.thePostTest.nativeElement.value);
-// }
-
-// // for transcluded content
-// ngAfterContentInit() {
-  // setTimeout(() => {
-  //         this.highlight(this.thewords);
-  //       }, 1000);
-// }
 
 ngAfterViewChecked() {
     this.highlight(this.thewords);
