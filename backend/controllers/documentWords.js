@@ -5,9 +5,10 @@ exports.newWord = (req, res, next) => {
   const word = new DocumentWord({
     word: req.body.word,
     annotation: req.body.annotation,
-    document_id: req.body.id,
+    document_id: req.body.document_id,
   });
   // console.log(req.body);
+  console.log(word);
   word.save()
     .then(result => {
       res.status(200).json({

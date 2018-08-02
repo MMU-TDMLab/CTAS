@@ -61,6 +61,14 @@
   margin-top: 1.25em;
 }
 
+#editDocBtn {
+  margin-top: 0.5em;
+}
+
+#deleteDocBtn {
+  margin-top: 1.25em;
+}
+
 .container {
   display: flex;
   max-width: 1200px;
@@ -82,4 +90,12 @@ mat-spinner {
 .column.right {
   margin-left: 2em;
   flex: 0 0 230px;
+}
+
+#saveEditBtn {
+  margin: auto;
+}
+
+#saveDocEditBtn {
+  margin: auto;
 }

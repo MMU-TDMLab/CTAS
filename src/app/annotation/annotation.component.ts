@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, AfterViewChecked } from '@angular/core';
-// , ElementRef, ViewChildren, AfterViewInit, ViewChild, AfterContentInit
 import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -17,10 +16,8 @@ import { DocService } from './document.service';
   templateUrl: './annotation.component.html',
   styleUrls: ['./annotation.component.css']
 })
-// AfterViewInit, AfterContentInit AfterContentInit,
-export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked {
-  // @ViewChildren('thePostTest') thePostTest: ElementRef;
-  // @ViewChild('thePostTest') thePostTest: ElementRef;
+export class AnnotationComponent
+  implements OnInit, OnDestroy, AfterViewChecked {
   form: FormGroup;
   posts: Post[] = [];
   words: ComplexWord[] = [];
@@ -45,15 +42,17 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
   public userIsAuthenticated = false;
   public editing: boolean;
   public reference = '';
+  public wordReference = '';
+  public docTrue: boolean;
+  public wordId;
 
   constructor(
     public postsService: PostsService,
     private authService: AuthService,
     public route: ActivatedRoute,
     private annotationService: AnnotationService,
-    private docService: DocService,
-    // private cdRef: ChangeDetectorRef
-  ) {}
+    private docService: DocService
+  ) {} // private cdRef: ChangeDetectorRef
   // private elRef: ElementRef
 
   ngOnInit() {
@@ -68,7 +67,7 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
           Validators.minLength(8),
           Validators.maxLength(250)
         ]
-      }),
+      })
     });
     this.annotationService.getWords();
     this.postsService.getPosts();
@@ -103,28 +102,27 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
         this.docWords = docWord;
         this.docWords.map(doc => {
           if (doc.document_id === this.id) {
-            // console.log('doc id ', doc.document_id, 'postid ', this.id);
             this.docWords.push(doc.word);
           }
         });
       });
 
-      this.role = this.authService.getUserRole();
-      this.userIsAuthenticated = this.authService.getIsAuth();
-      this.authStatus = this.authService
+    this.role = this.authService.getUserRole();
+    this.userIsAuthenticated = this.authService.getIsAuth();
+    this.authStatus = this.authService
       .getAuthStatus()
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
         this.role = this.authService.getUserRole();
       });
-      this.isLoading = false;
+    this.isLoading = false;
   }
 
   highlight(words) {
     try {
-    const high = document.getElementById('scrollable');
-    const paragraph = high.innerHTML.split(' ');
-    const res = [];
+      const high = document.getElementById('scrollable');
+      const paragraph = high.innerHTML.split(' ');
+      const res = [];
 
       paragraph.map(word => {
         let t = word;
@@ -152,32 +150,32 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
 
   documentSpecificWords = words => {
     try {
-    const high = document.getElementById('scrollable');
-    const paragraph = high.innerHTML.split(' ');
-    const res = [];
+      const high = document.getElementById('scrollable');
+      const paragraph = high.innerHTML.split(' ');
+      const res = [];
 
-    paragraph.map(word => {
-      let t = word;
-      if (words.indexOf(word) > -1) {
-        t =
-          '<a class="clickable" style="background-color: yellow; text-decoration: underline;">' +
-          word +
-          '</a>';
-      }
-      res.push(t);
-    });
-    high.innerHTML = res.join(' ');
-    const elementsToMakeClickable = document.getElementsByClassName(
-      'clickable'
-    );
-    const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
-    elementsToMakeClickableArray.map(element => {
-      element.addEventListener('click', this.viewAnnotation.bind(this));
-    });
-    document.getElementById('btnHighLight').style.visibility = 'visible';
-  } catch (e) {
-    // console.log(e);
-  }
+      paragraph.map(word => {
+        let t = word;
+        if (words.indexOf(word) > -1) {
+          t =
+            '<a class="clickable" style="background-color: yellow; text-decoration: underline;">' +
+            word +
+            '</a>';
+        }
+        res.push(t);
+      });
+      high.innerHTML = res.join(' ');
+      const elementsToMakeClickable = document.getElementsByClassName(
+        'clickable'
+      );
+      const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
+      elementsToMakeClickableArray.map(element => {
+        element.addEventListener('click', this.viewAnnotation.bind(this));
+      });
+      document.getElementById('btnHighLight').style.visibility = 'visible';
+    } catch (e) {
+      // console.log(e);
+    }
   }
 
   viewAnnotation(e) {
@@ -263,19 +261,24 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
 
     this.theHardWords.map(word => {
       if (word.word === this.setWord) {
+        this.wordReference = 'Global';
+        this.docTrue = true;
         this.showingAnnotation = word.annotation;
       }
     });
 
     this.docWords.map(word => {
       if (word.word === this.setWord) {
-      this.showingAnnotation = word.annotation;
+        this.wordReference = 'Doc Specific Word';
+        this.docTrue = false;
+        this.wordId = word.document_id;
+        this.showingAnnotation = word.annotation;
       }
     });
   }
 
   onAnnotate() {
-      if (!this.form.valid) {
+    if (!this.form.valid) {
       return;
     }
     this.annotation = this.form.value.annotation;
@@ -288,37 +291,31 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.theHardWords.map(word => {
       this.thewords = word.word;
     });
-    // this.docWords.map(word => {
-    //   this.docWords = word.word;
-    // });
     setTimeout(() => {
-    this.highlight(this.thewords);
-    this.documentSpecificWords(this.docWords);
-  }, 400);
+      this.highlight(this.thewords);
+      this.documentSpecificWords(this.docWords);
+    }, 400);
   }
 
   addToDoc() {
     if (!this.form.valid) {
-    return;
+      return;
+    }
+    this.annotation = this.form.value.annotation;
+    this.docService.addWord(this.word, this.annotation, this.id);
+    this.form.reset();
+    this.word = '';
+    this.ngOnInit();
+    this.docService.getWords();
+    this.annotationService.getWords();
+    this.docWords.map(word => {
+      this.docWords = word.word;
+    });
+    setTimeout(() => {
+      this.highlight(this.thewords);
+      this.documentSpecificWords(this.docWords);
+    }, 400);
   }
-  this.annotation = this.form.value.annotation;
-  this.docService.addWord(this.word, this.annotation, this.id);
-  this.form.reset();
-  this.word = '';
-  this.ngOnInit();
-  this.docService.getWords();
-  this.annotationService.getWords();
-  // this.theHardWords.map(word => {
-  //   this.thewords = word.word;
-  // });
-  this.docWords.map(word => {
-    this.docWords = word.word;
-  });
-  setTimeout(() => {
-  this.highlight(this.thewords);
-  this.documentSpecificWords(this.docWords);
-}, 400);
-}
 
   onEditWord() {
     this.editing = true;
@@ -328,8 +325,6 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
 
   onEditSub() {
     this.editing = false;
-    document.getElementById('editBtn').style.visibility = 'visible';
-    document.getElementById('deleteBtn').style.visibility = 'visible';
     let theWord: string;
     let theAnnotation: string;
     theWord = this.word;
@@ -338,11 +333,32 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.resetAlertBox();
   }
 
+  onDocEditWord() {
+    this.editing = true;
+    document.getElementById('editDocBtn').style.visibility = 'hidden';
+    document.getElementById('deleteDocBtn').style.visibility = 'hidden';
+  }
+
+  onDocEditSub() {
+    this.editing = false;
+    let theWord: string;
+    let theAnnotation: string;
+    let wordId: string;
+    theWord = this.word;
+    theAnnotation = this.form.value.annotation;
+    wordId = this.wordId;
+    this.docService.editWord(theWord, theAnnotation, wordId);
+    this.resetAlertBox();
+  }
+
   resetAlertBox() {
     this.word = '';
     this.annotation = '';
+    this.wordReference = '';
     this.form.reset();
     this.editing = false;
+    // document.getElementById('editBtn').style.visibility = 'visible';
+    // document.getElementById('deleteBtn').style.visibility = 'visible';
   }
 
   onDelete() {
@@ -354,6 +370,24 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
     const index = this.thewords.indexOf(deleteWord);
     this.thewords.splice(index);
     this.word = '';
+    this.wordReference = '';
+    this.ngOnInit();
+    setTimeout(() => {
+      this.highlight(this.thewords);
+      this.documentSpecificWords(this.docWords);
+    }, 400);
+  }
+
+  onDocDelete() {
+    let deleteWord: string;
+    deleteWord = this.word;
+    this.docService.deleteWord(deleteWord);
+    this.docService.getWords();
+    this.annotationService.getWords();
+    const index = this.docWords.indexOf(deleteWord);
+    this.docWords.splice(index);
+    this.word = '';
+    this.wordReference = '';
     this.ngOnInit();
     setTimeout(() => {
       this.highlight(this.thewords);
@@ -363,18 +397,17 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
 
   urlify(reference) {
     const text = reference;
-    const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
     // const urlRegex = /(https?:\/\/[^\s]+)/g;
-    return text.replace(urlRegex, (url) => {
+    return text.replace(urlRegex, url => {
       return '<a href="' + url + '">' + url + '</a>';
-  });
-}
+    });
+  }
 
-
-ngAfterViewChecked() {
+  ngAfterViewChecked() {
     this.highlight(this.thewords);
     this.documentSpecificWords(this.docWords);
-}
+  }
 
   ngOnDestroy() {
     this.postsSub.unsubscribe();

@@ -1,4 +1,4 @@
-const multer = require('multer');
+// const multer = require('multer');
 
 // const mimeTypeMap = multer({
 //   fileFilter: function (req, file, cb) {
@@ -14,7 +14,7 @@ const multer = require('multer');
 //   }
 // });
 
-const storage = multer.diskStorage({
+// const storage = multer.diskStorage({
   // destination: (req, file, cb) => {
     // const isValid = mimeTypeMap[file.mimetype];
     // let error = new Error('Invalid mime type');
@@ -30,6 +30,6 @@ const storage = multer.diskStorage({
   //   const fileName = nameWithoutExtension;
   //   cb(null, fileName + '-' + Date.now() + '.' + fileExtention);
   // }
-});
+// });
 
-module.exports = multer({ storage: storage }).single('file');
+// module.exports = multer({ storage: storage }).single('file');

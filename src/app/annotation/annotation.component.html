@@ -35,6 +35,7 @@
       </ng-template>
       <ng-template [ngIf]='word'>
         <form [formGroup]='form'>
+          {{ wordReference }}
           <div class="alert alert-warning alert-dismissible fade show" id="annotation" role="alert">
             <strong>{{ word }}</strong>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)='resetAlertBox()'>
@@ -48,11 +49,17 @@
                   {{ showingAnnotation }}
                 </div>
               </ng-template>
-              <ng-template [ngIf]="userIsAuthenticated && showingAnnotation && editing">
+              <ng-template [ngIf]="userIsAuthenticated && showingAnnotation && editing && docTrue">
                 <div class="alert alert-info" role="alert">
                   <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="{{ showingAnnotation }}" rows="3" formControlName="annotation"></textarea>
                 </div>
                 <button class="btn btn-success btn-sm" id="saveEditBtn" type="button" (click)='onEditSub()' [disabled]="!form.valid">Save Edited Annotation</button>
+              </ng-template>
+              <ng-template [ngIf]="userIsAuthenticated && showingAnnotation && editing && !docTrue">
+                <div class="alert alert-info" role="alert">
+                  <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="{{ showingAnnotation }}" rows="3" formControlName="annotation"></textarea>
+                </div>
+                <button class="btn btn-success btn-sm" id="saveDocEditBtn" type="button" (click)='onDocEditSub()' [disabled]="!form.valid">Save Edited Doc Annotation</button>
               </ng-template>
               <ng-template [ngIf]="userIsAuthenticated && !showingAnnotation">
                 <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Describe Word" rows="3" formControlName="annotation"></textarea>
@@ -64,9 +71,13 @@
             <button class="btn btn-success btn-sm" id="postbtn" type="button" (click)='onAnnotate()' [disabled]="!form.valid">Save To All Documents</button>
             <button class="btn btn-success btn-sm" id="postbtn" type="button" (click)='addToDoc()' [disabled]="!form.valid">Save To This Document</button>
           </ng-template>
-          <ng-template [ngIf]="userIsAuthenticated && !editing && showingAnnotation && (this.role == 'teacher' ||  this.role == 'admin')">
+          <ng-template [ngIf]="userIsAuthenticated && !editing && showingAnnotation && docTrue && (this.role == 'teacher' ||  this.role == 'admin')">
             <button class="btn btn-secondary btn-sm" id="editBtn" type="button" (click)='onEditWord()'>Edit Annotation</button>
             <button class="btn btn-danger btn-sm" id="deleteBtn" type="button" (click)='onDelete()'>Delete Annotation</button>
+          </ng-template>
+          <ng-template [ngIf]="userIsAuthenticated && !editing && showingAnnotation && !docTrue && (this.role == 'teacher' ||  this.role == 'admin')">
+            <button class="btn btn-secondary btn-sm" id="editDocBtn" type="button" (click)='onDocEditWord()'>Edit Doc Annotation</button>
+            <button class="btn btn-danger btn-sm" id="deleteDocBtn" type="button" (click)='onDocDelete()'>Delete Doc Annotation</button>
           </ng-template>
         </form>
         <ng-template [ngIf]="userIsAuthenticated && this.role == 'student'">

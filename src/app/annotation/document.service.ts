@@ -47,6 +47,7 @@ export class DocService {
 
   addWord(word: string, annotation: string, document_id: string) {
     const docWord: DocWord = { word: word, annotation: annotation, document_id: document_id };
+    console.log(docWord);
     return this.http
       .post(BACKEND_URL_Document + '/new-word', docWord)
       .subscribe(
@@ -59,9 +60,10 @@ export class DocService {
       );
   }
 
-  editWord(theWord: string, theAnnotation: string) {
+  editWord(theWord: string, theAnnotation: string, document_id: string) {
     const anno = {
-      annotation: theAnnotation
+      annotation: theAnnotation,
+      document_id: document_id
     };
     this.http
       .put(BACKEND_URL_Document + '/update' + theWord, anno)
@@ -71,7 +73,7 @@ export class DocService {
         const makeDocWord: DocWord = {
           word: theWord,
           annotation: theAnnotation,
-          document_id: null
+          document_id: document_id
         };
         updatedWords[oldWordIndex] = makeDocWord;
         this.docWords = updatedWords;

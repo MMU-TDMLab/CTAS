@@ -2,13 +2,13 @@ const express = require('express');
 
 const router = express.Router();
 
-const extractFile = require('../middleware/file');
+// const extractFile = require('../middleware/file');
 const authCheck = require('../middleware/check-auth');
 const PostController = require('../controllers/posts');
 
 router.post("",
   authCheck,
-  extractFile,
+  // extractFile,
   PostController.createPost);
 
 router.put("/:id",
