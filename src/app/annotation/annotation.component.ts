@@ -261,7 +261,7 @@ export class AnnotationComponent
 
     this.theHardWords.map(word => {
       if (word.word === this.setWord) {
-        this.wordReference = 'Global';
+        this.wordReference = 'Global Word';
         this.docTrue = true;
         this.showingAnnotation = word.annotation;
       }
@@ -269,7 +269,7 @@ export class AnnotationComponent
 
     this.docWords.map(word => {
       if (word.word === this.setWord) {
-        this.wordReference = 'Doc Specific Word';
+        this.wordReference = 'Document Specific Word';
         this.docTrue = false;
         this.wordId = word.document_id;
         this.showingAnnotation = word.annotation;

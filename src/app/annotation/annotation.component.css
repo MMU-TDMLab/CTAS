@@ -27,7 +27,7 @@
 }
 
 #btnHighLight {
-  margin-top: 2.9em;
+  margin-top: 2.5em;
   visibility: hidden;
 }
 
@@ -87,13 +87,15 @@ mat-spinner {
 }
 
 .column.center {
-  font-family: Lato;
   flex: 0 0 450px;
 }
 
 .column.right {
-  margin-left: 2em;
-  flex: 0 0 230px;
+  position: fixed;
+  left: 55em;
+  max-width: 200px;
+  /* margin-left: 2em; */
+  /* flex: 0 0 230px; */
 }
 
 /* #saveEditBtn {
