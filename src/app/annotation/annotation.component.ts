@@ -281,21 +281,26 @@ export class AnnotationComponent
     if (!this.form.valid) {
       return;
     }
-    if (confirm('Are you sure you want to save ' + this.word + ' to all documents?')) {
-    this.annotation = this.form.value.annotation;
-    this.annotationService.addWord(this.word, this.annotation);
-    this.form.reset();
-    this.word = '';
-    this.ngOnInit();
-    this.docService.getWords();
-    this.annotationService.getWords();
-    this.theHardWords.map(word => {
-      this.thewords = word.word;
-    });
-    setTimeout(() => {
-      this.highlight(this.thewords);
-      this.documentSpecificWords(this.docWords);
-    }, 400);
+    if (
+      confirm(
+        'Are you sure you want to save ' + this.word + ' to all documents?'
+      )
+    ) {
+      this.annotation = this.form.value.annotation;
+      this.annotationService.addWord(this.word, this.annotation);
+      this.form.reset();
+      this.word = '';
+      this.ngOnInit();
+      this.docService.getWords();
+      this.annotationService.getWords();
+      this.theHardWords.map(word => {
+        this.thewords = word.word;
+      });
+      // setTimeout(() => {
+      //   this.highlight(this.thewords);
+      //   this.documentSpecificWords(this.docWords);
+      // }, 400);
+      this.ngOnInit();
     } else {
       alert(this.word + ' has not been saved.');
     }
@@ -305,6 +310,11 @@ export class AnnotationComponent
     if (!this.form.valid) {
       return;
     }
+    if (
+      confirm(
+        'Are you sure you want to save ' + this.word + ' to this document?'
+      )
+    ) {
     this.annotation = this.form.value.annotation;
     this.docService.addWord(this.word, this.annotation, this.id);
     this.form.reset();
@@ -315,10 +325,14 @@ export class AnnotationComponent
     this.docWords.map(word => {
       this.docWords = word.word;
     });
-    setTimeout(() => {
-      this.highlight(this.thewords);
-      this.documentSpecificWords(this.docWords);
-    }, 400);
+    // setTimeout(() => {
+    //   this.highlight(this.thewords);
+    //   this.documentSpecificWords(this.docWords);
+    // }, 400);
+    this.ngOnInit();
+  } else {
+    alert(this.word + ' has not been saved.');
+  }
   }
 
   onEditWord() {
@@ -361,8 +375,7 @@ export class AnnotationComponent
     this.wordReference = '';
     this.form.reset();
     this.editing = false;
-    // document.getElementById('editBtn').style.visibility = 'visible';
-    // document.getElementById('deleteBtn').style.visibility = 'visible';
+    this.ngOnInit();
   }
 
   onDelete() {
@@ -376,10 +389,10 @@ export class AnnotationComponent
     this.word = '';
     this.wordReference = '';
     this.ngOnInit();
-    setTimeout(() => {
-      this.highlight(this.thewords);
-      this.documentSpecificWords(this.docWords);
-    }, 400);
+    // setTimeout(() => {
+    //   this.highlight(this.thewords);
+    //   this.documentSpecificWords(this.docWords);
+    // }, 400);
   }
 
   onDocDelete() {
@@ -393,10 +406,10 @@ export class AnnotationComponent
     this.word = '';
     this.wordReference = '';
     this.ngOnInit();
-    setTimeout(() => {
-      this.highlight(this.thewords);
-      this.documentSpecificWords(this.docWords);
-    }, 400);
+    // setTimeout(() => {
+    //   this.highlight(this.thewords);
+    //   this.documentSpecificWords(this.docWords);
+    // }, 400);
   }
 
   urlify(reference) {
