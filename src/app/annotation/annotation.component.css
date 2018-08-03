@@ -44,7 +44,7 @@
 }
 
 #annotation {
-  margin-top: 2.5em;
+  margin-top: 0.5em;
 }
 
 .highlighted {
@@ -96,10 +96,14 @@ mat-spinner {
   flex: 0 0 230px;
 }
 
-#saveEditBtn {
+/* #saveEditBtn {
   margin: auto;
 }
 
 #saveDocEditBtn {
   margin: auto;
+} */
+
+#wordRef {
+  margin-top: 3em;
 }

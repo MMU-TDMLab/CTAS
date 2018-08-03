@@ -296,10 +296,6 @@ export class AnnotationComponent
       this.theHardWords.map(word => {
         this.thewords = word.word;
       });
-      // setTimeout(() => {
-      //   this.highlight(this.thewords);
-      //   this.documentSpecificWords(this.docWords);
-      // }, 400);
       this.ngOnInit();
     } else {
       alert(this.word + ' has not been saved.');
@@ -325,10 +321,6 @@ export class AnnotationComponent
     this.docWords.map(word => {
       this.docWords = word.word;
     });
-    // setTimeout(() => {
-    //   this.highlight(this.thewords);
-    //   this.documentSpecificWords(this.docWords);
-    // }, 400);
     this.ngOnInit();
   } else {
     alert(this.word + ' has not been saved.');
@@ -342,6 +334,11 @@ export class AnnotationComponent
   }
 
   onEditSub() {
+    if (
+      confirm(
+        'Are you sure you want to edit ' + this.word + ' off all documents?'
+      )
+    ) {
     this.editing = false;
     let theWord: string;
     let theAnnotation: string;
@@ -349,6 +346,9 @@ export class AnnotationComponent
     theAnnotation = this.form.value.annotation;
     this.annotationService.editWord(theWord, theAnnotation);
     this.resetAlertBox();
+  } else {
+    alert(this.word + ' has not been edited.');
+  }
   }
 
   onDocEditWord() {
@@ -358,6 +358,11 @@ export class AnnotationComponent
   }
 
   onDocEditSub() {
+    if (
+      confirm(
+        'Are you sure you want to edit ' + this.word + ' off this document?'
+      )
+    ) {
     this.editing = false;
     let theWord: string;
     let theAnnotation: string;
@@ -367,6 +372,9 @@ export class AnnotationComponent
     wordId = this.wordId;
     this.docService.editWord(theWord, theAnnotation, wordId);
     this.resetAlertBox();
+  } else {
+    alert(this.word + ' has not been edited.');
+  }
   }
 
   resetAlertBox() {
@@ -379,6 +387,11 @@ export class AnnotationComponent
   }
 
   onDelete() {
+    if (
+      confirm(
+        'Are you sure you want to DELETE ' + this.word + ' off all documents?'
+      )
+    ) {
     let deleteWord: string;
     deleteWord = this.word;
     this.annotationService.deleteWord(deleteWord);
@@ -389,13 +402,17 @@ export class AnnotationComponent
     this.word = '';
     this.wordReference = '';
     this.ngOnInit();
-    // setTimeout(() => {
-    //   this.highlight(this.thewords);
-    //   this.documentSpecificWords(this.docWords);
-    // }, 400);
+  } else {
+    alert(this.word + ' has not been deleted.');
+  }
   }
 
   onDocDelete() {
+    if (
+      confirm(
+        'Are you sure you want to DELETE ' + this.word + ' off this specific document?'
+      )
+    ) {
     let deleteWord: string;
     deleteWord = this.word;
     this.docService.deleteWord(deleteWord);
@@ -406,10 +423,9 @@ export class AnnotationComponent
     this.word = '';
     this.wordReference = '';
     this.ngOnInit();
-    // setTimeout(() => {
-    //   this.highlight(this.thewords);
-    //   this.documentSpecificWords(this.docWords);
-    // }, 400);
+  } else {
+    alert(this.word + ' has not been deleted.');
+  }
   }
 
   urlify(reference) {
