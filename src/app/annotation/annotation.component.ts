@@ -179,6 +179,7 @@ export class AnnotationComponent
   }
 
   viewAnnotation(e) {
+    this.resetAlertBox(false);
     const word = e.target.textContent;
     this.findAnnotation(word);
   }
@@ -250,7 +251,7 @@ export class AnnotationComponent
   deletenode(node) {
     const contents = document.createTextNode(node.innerText);
     node.parentNode.replaceChild(contents, node);
-    this.resetAlertBox();
+    this.resetAlertBox(true);
   }
 
   findAnnotation(e) {
@@ -345,7 +346,7 @@ export class AnnotationComponent
     theWord = this.word;
     theAnnotation = this.form.value.annotation;
     this.annotationService.editWord(theWord, theAnnotation);
-    this.resetAlertBox();
+    this.resetAlertBox(true);
   } else {
     alert(this.word + ' has not been edited.');
   }
@@ -371,19 +372,21 @@ export class AnnotationComponent
     theAnnotation = this.form.value.annotation;
     wordId = this.wordId;
     this.docService.editWord(theWord, theAnnotation, wordId);
-    this.resetAlertBox();
+    this.resetAlertBox(true);
   } else {
     alert(this.word + ' has not been edited.');
   }
   }
 
-  resetAlertBox() {
+  resetAlertBox(callNgOnInit: boolean) {
     this.word = '';
     this.annotation = '';
     this.wordReference = '';
     this.form.reset();
     this.editing = false;
-    this.ngOnInit();
+    if (callNgOnInit) {
+      this.ngOnInit();
+    }
   }
 
   onDelete() {
