@@ -11,14 +11,15 @@
           <strong id="stronger">{{ post.header }}</strong>
           <!-- style="overflow-y: scroll; height:500px;" -->
           <div id="scrollable">
-            {{ postIWant }}
+            {{ selectedPost }}
           </div>
           <div class="myStyle">
             References to the above paper and or extra reading material can be found below:
           </div>
           <br>
-          <div>
-            {{ reference }}
+          <div id="reference">
+              {{ referencedText }}
+            <!-- {{ reference }} -->
           </div>
           <br>
         </ng-template>

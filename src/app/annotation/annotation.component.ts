@@ -16,18 +16,24 @@ import { DocService } from './document.service';
   templateUrl: './annotation.component.html',
   styleUrls: ['./annotation.component.css']
 })
-export class AnnotationComponent
-  implements OnInit, OnDestroy, AfterViewChecked {
-  form: FormGroup;
-  posts: Post[] = [];
-  words: ComplexWord[] = [];
-  docWord: DocWord[] = [];
+
+/**
+ * Annotation Component is the component which creates the annotations.
+ * It currently creates the annotations automatically which have previously been stored in the database.
+ * This component also allows Teachers/Admins to create annotations on the fly with the highlight method.
+ * Delete and edit annotations.
+ */
+export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked {
+  public form: FormGroup;
+  public posts: Post[] = [];
+  public words: ComplexWord[] = [];
+  public docWord: DocWord[] = [];
   public isLoading = true;
   public thewords: string[];
   public role: string;
   public id: string;
   public setWord: string;
-  public postIWant: string;
+  public selectedPost: string;
   public annotation: string;
   public editAnnotation: string;
   public word;
@@ -45,6 +51,7 @@ export class AnnotationComponent
   public wordReference = '';
   public docTrue: boolean;
   public wordId;
+  public referencedText;
 
   constructor(
     public postsService: PostsService,
@@ -52,23 +59,24 @@ export class AnnotationComponent
     public route: ActivatedRoute,
     private annotationService: AnnotationService,
     private docService: DocService
-  ) {} // private cdRef: ChangeDetectorRef
-  // private elRef: ElementRef
+  ) {}
 
+  /**
+   * This function runs at the start when you load this component.
+   * Contains the form validation.
+   * This function gets the complex words, posts and document specific words from the database and passes them to the component.
+   * This function also checks if the user is authenticated and check what role the user is in order to allow a user to create a
+   * post or view a post.
+   * When everything has gone through the loading spinner gets set to false.
+   */
   ngOnInit() {
     this.id = this.route.snapshot.paramMap.get('postId');
     this.editing = false;
     this.annotation = '';
     this.editAnnotation = '';
-    this.form = new FormGroup({
-      annotation: new FormControl(null, {
-        validators: [
-          Validators.required,
-          Validators.minLength(8),
-          Validators.maxLength(250)
-        ]
-      })
-    });
+
+    this.form = this.createForm();
+
     this.annotationService.getWords();
     this.postsService.getPosts();
 
@@ -89,7 +97,7 @@ export class AnnotationComponent
         this.posts = posts;
         this.posts.map(post => {
           if (post.id === this.id) {
-            this.postIWant = post.body;
+            this.selectedPost = post.body;
             this.reference = post.references;
           }
         });
@@ -118,7 +126,28 @@ export class AnnotationComponent
     this.isLoading = false;
   }
 
-  highlight(words) {
+  /**
+   * Validation for the form when creating the annotations using FormGroup/FormControl.
+   */
+  createForm(): FormGroup {
+    return new FormGroup({
+      annotation: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(250)
+        ]
+      })
+    });
+  }
+
+  /**
+   * Highlight method gets the (complex words) from the database, passing them through this method which gets the #id of the
+   * element of the HTML which shows the post. Runs the text from that element through a map where if any (complex word) match
+   * any word from the post or better said the text inside the (#scrollable) div. It will then wrap it in an <a> tag and give
+   * it different styles and click listner.
+   */
+  highlight(words: string[]) {
     try {
       const high = document.getElementById('scrollable');
       const paragraph = high.innerHTML.split(' ');
@@ -144,11 +173,16 @@ export class AnnotationComponent
       });
       document.getElementById('btnHighLight').style.visibility = 'visible';
     } catch (e) {
-      // console.log(e);
     }
   }
 
-  documentSpecificWords = words => {
+  /**
+   * documentSpecificWords method gets the (Per document words) from the database, passing them through this method which gets
+   * the #id of the element of the HTML which shows the post. The same pretty much as the Highlight method. Runs the text from
+   * that element through a map where if any (document word) match any word from the post or better said the text inside the
+   * (#scrollable) div. It will then wrap it in an <a> tag and give it different styles and click listner.
+   */
+  documentSpecificWords(words: string[]) {
     try {
       const high = document.getElementById('scrollable');
       const paragraph = high.innerHTML.split(' ');
@@ -174,10 +208,14 @@ export class AnnotationComponent
       });
       document.getElementById('btnHighLight').style.visibility = 'visible';
     } catch (e) {
-      // console.log(e);
     }
   }
 
+  /**
+   * ViewAnnotation Method gets called when you click on an annotation (yellow highlighted word in the text). When it has been
+   * clicked it pushes that word through to here, either from the highlight/documentSpecificWords method and calls findAnnotation.
+   * @param e Contains the word of which you have clicked on.
+   */
   viewAnnotation(e) {
     this.resetAlertBox(false);
     const word = e.target.textContent;
@@ -435,16 +473,49 @@ export class AnnotationComponent
     const text = reference;
     const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
     // const urlRegex = /(https?:\/\/[^\s]+)/g;
-    return text.replace(urlRegex, url => {
-      return '<a href="' + url + '">' + url + '</a>';
+    const high = document.getElementById('reference');
+    // const paragraph = high.innerHTML.split(' ');
+    const res = [];
+     text.replace(urlRegex, url => {
+      let t = url;
+       t = '<a href="' + url + '"></a>';
+      res.push(t);
     });
+    high.innerHTML = res.join(' ');
+  }
+
+  urlifyText(referencedText) {
+    try {
+      const high = document.getElementById('reference');
+      const paragraph = high.innerHTML.split(' ');
+      const res = [];
+
+      paragraph.map(word => {
+        let t = word;
+        if (referencedText.indexOf(word) > -1) {
+          t =
+            '<a class="clickable"; text-decoration: underline;">' +
+            word +
+            '</a>';
+        }
+        res.push(t);
+      });
+      high.innerHTML = res.join(' ');
+    } catch (e) {
+      // console.log(e);
+    }
   }
 
   ngAfterViewChecked() {
     this.highlight(this.thewords);
     this.documentSpecificWords(this.docWords);
+    this.urlify(this.reference);
   }
 
+  /**
+   * When the user closes the page or navigates away from the page, all the subscriptions get unsubscribed so we do not have issues
+   * or any unnessasary waste of memory.
+   */
   ngOnDestroy() {
     this.postsSub.unsubscribe();
     this.authStatus.unsubscribe();
