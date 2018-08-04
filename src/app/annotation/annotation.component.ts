@@ -390,6 +390,10 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
   }
   }
 
+  /**
+   * onEditWord method gets called when the edit button has been clicked, this then sets editing to true, hides the edit
+   * button & delete button. Editing boolean hides button on the HTML page.
+   */
   onEditWord() {
     this.editing = true;
     document.getElementById('editBtn').style.visibility = 'hidden';
@@ -414,6 +418,10 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
   }
   }
 
+  /**
+   * onDocEditWord method gets called when the edit button has been clicked, this then sets editing to true, hides the edit
+   * button & delete button. Editing boolean hides button on the HTML page.
+   */
   onDocEditWord() {
     this.editing = true;
     document.getElementById('editDocBtn').style.visibility = 'hidden';
