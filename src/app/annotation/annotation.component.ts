@@ -222,6 +222,12 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.findAnnotation(word);
   }
 
+  /**
+   * highlightSelection sets the showingAnnotation to '', followed by getting the window.getSelection which is the selection
+   * of which the user has highlighted. If the user has not highlighted anything but triggered this in any way it will then
+   * return. Else it will get the range count from the text begining of text being 0 end of text being possibibly 5000. It then
+   * get the range of which the user has highlighted. Then follows by calling the highlightRange and passing the range over.
+   */
   highlightSelection() {
     this.showingAnnotation = '';
     const userSelection = window.getSelection();
@@ -244,6 +250,10 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
     }
   }
 
+  /**
+   * guidGenerator generates a random ID for the node ID. Currently not very useful unless you want to
+   * modify specific nodes.
+   */
   guidGenerator() {
     const S4 = () => {
       // tslint:disable-next-line:no-bitwise
@@ -265,6 +275,12 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
     );
   }
 
+  /**
+   * Using the range passed on from highlightSelection method, it then puts that text into an <a> tag followed by
+   * giving it a unique ID, with a class named 'clickable' and sets style to the text.
+   * @param range Range is the range between the highlighted word from x to y. An example would be this is the text:
+   * Today I went to the market. If you highlighted 'went' it would be 9 to 12 would be the range.
+   */
   highlightRange(range) {
     const newNode = document.createElement('a');
     newNode.id = this.guidGenerator();
@@ -273,24 +289,29 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
       'style',
       'background-color: yellow; display: inline; text-decoration: underline;'
     );
-    newNode.onclick = () => {
-      if (confirm('Are you sure you want to delete ' + range + '?')) {
-        this.deletenode(newNode);
-      } else {
-        alert(range + ' has not been deleted.');
-      }
-    };
+    // newNode.onclick = () => {
+    //   if (confirm('Are you sure you want to delete ' + range + '?')) {
+    //     this.deletenode(newNode);
+    //   } else {
+    //     alert(range + ' has not been deleted.');
+    //   }
+    // };
+
     // Add Text for replacement (for multiple nodes only)
     newNode.appendChild(range.cloneContents());
     // Apply Node around selection (used for individual nodes only)
     return newNode;
   }
 
-  deletenode(node) {
-    const contents = document.createTextNode(node.innerText);
-    node.parentNode.replaceChild(contents, node);
-    this.resetAlertBox(true);
-  }
+  /**
+   * This deletes the annotation if you click the word two times and it will ask you before deleting it.
+   * Currently this is not used but could always be added.
+   */
+  // deletenode(node) {
+  //   const contents = document.createTextNode(node.innerText);
+  //   node.parentNode.replaceChild(contents, node);
+  //   this.resetAlertBox(true);
+  // }
 
   findAnnotation(e) {
     this.setWord = e;
@@ -416,6 +437,12 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
   }
   }
 
+  /**
+   * ResetAlertBox method is used when you click close on an annotation. It resets everything so the user can
+   * experience a new fresh start on any other word or in order to view different words that the user clicks.
+   * @param callNgOnInit If this is true then it will run the ngOnInit function, this has been made in such a way
+   * because this resetAlertBox method gets run regularly but we do not want to call ngOnInit everytime.
+   */
   resetAlertBox(callNgOnInit: boolean) {
     this.word = '';
     this.annotation = '';
@@ -469,6 +496,10 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
   }
   }
 
+  /**
+   * Urlify method gets hold of all the references in the post and checks which ones are a link and puts them
+   * into the HTML element on the html page.
+   */
   urlify(reference) {
     const text = reference;
     const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
@@ -506,6 +537,11 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
     }
   }
 
+  /**
+   * After View is checked, run the highlight method passing the (complex words from the database through).
+   * Run the documentSpecificWords method passing the document specific words.
+   * Run the urlify method which gets hold of all the references in the post and checks which ones are a link.
+   */
   ngAfterViewChecked() {
     this.highlight(this.thewords);
     this.documentSpecificWords(this.docWords);
