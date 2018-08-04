@@ -222,6 +222,37 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.findAnnotation(word);
   }
 
+
+  /**
+   * findAnnotation sets the setWord to e, the word to e, then maps the complex words and document specific words to find out which
+   * word matches and then stores the annotation of the current word that has been clicked to the showingAnnotation. This also will
+   * let the user know if the word is a 'Global Word' or if the word is a 'Document Specific Word'.
+   * @param e - e is the word that the user has clicked.
+   */
+  findAnnotation(e) {
+    this.setWord = e;
+    this.word = e;
+    this.docService.getWords();
+    this.annotationService.getWords();
+
+    this.theHardWords.map(word => {
+      if (word.word === this.setWord) {
+        this.wordReference = 'Global Word';
+        this.docTrue = true;
+        this.showingAnnotation = word.annotation;
+      }
+    });
+
+    this.docWords.map(word => {
+      if (word.word === this.setWord) {
+        this.wordReference = 'Document Specific Word';
+        this.docTrue = false;
+        this.wordId = word.document_id;
+        this.showingAnnotation = word.annotation;
+      }
+    });
+  }
+
   /**
    * highlightSelection sets the showingAnnotation to '', followed by getting the window.getSelection which is the selection
    * of which the user has highlighted. If the user has not highlighted anything but triggered this in any way it will then
@@ -313,30 +344,14 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
   //   this.resetAlertBox(true);
   // }
 
-  findAnnotation(e) {
-    this.setWord = e;
-    this.word = e;
-    this.docService.getWords();
-    this.annotationService.getWords();
-
-    this.theHardWords.map(word => {
-      if (word.word === this.setWord) {
-        this.wordReference = 'Global Word';
-        this.docTrue = true;
-        this.showingAnnotation = word.annotation;
-      }
-    });
-
-    this.docWords.map(word => {
-      if (word.word === this.setWord) {
-        this.wordReference = 'Document Specific Word';
-        this.docTrue = false;
-        this.wordId = word.document_id;
-        this.showingAnnotation = word.annotation;
-      }
-    });
-  }
-
+  /**
+   * onAnnotation will be the method which stores the global words. It will check if the form is valid and if not
+   * then it will return. If the form is valid it will then ask the user if they are sure they want to save the word
+   * that they have highlighted to *All Documents*. The annotation recieves the value from the form.value.annotation.
+   * It then passes the value from the front end and calls the service 'addWord' passing the word that needs to be stored
+   * and the annotation associated with it. Then following by reseting the form. Else it will alert the user that the
+   * selected word has not been saved.
+   */
   onAnnotate() {
     if (!this.form.valid) {
       return;
@@ -350,12 +365,6 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
       this.annotationService.addWord(this.word, this.annotation);
       this.form.reset();
       this.word = '';
-      this.ngOnInit();
-      this.docService.getWords();
-      this.annotationService.getWords();
-      this.theHardWords.map(word => {
-        this.thewords = word.word;
-      });
       this.ngOnInit();
     } else {
       alert(this.word + ' has not been saved.');
@@ -375,12 +384,6 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.docService.addWord(this.word, this.annotation, this.id);
     this.form.reset();
     this.word = '';
-    this.ngOnInit();
-    this.docService.getWords();
-    this.annotationService.getWords();
-    this.docWords.map(word => {
-      this.docWords = word.word;
-    });
     this.ngOnInit();
   } else {
     alert(this.word + ' has not been saved.');
