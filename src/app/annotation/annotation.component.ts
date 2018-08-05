@@ -371,6 +371,14 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
     }
   }
 
+  /**
+   * addToDoc will be the method which stores the document specific words. It will check if the form is valid and if not
+   * then it will return. If the form is valid it will then ask the user if they are sure they want to save the word
+   * that they have highlighted to *This Document Only*. The annotation recieves the value from the form.value.annotation.
+   * It then passes the value from the front end and calls the service 'addWord' passing the word that needs to be stored,
+   * the annotation associated with it and the post ID. Then following by reseting the form. Else it will alert the user
+   * that the selected word has not been saved.
+   */
   addToDoc() {
     if (!this.form.valid) {
       return;
@@ -400,10 +408,17 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
     document.getElementById('deleteBtn').style.visibility = 'hidden';
   }
 
+  /**
+   * onEditSub handles the submission of an edit made to a Global Word. It will first ask for confimation, it will display
+   * a message asking if the user is sure that they want to edit this word on all documents. Editing then become false
+   * followed by grabbing the word and the form value of annotation and passing it through to the Annotation Service. Then
+   * the reset will happen in order to refresh the changes on the page. If the user does not confirm the change then it will
+   * return an alert saying the word has not been edited.
+   */
   onEditSub() {
     if (
       confirm(
-        'Are you sure you want to edit ' + this.word + ' off all documents?'
+        'Are you sure you want to edit ' + this.word + ' on all documents?'
       )
     ) {
     this.editing = false;
@@ -428,10 +443,17 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
     document.getElementById('deleteDocBtn').style.visibility = 'hidden';
   }
 
+  /**
+   * onDocEditSub handles the submission of an edit made to a Document Specific Word. It will first ask for confimation,
+   * it will display a message asking if the user is sure that they want to edit this word on this document. Editing then
+   * become false followed by grabbing the word, the form value of annotation and the word ID then passing it through to the
+   * Doc Service. Then the reset will happen in order to refresh the changes on the page. If the user does not confirm the
+   * change then it will return an alert saying the word has not been edited.
+   */
   onDocEditSub() {
     if (
       confirm(
-        'Are you sure you want to edit ' + this.word + ' off this document?'
+        'Are you sure you want to edit ' + this.word + ' on this document?'
       )
     ) {
     this.editing = false;
@@ -465,6 +487,12 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
     }
   }
 
+  /**
+   * onDelete method handles the deletion of the Global words. It will ask for confimation before deleting the selected
+   * word if so then it will run the following function. This will call the Annotation Service and it will pass the
+   * selected word that you want to delete. find all the words and make a refresh and set everything back to ''. If the
+   * user decides to cancel when the confimation is promted then no effect will be made to the page/word.
+   */
   onDelete() {
     if (
       confirm(
@@ -486,6 +514,12 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
   }
   }
 
+  /**
+   * onDocDelete method handles the deletion of the Document specific words. It will ask for confimation before deleting
+   * the selected word if so then it will run the following function. This will call the Doc Service and it will pass the
+   * selected word that you want to delete. find all the words and make a refresh and set everything back to ''. If the
+   * user decides to cancel when the confimation is promted then no effect will be made to the page/word.
+   */
   onDocDelete() {
     if (
       confirm(
@@ -512,6 +546,7 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
    * into the HTML element on the html page.
    */
   urlify(reference) {
+    try {
     const text = reference;
     const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
     // const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -524,29 +559,32 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
       res.push(t);
     });
     high.innerHTML = res.join(' ');
+  } catch (e) {
+    //     // console.log(e);
+      }
   }
 
-  urlifyText(referencedText) {
-    try {
-      const high = document.getElementById('reference');
-      const paragraph = high.innerHTML.split(' ');
-      const res = [];
+  // urlifyText(referencedText) {
+  //   try {
+  //     const high = document.getElementById('reference');
+  //     const paragraph = high.innerHTML.split(' ');
+  //     const res = [];
 
-      paragraph.map(word => {
-        let t = word;
-        if (referencedText.indexOf(word) > -1) {
-          t =
-            '<a class="clickable"; text-decoration: underline;">' +
-            word +
-            '</a>';
-        }
-        res.push(t);
-      });
-      high.innerHTML = res.join(' ');
-    } catch (e) {
-      // console.log(e);
-    }
-  }
+  //     paragraph.map(word => {
+  //       let t = word;
+  //       if (referencedText.indexOf(word) > -1) {
+  //         t =
+  //           '<a class="clickable"; text-decoration: underline;">' +
+  //           word +
+  //           '</a>';
+  //       }
+  //       res.push(t);
+  //     });
+  //     high.innerHTML = res.join(' ');
+  //   } catch (e) {
+  //     // console.log(e);
+  //   }
+  // }
 
   /**
    * After View is checked, run the highlight method passing the (complex words from the database through).
