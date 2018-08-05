@@ -23,7 +23,8 @@ import { DocService } from './document.service';
  * This component also allows Teachers/Admins to create annotations on the fly with the highlight method.
  * Delete and edit annotations.
  */
-export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class AnnotationComponent
+  implements OnInit, OnDestroy, AfterViewChecked {
   public form: FormGroup;
   public posts: Post[] = [];
   public words: ComplexWord[] = [];
@@ -172,8 +173,7 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
         element.addEventListener('click', this.viewAnnotation.bind(this));
       });
       document.getElementById('btnHighLight').style.visibility = 'visible';
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   /**
@@ -207,8 +207,7 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
         element.addEventListener('click', this.viewAnnotation.bind(this));
       });
       document.getElementById('btnHighLight').style.visibility = 'visible';
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   /**
@@ -221,7 +220,6 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
     const word = e.target.textContent;
     this.findAnnotation(word);
   }
-
 
   /**
    * findAnnotation sets the setWord to e, the word to e, then maps the complex words and document specific words to find out which
@@ -388,14 +386,14 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
         'Are you sure you want to save ' + this.word + ' to this document?'
       )
     ) {
-    this.annotation = this.form.value.annotation;
-    this.docService.addWord(this.word, this.annotation, this.id);
-    this.form.reset();
-    this.word = '';
-    this.ngOnInit();
-  } else {
-    alert(this.word + ' has not been saved.');
-  }
+      this.annotation = this.form.value.annotation;
+      this.docService.addWord(this.word, this.annotation, this.id);
+      this.form.reset();
+      this.word = '';
+      this.ngOnInit();
+    } else {
+      alert(this.word + ' has not been saved.');
+    }
   }
 
   /**
@@ -421,16 +419,16 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
         'Are you sure you want to edit ' + this.word + ' on all documents?'
       )
     ) {
-    this.editing = false;
-    let theWord: string;
-    let theAnnotation: string;
-    theWord = this.word;
-    theAnnotation = this.form.value.annotation;
-    this.annotationService.editWord(theWord, theAnnotation);
-    this.resetAlertBox(true);
-  } else {
-    alert(this.word + ' has not been edited.');
-  }
+      this.editing = false;
+      let theWord: string;
+      let theAnnotation: string;
+      theWord = this.word;
+      theAnnotation = this.form.value.annotation;
+      this.annotationService.editWord(theWord, theAnnotation);
+      this.resetAlertBox(true);
+    } else {
+      alert(this.word + ' has not been edited.');
+    }
   }
 
   /**
@@ -456,18 +454,18 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
         'Are you sure you want to edit ' + this.word + ' on this document?'
       )
     ) {
-    this.editing = false;
-    let theWord: string;
-    let theAnnotation: string;
-    let wordId: string;
-    theWord = this.word;
-    theAnnotation = this.form.value.annotation;
-    wordId = this.wordId;
-    this.docService.editWord(theWord, theAnnotation, wordId);
-    this.resetAlertBox(true);
-  } else {
-    alert(this.word + ' has not been edited.');
-  }
+      this.editing = false;
+      let theWord: string;
+      let theAnnotation: string;
+      let wordId: string;
+      theWord = this.word;
+      theAnnotation = this.form.value.annotation;
+      wordId = this.wordId;
+      this.docService.editWord(theWord, theAnnotation, wordId);
+      this.resetAlertBox(true);
+    } else {
+      alert(this.word + ' has not been edited.');
+    }
   }
 
   /**
@@ -499,19 +497,19 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
         'Are you sure you want to DELETE ' + this.word + ' off all documents?'
       )
     ) {
-    let deleteWord: string;
-    deleteWord = this.word;
-    this.annotationService.deleteWord(deleteWord);
-    this.docService.getWords();
-    this.annotationService.getWords();
-    const index = this.thewords.indexOf(deleteWord);
-    this.thewords.splice(index);
-    this.word = '';
-    this.wordReference = '';
-    this.ngOnInit();
-  } else {
-    alert(this.word + ' has not been deleted.');
-  }
+      let deleteWord: string;
+      deleteWord = this.word;
+      this.annotationService.deleteWord(deleteWord);
+      this.docService.getWords();
+      this.annotationService.getWords();
+      const index = this.thewords.indexOf(deleteWord);
+      this.thewords.splice(index);
+      this.word = '';
+      this.wordReference = '';
+      this.ngOnInit();
+    } else {
+      alert(this.word + ' has not been deleted.');
+    }
   }
 
   /**
@@ -523,22 +521,24 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
   onDocDelete() {
     if (
       confirm(
-        'Are you sure you want to DELETE ' + this.word + ' off this specific document?'
+        'Are you sure you want to DELETE ' +
+          this.word +
+          ' off this specific document?'
       )
     ) {
-    let deleteWord: string;
-    deleteWord = this.word;
-    this.docService.deleteWord(deleteWord);
-    this.docService.getWords();
-    this.annotationService.getWords();
-    const index = this.docWords.indexOf(deleteWord);
-    this.docWords.splice(index);
-    this.word = '';
-    this.wordReference = '';
-    this.ngOnInit();
-  } else {
-    alert(this.word + ' has not been deleted.');
-  }
+      let deleteWord: string;
+      deleteWord = this.word;
+      this.docService.deleteWord(deleteWord);
+      this.docService.getWords();
+      this.annotationService.getWords();
+      const index = this.docWords.indexOf(deleteWord);
+      this.docWords.splice(index);
+      this.word = '';
+      this.wordReference = '';
+      this.ngOnInit();
+    } else {
+      alert(this.word + ' has not been deleted.');
+    }
   }
 
   /**
@@ -547,21 +547,21 @@ export class AnnotationComponent implements OnInit, OnDestroy, AfterViewChecked 
    */
   urlify(reference) {
     try {
-    const text = reference;
-    const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
-    // const urlRegex = /(https?:\/\/[^\s]+)/g;
-    const high = document.getElementById('reference');
-    // const paragraph = high.innerHTML.split(' ');
-    const res = [];
-     text.replace(urlRegex, url => {
-      let t = url;
-       t = '<a href="' + url + '"></a>';
-      res.push(t);
-    });
-    high.innerHTML = res.join(' ');
-  } catch (e) {
-    //     // console.log(e);
-      }
+      const text = reference;
+      const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
+      // const urlRegex = /(https?:\/\/[^\s]+)/g;
+      const high = document.getElementById('reference');
+      // const paragraph = high.innerHTML.split(' ');
+      const res = [];
+      text.replace(urlRegex, url => {
+        let t = url;
+        t = '<a href="' + url + '"></a>';
+        res.push(t);
+      });
+      high.innerHTML = res.join(' ');
+    } catch (e) {
+      //     // console.log(e);
+    }
   }
 
   // urlifyText(referencedText) {

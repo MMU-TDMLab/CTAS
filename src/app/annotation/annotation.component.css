@@ -78,6 +78,9 @@
   max-width: 1200px;
 }
 
+/**
+* The loading spinner which is set to the middle.
+*/
 mat-spinner {
   margin: auto;
 }

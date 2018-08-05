@@ -6,10 +6,6 @@ import { CourseComponent } from './course/course.component';
 import { ModuleComponent } from './course/module/module.component';
 import { AuthGuard } from './auth/auth.guard';
 import { AnnotationComponent } from './annotation/annotation.component';
-// import { HighlightComponent } from './highlight/highlight.component';
-// import { DefinitionComponent } from './highlight/definition/definition.component';
-
-
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -19,11 +15,8 @@ const appRoutes: Routes = [
   { path: 'edit/:postId', component: ModuleComponent, canActivate: [AuthGuard]  },
   { path: 'annotation', component: AnnotationComponent, canActivate: [AuthGuard] },
   { path: 'annotation/:postId', component: AnnotationComponent, canActivate: [AuthGuard] },
-  // { path: 'highlight/:postId', component: HighlightComponent, canActivate: [AuthGuard] },
-  // { path: 'highlight/:postId/:word', component: DefinitionComponent, canActivate: [AuthGuard] },
   { path: 'auth', loadChildren: './auth/auth.module#AuthModule'}
 ];
-
 
 @NgModule({
   imports: [RouterModule.forRoot(appRoutes)],
