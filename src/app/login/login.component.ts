@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { AuthService } from '../auth/auth.service';
 import { Subscription } from '../../../node_modules/rxjs';
-
 
 @Component({
   selector: 'app-login',
@@ -14,8 +14,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   private authStatusSub: Subscription;
   form: FormGroup;
   isLoading = false;
-  // notLoggedIn = true;
-  // loggingIn: String = '';
 
   constructor(private router: Router, public authService: AuthService) { }
 
@@ -40,10 +38,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (this.form.invalid) {
       return;
     }
-    this.authService.userLogin(this.form.value.email, this.form.value.password, this.form.value.role); // , this.form.value.role
+    this.authService.userLogin(this.form.value.email, this.form.value.password, this.form.value.role);
     this.router.navigate(['/course']);
   //   this.form.reset();
-
   }
 
   ngOnDestroy() {

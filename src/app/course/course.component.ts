@@ -11,6 +11,9 @@ export class CourseComponent implements OnInit {
 
   ngOnInit() {}
 
+  /**
+   * If a module is clicked, it will then route you to the module page.
+   */
   onClickWeb() {
     this.router.navigate(['/module']);
   }
