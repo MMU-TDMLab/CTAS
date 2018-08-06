@@ -9,6 +9,11 @@ import { environment } from '../../environments/environment';
 const BACKEND_URL = environment.apiUrl + '/user/';
 
 @Injectable({ providedIn: 'root'})
+
+/**
+ * This class is the Authentication Service class. It will create tokens, token timers, check if authenticated
+ * and it will show the users role/ID.
+ */
 export class AuthService {
   private token: string;
   private tokenTimer: any;
@@ -19,26 +24,48 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
+  /**
+   * Returns token if request from outside this component.
+   */
   getToken() {
     return this.token;
   }
 
+  /**
+   * Returns if user is authenticated from outside this component when requested.
+   */
   getIsAuth() {
     return this.isAuthenticated;
   }
 
+  /**
+   * Returns the authentication status as an Observable.
+   */
   getAuthStatus() {
     return this.authStatus.asObservable();
   }
 
+  /**
+   * Returns the current user ID.
+   */
   getUserId() {
     return this.userId;
   }
 
+  /**
+   * Returns the users role, provided by this service.
+   */
   getUserRole() {
     return this.role;
   }
 
+  /**
+   * This is the Post query to create a user, currently it is enabled but probably will be disabled so users
+   * can not create fake accounts. Maybe implement this so only Admins can create accounts.
+   * @param email Email of the user being created.
+   * @param password Password of the user being created(Gets Hashed).
+   * @param role Role of the user when creating account.
+   */
   createUser(email: string, password: string, role: string) {
     const authData: AuthData = {email: email, password: password, role: role};
     this.http
@@ -50,10 +77,17 @@ export class AuthService {
       });
   }
 
+  /**
+   * These are the login details which get passed to the backend and get checked if they match the records
+   * in the database.
+   * @param email Email the user has entered to login.
+   * @param password Password the user has entered to login.
+   * @param role Role the user has entered to login.
+   */
   userLogin(email: string, password: string, role: string) {
     const authData: AuthData = {email: email, password: password, role: role};
     this.http.post<{ token: string, expiresIn: number, userId: string, role: string }>(
-      BACKEND_URL + '/login', authData) // , role: string
+      BACKEND_URL + '/login', authData)
     .subscribe(response => {
       const token = response.token;
       this.token = token;
@@ -66,7 +100,7 @@ export class AuthService {
         this.authStatus.next(true);
         const now = new Date();
         const expirationDate = new Date(now.getTime() + expiresDuration * 1000);
-        this.saveAuthData(token, expirationDate, this.userId, this.role); // , this.userRole
+        this.saveAuthData(token, expirationDate, this.userId, this.role);
         this.router.navigate(['/']);
       }
     }, error => {
@@ -74,7 +108,11 @@ export class AuthService {
     });
   }
 
-  authUser() {    // Checks if the token is in the past if not it then sets the token timer
+  /**
+   * This will check if the user is in the past, if the user is in the past it will return, if not in the past
+   * then it will set a token timer.
+   */
+  authUser() {
     const authInfo = this.getAuthData();
     if (!authInfo) {
       return;
@@ -91,6 +129,11 @@ export class AuthService {
     }
   }
 
+  /**
+   * This would be the logout method that gets called when a user logs out. So it sets the token to null, clears token,
+   * sets authentication to false, clears authentication data, resets all the fields below as can be seen. Then redirects
+   * user to the '/auth/login' page.
+   */
   logout() {
     this.token = null;
     this.isAuthenticated = false; // Sets Auth to false
@@ -102,21 +145,34 @@ export class AuthService {
     this.router.navigate(['/auth/login']);
   }
 
-  // tslint:disable-next-line:max-line-length
-  private saveAuthData(token: string, expirationDate: Date, userId: string, role: string) { // Saves token and expiration date to local storage
+  /**
+   * Saves token, expiration date, user ID and role to local storage.
+   * @param token This would be the token that the user stores in the local storage.
+   * @param expirationDate The expiration date of the token that gets stored.
+   * @param userId The user ID gets stored of the user in the local storage.
+   * @param role The role of the user gets stored in the local storage too.
+   */
+  private saveAuthData(token: string, expirationDate: Date, userId: string, role: string) {
     localStorage.setItem('token', token);
     localStorage.setItem('expiration', expirationDate.toISOString());
     localStorage.setItem('userId', userId);
     localStorage.setItem('role', role);
   }
 
-  private clearAuthData() { // Clears the token and the expiration date of token
+  /**
+   * Clears the token, removes the expiration date of token, the user ID and the role of the user.
+   */
+  private clearAuthData() {
     localStorage.removeItem('token');
     localStorage.removeItem('expiration');
     localStorage.removeItem('userId');
     localStorage.removeItem('role');
   }
 
+  /**
+   * This gets the authentication data such as the token, the expiration date of the token, the user ID
+   * and the user role. If there is no token and expirationData then simply return.
+   */
   private getAuthData() {
     const token = localStorage.getItem('token');
     const expirationDate = localStorage.getItem('expiration');
@@ -133,7 +189,11 @@ export class AuthService {
     };
   }
 
-  private authTimer(duration: number) {     // Sets Token Timer
+  /**
+   * Auth Timer sets the authantication token timer, when the time is up it will simply call the logout method.
+   * @param duration The duration of the token, gets sent to console so it can be seen.
+   */
+  private authTimer(duration: number) {
     console.log('setting timer: ' + duration);
     this.tokenTimer = setTimeout(() => {
       this.logout();
