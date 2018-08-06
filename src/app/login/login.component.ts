@@ -10,6 +10,10 @@ import { Subscription } from '../../../node_modules/rxjs';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+
+/**
+ * Login Component handles the user login, subscriptions and form validation.
+ */
 export class LoginComponent implements OnInit, OnDestroy {
   private authStatusSub: Subscription;
   form: FormGroup;
@@ -17,6 +21,9 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router, public authService: AuthService) { }
 
+  /**
+   * When it gets the authentication status, the spinner becomes false.
+   */
   ngOnInit() {
     this.authStatusSub = this.authService.getAuthStatus().subscribe(
       authStatus => {
@@ -24,6 +31,9 @@ export class LoginComponent implements OnInit, OnDestroy {
       }
     );
 
+    /**
+     * Email, Password and Role validation.
+     */
     this.form = new FormGroup({
       email: new FormControl(null, {validators: [Validators.required, Validators.minLength(3)]
       }),
@@ -34,15 +44,22 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * When login button is clicked, this method is called. If the form is invalid then return. If form is valid then
+   * values for the email, password and role will be pushed to the Auth Service, passing it through the UserLogin.
+   * Then navigating you to the course.
+   */
   onLogin() {
     if (this.form.invalid) {
       return;
     }
     this.authService.userLogin(this.form.value.email, this.form.value.password, this.form.value.role);
     this.router.navigate(['/course']);
-  //   this.form.reset();
   }
 
+  /**
+   * When user navigates away from the login.html it will unsubscribe the subscription so we don't get a memory leak.
+   */
   ngOnDestroy() {
     this.authStatusSub.unsubscribe();
   }
