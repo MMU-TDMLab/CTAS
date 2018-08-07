@@ -1,8 +1,7 @@
 const express = require('express');
+const router = express.Router();
 
 const DocumentWordsController = require('../controllers/documentWords');
-
-const router = express.Router();
 
 router.post("/new-word", DocumentWordsController.newWord);
 

@@ -9,7 +9,6 @@ exports.createPost = (req, res, next) => {
     references: req.body.references,
     poster: req.userData.userId,
   });
-  // console.log(req);
   post.save().then(createdPost => {
       res.status(201).json({
         message: "Post added Successfully",
@@ -20,7 +19,6 @@ exports.createPost = (req, res, next) => {
       });
     })
     .catch(error => {
-      // console.log(error);
       res.status(500).json({
         message: "Creating Post Failed!"
       });
@@ -117,7 +115,6 @@ exports.deletePost = (req, res, next) => {
       role: 'admin'
     })
     .then(user => {
-      // console.log('req userdata ', req.userData.role);
       if (!req.userData.role === 'admin') {
         Post.deleteOne({
           _id: req.params.id,

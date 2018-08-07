@@ -7,8 +7,7 @@ exports.newWord = (req, res, next) => {
     annotation: req.body.annotation,
     document_id: req.body.document_id,
   });
-  // console.log(req.body);
-  console.log(word);
+  // console.log(word);
   word.save()
     .then(result => {
       res.status(200).json({
@@ -40,7 +39,6 @@ exports.updateWord = (req, res, next) => {
   },
   { $set: { annotation: req.body.annotation }},
   { upsert: false },
-  // (err, newWord) => {
   (err) => {
     if (err) {
       console.log('Error Occured');
@@ -48,11 +46,6 @@ exports.updateWord = (req, res, next) => {
       res.status(200).json({
         message: "Update successful!"
       })
-      // .catch(error => {
-      //     res.status(500).json({
-      //         message: "Could not update post!"
-      //     });
-      //   })
     }
   });
 }

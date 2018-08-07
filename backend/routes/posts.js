@@ -1,5 +1,4 @@
 const express = require('express');
-
 const router = express.Router();
 
 const authCheck = require('../middleware/check-auth');
@@ -7,7 +6,6 @@ const PostController = require('../controllers/posts');
 
 router.post("",
   authCheck,
-  // extractFile,
   PostController.createPost);
 
 router.put("/:id",

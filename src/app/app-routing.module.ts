@@ -7,6 +7,10 @@ import { ModuleComponent } from './course/module/module.component';
 import { AuthGuard } from './auth/auth.guard';
 import { AnnotationComponent } from './annotation/annotation.component';
 
+/**
+ * This takes care of the routes. The 'canActivate: [AuthGuard]' checks if the
+ * user is authenticated before accessing that route.
+ */
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },

@@ -38,7 +38,7 @@ exports.userLogin = (req, res, next) => {
         });
       }
       fetchedUser = user;
-      return bcrypt.compare(req.body.password, user.password); //, req.body.role
+      return bcrypt.compare(req.body.password, user.password);
     })
     .then(result => {
       if (!result) {
@@ -47,7 +47,7 @@ exports.userLogin = (req, res, next) => {
         });
       }
       const token = jwt.sign(
-        { email: fetchedUser.email, userId: fetchedUser._id, role: fetchedUser.role }, // , role: fetchedUser.role
+        { email: fetchedUser.email, userId: fetchedUser._id, role: fetchedUser.role },
          process.env.JWT_KEY,
          { expiresIn: '1h' }
       );
