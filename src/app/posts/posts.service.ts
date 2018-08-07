@@ -10,12 +10,20 @@ import { environment } from '../../environments/environment';
 const BACKEND_URL = environment.apiUrl + '/posts/';
 
 @Injectable({ providedIn: 'root' })
+
+/**
+ * Post Service works with all the posts. There is a Put, Delete, Get and Post query.
+ */
 export class PostsService {
   private posts: Post[] = [];
   private postsUpdated = new Subject<Post[]>();
 
   constructor(private http: HttpClient) {}
 
+  /**
+   * This is the Get query. It requests the backend for all the Posts which include the
+   * header, message, post ID, body, references and the poster ID.
+   */
   getPosts() {
     this.http
       .get<{ message: string; posts: any }>(BACKEND_URL)
@@ -40,26 +48,48 @@ export class PostsService {
       });
   }
 
+  /**
+   * This is the get updated posts as Observable.
+   */
   getPostUpdateListenerTwo() {
     return this.postsUpdated.asObservable();
   }
 
+  /**
+   * This gets the posts as an observable with a type (currently set as <any>).
+   */
   getPostUpdateListener(): Observable<any> {
     return this.http.get<any>(BACKEND_URL);
 }
 
+  /**
+   * This returns the post with the ID, header, message, body, reference and
+   * the poster, by providing the ID to the post.
+   * @param id Gets post by the ID.
+   */
   getPost(id: string) {
     return this.http.get<{ _id: string, header: string, message: string, body: string, references: string, poster: string }>(
       BACKEND_URL + id
     );
   }
 
+  /**
+   * This is a Post method, you are passing the header, message, body, references and poster.
+   * The ID of the post gets done automatically by Mongoose.
+   * @param header The header of the post provided by the user when creating the post.
+   * @param message The message of the post provided by the user when creating the post.
+   * @param body The body of the post provided by the user when creating the post.
+   * @param references The reference of the post provided by the user when creating the post.
+   * @param poster The poster of the post provided by the user when creating the post.
+   */
   addPost(header: string, message: string, body: string, references: string, poster: string) {
-    const postData = new FormData();
-    postData.append('header', header);
-    postData.append('message', message);
-    postData.append('body', body);
-    postData.append('references', references);
+    const postData = {
+      header: header,
+      message: message,
+      body: body,
+      references: references
+    };
+    console.log(postData);
     this.http
       .post<{ message: string; post: Post }>(
         BACKEND_URL,
@@ -101,6 +131,15 @@ export class PostsService {
   //     );
   // }
 
+  /**
+   * This is the Put method, You provide the header, message, body and reference and the ID of
+   * the Post and the Poster is not required to be provided since they should not change.
+   * @param id ID is automatically provided, this was tweaked in the Show.Post.component
+   * @param header The header of the post provided by the user when updating the post.
+   * @param message The message of the post provided by the user when updating the post.
+   * @param body The body of the post provided by the user when updating the post.
+   * @param references The reference of the post provided by the user when updating the post.
+   */
   updatePost(id: string, header: string, message: string, body: string, references: string) {
     let postData: Post;
         postData = {
@@ -130,6 +169,11 @@ export class PostsService {
       });
   }
 
+  /**
+   * This is a delete method, you send the ID of the post that you want to delete
+   * to the backend.
+   * @param postId The ID of the Post that the user wishes to delete.
+   */
   deletePost(postId: string) {
     this.http
       .delete(BACKEND_URL + postId)

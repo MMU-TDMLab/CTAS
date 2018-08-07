@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 const postSchema = mongoose.Schema({
-  header: {  // Post Title
+  header: {
     type: String,
     required: true
   },
-  message: { // Post Message
+  message: {
     type: String,
     required: true
   },

@@ -8,6 +8,11 @@ import { ErrorComponent } from './error/error.component';
 import { ErrorService } from './error/error.service';
 
 @Injectable()
+
+/**
+ * Error Interceptor class handles the errors. It handles the error by sending over
+ * the error message to the Error Component, which then displays it.
+ */
 export class ErrorInterceptor implements HttpInterceptor {
 
   constructor(private dialog: MatDialog, private errorService: ErrorService) {}
@@ -20,7 +25,6 @@ export class ErrorInterceptor implements HttpInterceptor {
           errorMessage = error.error.message;
         }
         this.dialog.open(ErrorComponent, {data: {message: errorMessage}});
-        // console.log(error);
         // alert(error.error.message);
         return throwError(error);
       })

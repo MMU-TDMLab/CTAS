@@ -9,9 +9,10 @@ exports.createPost = (req, res, next) => {
     references: req.body.references,
     poster: req.userData.userId,
   });
+  // console.log(req);
   post.save().then(createdPost => {
       res.status(201).json({
-        message: "Post added successfully",
+        message: "Post added Successfully",
         post: {
           ...createdPost,
           id: createdPost._id,
@@ -19,8 +20,9 @@ exports.createPost = (req, res, next) => {
       });
     })
     .catch(error => {
+      // console.log(error);
       res.status(500).json({
-        message: "Creating post failed!"
+        message: "Creating Post Failed!"
       });
     });
 }
