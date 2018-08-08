@@ -66,7 +66,7 @@ export class DocService {
    */
   addWord(word: string, annotation: string, document_id: string) {
     const docWord: DocWord = { word: word, annotation: annotation, document_id: document_id };
-    // console.log(docWord);
+    console.log(docWord);
     return this.http
       .post(BACKEND_URL_Document + '/new-word', docWord)
       .subscribe(
@@ -110,12 +110,17 @@ export class DocService {
    * This is the Delete query. It would pass the word you would like to remove.
    * @param deleteWord The word you would like to remove will get passed through here.
    */
-  deleteWord(deleteWord: string) {
+  deleteWord(word: string, annotation: string, document_id: string) {
+    const docWord: DocWord = {
+      word: word,
+      annotation: annotation,
+      document_id: document_id
+    };
     this.http
-      .delete(BACKEND_URL_Document + '/delete-word' + deleteWord)
+    .post(BACKEND_URL_Document + '/delete-word/', docWord)
       .subscribe(() => {
         const result = this.docWords.filter(
-          word => word.word !== deleteWord
+          theword => theword.word !== word
         );
         this.docWords = result;
         this.docWordUpdate.next([...this.docWords]);

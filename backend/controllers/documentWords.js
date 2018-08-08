@@ -1,5 +1,5 @@
 const DocumentWord = require('../models/document-words');
-const Post = require('../models/post');
+// const Post = require('../models/post');
 
 exports.newWord = (req, res, next) => {
   const word = new DocumentWord({
@@ -7,7 +7,6 @@ exports.newWord = (req, res, next) => {
     annotation: req.body.annotation,
     document_id: req.body.document_id,
   });
-  // console.log(word);
   word.save()
     .then(result => {
       res.status(200).json({
@@ -51,18 +50,19 @@ exports.updateWord = (req, res, next) => {
 }
 
 exports.deleteWord = (req, res, next) => {
-  DocumentWord.deleteOne({
-    word: req.params.word,
-  }).then(result => {
-    if (result.n > 0) {
-      res.status(200).json({
-        message: "Deletion successful!"
-      });
-    } else {
-      res.status(401).json({
-        message: "Not authorised!"
-      });
-    }
+  DocumentWord.findOneAndRemove({
+    word: req.body.word,
+    document_id: req.body.document_id
+  })
+  .then(result => {
+    res.status(200).json({
+      message: "Document Word has been deleted successfully!",
+      result: result
+    });
+  })
+  .catch(err => {
+    res.status(500).json({
+      message: 'Document Word was not deleted!'
+    })
   });
 }
-

@@ -110,6 +110,7 @@ export class AnnotationComponent
       .subscribe((docWord: DocWord[]) => {
         this.docWords = docWord;
         this.docWords.map(doc => {
+          // console.log('doc id ', doc.document_id);
           if (doc.document_id === this.id) {
             this.docWords.push(doc.word);
           }
@@ -266,6 +267,29 @@ export class AnnotationComponent
       for (let i = 0; i < userSelection.rangeCount; i++) {
         this.highlightRange(userSelection.getRangeAt(i));
         this.word = userSelection.toString();
+        let theWord: string;
+        let theAnnotation: string;
+
+        this.docWords.map(word => {
+          if (word.word === this.word) {
+            theWord = this.word;
+            theAnnotation = word.annotation;
+          }
+        });
+        if (theWord && theAnnotation) {
+          if (
+            confirm(
+              theWord + ' has previously been annotated as ' + theAnnotation + ' would you like to use this annotation?'
+            )
+          ) {
+              this.docService.addWord(theWord, theAnnotation, this.id);
+              this.word = '';
+              this.ngOnInit();
+            } else {
+              alert('You can create you\'re own annotation for this word.');
+            }
+        }
+
         const node = this.highlightRange(
           userSelection.getRangeAt(i) /*.toString()*/
         );
@@ -390,6 +414,7 @@ export class AnnotationComponent
       this.docService.addWord(this.word, this.annotation, this.id);
       this.form.reset();
       this.word = '';
+      // this.showingAnnotation = '';
       this.ngOnInit();
     } else {
       alert(this.word + ' has not been saved.');
@@ -528,11 +553,13 @@ export class AnnotationComponent
     ) {
       let deleteWord: string;
       deleteWord = this.word;
-      this.docService.deleteWord(deleteWord);
-      this.docService.getWords();
-      this.annotationService.getWords();
-      const index = this.docWords.indexOf(deleteWord);
-      this.docWords.splice(index);
+      let annotation: string;
+      annotation = this.showingAnnotation;
+      this.docService.deleteWord(deleteWord, annotation, this.id);
+      // this.docService.getWords();
+      // this.annotationService.getWords();
+      // const index = this.docWords.indexOf(deleteWord);
+      // this.docWords.splice(index);
       this.word = '';
       this.wordReference = '';
       this.ngOnInit();
@@ -560,7 +587,6 @@ export class AnnotationComponent
       });
       high.innerHTML = res.join(' ');
     } catch (e) {
-      //     // console.log(e);
     }
   }
 
@@ -596,6 +622,18 @@ export class AnnotationComponent
     this.documentSpecificWords(this.docWords);
     this.urlify(this.reference);
   }
+
+  // Determine if an element is in the visible viewport
+ isInViewport(element) {
+  const rect = element.getBoundingClientRect();
+  const html = document.documentElement;
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= (window.innerHeight || html.clientHeight) &&
+    rect.right <= (window.innerWidth || html.clientWidth)
+  );
+ }
 
   /**
    * When the user closes the page or navigates away from the page, all the subscriptions get unsubscribed so we do not have issues

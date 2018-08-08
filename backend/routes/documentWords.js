@@ -9,6 +9,8 @@ router.get("", DocumentWordsController.findWords);
 
 router.put('/update:word', DocumentWordsController.updateWord);
 
-router.delete("/delete-word:word", DocumentWordsController.deleteWord);
+router.post("/delete-word", DocumentWordsController.deleteWord);
+// router.delete("/delete-word:word", DocumentWordsController.deleteWord);
+
 
 module.exports = router;

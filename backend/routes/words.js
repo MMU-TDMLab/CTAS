@@ -10,8 +10,7 @@ router.get("", WordController.findWords);
 
 router.put('/update:word', WordController.updateWord);
 
-router.delete("/delete-word:word", WordController.deleteWord
+router.delete("/delete-word:word", WordController.deleteWord);
   // authCheck,
-  );
 
 module.exports = router;
