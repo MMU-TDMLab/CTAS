@@ -33,10 +33,8 @@ exports.findWords = (req, res, next) => {
 }
 
 exports.updateWord = (req, res, next) => {
-  console.log('body', req.body);
-  DocumentWord.findOneAndUpdate({
-    word: req.params.word,
-    document_id: req.body.document_id
+  DocumentWord.findByIdAndUpdate({
+    _id: req.params.id
   },
   { $set: { annotation: req.body.annotation }},
   { upsert: false },

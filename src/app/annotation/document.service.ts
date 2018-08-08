@@ -31,6 +31,7 @@ export class DocService {
         map(wordData => {
           return wordData.words.map(word => {
             return {
+              _id: word._id,
               word: word.word,
               annotation: word.annotation,
               document_id: word.document_id
@@ -81,28 +82,26 @@ export class DocService {
 
   /**
   * This is the Put query, this will update the annotation on the given word.
-   * @param theWord The word you would like to make changes on.
+   * @param wordID The word ID you would like to make changes on.
    * @param theAnnotation The annotation that you are changing so the updated annotation.
-   * @param document_id The document the annotation is changing on.
    */
-  editWord(theWord: string, theAnnotation: string, document_id: string) {
+  editWord(wordID: string, theAnnotation: string) {
     const anno = {
       annotation: theAnnotation,
-      document_id: document_id
     };
     this.http
-      .put(BACKEND_URL_Document + '/update' + theWord, anno)
+      .put(BACKEND_URL_Document + '/update' + wordID, anno)
       .subscribe(response => {
-        const updatedWords = [...this.docWords];
-        const oldWordIndex = updatedWords.findIndex(w => w.word === theWord);
-        const makeDocWord: DocWord = {
-          word: theWord,
-          annotation: theAnnotation,
-          document_id: document_id
-        };
-        updatedWords[oldWordIndex] = makeDocWord;
-        this.docWords = updatedWords;
-        this.docWordUpdate.next([...this.docWords]);
+        // const updatedWords = [...this.docWords];
+        // const oldWordIndex = updatedWords.findIndex(w => w.word === theWord);
+        // const makeDocWord: DocWord = {
+        //   word: theWord,
+        //   annotation: theAnnotation,
+        //   document_id: document_id
+        // };
+        // updatedWords[oldWordIndex] = makeDocWord;
+        // this.docWords = updatedWords;
+        // this.docWordUpdate.next([...this.docWords]);
       });
   }
 

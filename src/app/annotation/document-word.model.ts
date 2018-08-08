@@ -4,6 +4,7 @@
  * This model will help guide whoever is coding this further from generating more errors.
  */
 export interface DocWord {
+  _id?: string;
   word: string;
   annotation: string;
   document_id: string;

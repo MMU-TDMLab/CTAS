@@ -53,6 +53,7 @@ export class AnnotationComponent
   public docTrue: boolean;
   public wordId;
   public referencedText;
+  public theWordId: string;
 
   constructor(
     public postsService: PostsService,
@@ -233,7 +234,7 @@ export class AnnotationComponent
     this.setWord = e;
     this.word = e;
     this.docService.getWords();
-    this.annotationService.getWords();
+    // this.annotationService.getWords();
 
     // this.theHardWords.map(word => {
     //   if (word.word === this.setWord) {
@@ -244,11 +245,12 @@ export class AnnotationComponent
     // });
 
     this.docWords.map(word => {
-      if (word.word === this.setWord) {
+      if (word.word === this.setWord && word.document_id === this.id) {
         this.wordReference = 'Document Specific Word';
         this.docTrue = false;
         this.wordId = word.document_id;
         this.showingAnnotation = word.annotation;
+        this.theWordId = word._id;
       }
     });
   }
@@ -487,13 +489,15 @@ export class AnnotationComponent
       )
     ) {
       this.editing = false;
-      let theWord: string;
+      // let theWord: string;
       let theAnnotation: string;
-      let wordId: string;
-      theWord = this.word;
+      // let wordDocId: string;
+      let wordID: string;
+      // theWord = this.word;
       theAnnotation = this.form.value.annotation;
-      wordId = this.wordId;
-      this.docService.editWord(theWord, theAnnotation, wordId);
+      // wordDocId = this.id;
+      wordID = this.theWordId;
+      this.docService.editWord(wordID, theAnnotation);
       this.resetAlertBox(true);
     } else {
       alert(this.word + ' has not been edited.');
