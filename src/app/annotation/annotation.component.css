@@ -57,6 +57,11 @@
   display: inline;
 }
 
+.margin-top {
+  margin-top: 0.75em;
+  min-width: 11.25em;
+}
+
 #editBtn {
   margin-top: 0.5em;
 }
@@ -104,4 +109,8 @@ mat-spinner {
 
 #wordRef {
   margin-top: 3em;
+}
+
+.margin-left {
+  margin-left: 0.5em;
 }

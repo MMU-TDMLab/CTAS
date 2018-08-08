@@ -111,6 +111,7 @@ export class AnnotationComponent
         this.docWords = docWord;
         this.docWords.map(doc => {
           // console.log('doc id ', doc.document_id);
+          // console.log(this.docWords);
           if (doc.document_id === this.id) {
             this.docWords.push(doc.word);
           }
@@ -234,13 +235,13 @@ export class AnnotationComponent
     this.docService.getWords();
     this.annotationService.getWords();
 
-    this.theHardWords.map(word => {
-      if (word.word === this.setWord) {
-        this.wordReference = 'Global Word';
-        this.docTrue = true;
-        this.showingAnnotation = word.annotation;
-      }
-    });
+    // this.theHardWords.map(word => {
+    //   if (word.word === this.setWord) {
+    //     this.wordReference = 'Global Word';
+    //     this.docTrue = true;
+    //     this.showingAnnotation = word.annotation;
+    //   }
+    // });
 
     this.docWords.map(word => {
       if (word.word === this.setWord) {
@@ -284,7 +285,10 @@ export class AnnotationComponent
           ) {
               this.docService.addWord(theWord, theAnnotation, this.id);
               this.word = '';
-              this.ngOnInit();
+              // this.ngOnInit();
+              setTimeout(() => {
+                this.ngOnInit();
+              }, 400);
             } else {
               alert('You can create you\'re own annotation for this word.');
             }
@@ -415,7 +419,10 @@ export class AnnotationComponent
       this.form.reset();
       this.word = '';
       // this.showingAnnotation = '';
-      this.ngOnInit();
+      // this.ngOnInit();
+      setTimeout(() => {
+        this.ngOnInit();
+      }, 400);
     } else {
       alert(this.word + ' has not been saved.');
     }
@@ -556,13 +563,13 @@ export class AnnotationComponent
       let annotation: string;
       annotation = this.showingAnnotation;
       this.docService.deleteWord(deleteWord, annotation, this.id);
-      // this.docService.getWords();
-      // this.annotationService.getWords();
       // const index = this.docWords.indexOf(deleteWord);
       // this.docWords.splice(index);
       this.word = '';
       this.wordReference = '';
-      this.ngOnInit();
+      setTimeout(() => {
+          this.ngOnInit();
+        }, 400);
     } else {
       alert(this.word + ' has not been deleted.');
     }
@@ -590,28 +597,6 @@ export class AnnotationComponent
     }
   }
 
-  // urlifyText(referencedText) {
-  //   try {
-  //     const high = document.getElementById('reference');
-  //     const paragraph = high.innerHTML.split(' ');
-  //     const res = [];
-
-  //     paragraph.map(word => {
-  //       let t = word;
-  //       if (referencedText.indexOf(word) > -1) {
-  //         t =
-  //           '<a class="clickable"; text-decoration: underline;">' +
-  //           word +
-  //           '</a>';
-  //       }
-  //       res.push(t);
-  //     });
-  //     high.innerHTML = res.join(' ');
-  //   } catch (e) {
-  //     // console.log(e);
-  //   }
-  // }
-
   /**
    * After View is checked, run the highlight method passing the (complex words from the database through).
    * Run the documentSpecificWords method passing the document specific words.
@@ -624,7 +609,7 @@ export class AnnotationComponent
   }
 
   // Determine if an element is in the visible viewport
- isInViewport(element) {
+  isInViewport(element) {
   const rect = element.getBoundingClientRect();
   const html = document.documentElement;
   return (
@@ -633,7 +618,7 @@ export class AnnotationComponent
     rect.bottom <= (window.innerHeight || html.clientHeight) &&
     rect.right <= (window.innerWidth || html.clientWidth)
   );
- }
+  }
 
   /**
    * When the user closes the page or navigates away from the page, all the subscriptions get unsubscribed so we do not have issues

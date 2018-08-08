@@ -47,7 +47,7 @@ export class DocService {
   /**
    * This is a normal get word as observable.
    */
-  getWordUpdateListenerTwo() {
+    getWordUpdateListenerTwo() {
     return this.docWordUpdate.asObservable();
   }
 
@@ -66,12 +66,12 @@ export class DocService {
    */
   addWord(word: string, annotation: string, document_id: string) {
     const docWord: DocWord = { word: word, annotation: annotation, document_id: document_id };
-    console.log(docWord);
+    // console.log(docWord);
     return this.http
       .post(BACKEND_URL_Document + '/new-word', docWord)
       .subscribe(
         response => {
-          console.log(response);
+          // console.log(response);
         },
         error => {
           console.log(error);
