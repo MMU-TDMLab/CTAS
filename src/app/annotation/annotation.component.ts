@@ -111,8 +111,6 @@ export class AnnotationComponent
       .subscribe((docWord: DocWord[]) => {
         this.docWords = docWord;
         this.docWords.map(doc => {
-          // console.log('doc id ', doc.document_id);
-          // console.log(this.docWords);
           if (doc.document_id === this.id) {
             this.docWords.push(doc.word);
           }
@@ -185,7 +183,7 @@ export class AnnotationComponent
    * that element through a map where if any (document word) match any word from the post or better said the text inside the
    * (#scrollable) div. It will then wrap it in an <a> tag and give it different styles and click listner.
    */
-  documentSpecificWords(words: string[]) {
+  highlightDocumentSpecificWords(words: string[]) {
     try {
       const high = document.getElementById('scrollable');
       const paragraph = high.innerHTML.split(' ');
@@ -489,13 +487,9 @@ export class AnnotationComponent
       )
     ) {
       this.editing = false;
-      // let theWord: string;
       let theAnnotation: string;
-      // let wordDocId: string;
       let wordID: string;
-      // theWord = this.word;
       theAnnotation = this.form.value.annotation;
-      // wordDocId = this.id;
       wordID = this.theWordId;
       this.docService.editWord(wordID, theAnnotation);
       this.resetAlertBox(true);
@@ -562,11 +556,9 @@ export class AnnotationComponent
           ' off this specific document?'
       )
     ) {
-      let deleteWord: string;
-      deleteWord = this.word;
-      let annotation: string;
-      annotation = this.showingAnnotation;
-      this.docService.deleteWord(deleteWord, annotation, this.id);
+      let wordID: string;
+      wordID = this.theWordId;
+      this.docService.deleteWord(wordID);
       // const index = this.docWords.indexOf(deleteWord);
       // this.docWords.splice(index);
       this.word = '';
@@ -607,8 +599,8 @@ export class AnnotationComponent
    * Run the urlify method which gets hold of all the references in the post and checks which ones are a link.
    */
   ngAfterViewChecked() {
-    this.highlight(this.thewords);
-    this.documentSpecificWords(this.docWords);
+    // this.highlight(this.thewords);
+    this.highlightDocumentSpecificWords(this.docWords);
     this.urlify(this.reference);
   }
 

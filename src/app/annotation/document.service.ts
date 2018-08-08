@@ -106,23 +106,18 @@ export class DocService {
   }
 
   /**
-   * This is the Delete query. It would pass the word you would like to remove.
-   * @param deleteWord The word you would like to remove will get passed through here.
+   * This is the Delete query. It would pass the word ID you would like to remove.
+   * @param wordID The word ID you would like to remove will get passed through here.
    */
-  deleteWord(word: string, annotation: string, document_id: string) {
-    const docWord: DocWord = {
-      word: word,
-      annotation: annotation,
-      document_id: document_id
-    };
+  deleteWord(wordID: string) {
     this.http
-    .post(BACKEND_URL_Document + '/delete-word/', docWord)
+    .delete(BACKEND_URL_Document + '/delete-word' + wordID)
       .subscribe(() => {
-        const result = this.docWords.filter(
-          theword => theword.word !== word
-        );
-        this.docWords = result;
-        this.docWordUpdate.next([...this.docWords]);
+        // const result = this.docWords.filter(
+        //   theword => theword.word !== word
+        // );
+        // this.docWords = result;
+        // this.docWordUpdate.next([...this.docWords]);
       });
   }
 }

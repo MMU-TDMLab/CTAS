@@ -50,9 +50,8 @@ exports.updateWord = (req, res, next) => {
 }
 
 exports.deleteWord = (req, res, next) => {
-  DocumentWord.findOneAndRemove({
-    word: req.body.word,
-    document_id: req.body.document_id
+  DocumentWord.findByIdAndRemove({
+    _id: req.params.id
   })
   .then(result => {
     res.status(200).json({

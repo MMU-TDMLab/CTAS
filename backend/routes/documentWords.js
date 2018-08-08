@@ -9,7 +9,7 @@ router.get("", DocumentWordsController.findWords);
 
 router.put('/update:id', DocumentWordsController.updateWord);
 
-router.post("/delete-word:id", DocumentWordsController.deleteWord);
+router.delete("/delete-word:id", DocumentWordsController.deleteWord);
 // router.delete("/delete-word:word", DocumentWordsController.deleteWord);
 
 module.exports = router;
