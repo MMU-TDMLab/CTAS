@@ -65,3 +65,23 @@ exports.deleteWord = (req, res, next) => {
     })
   });
 }
+
+exports.readText = (req, res, next) => {
+// Read the file and print its contents.
+const fs = require("fs"),
+path = require("path"),
+filePath = path.join(__dirname, "../documents/textfile.txt");
+
+fs.readFile(filePath, { encoding: "utf-8" }, function(err, data) {
+  if (!err) {
+    // console.log("received data: " + data);
+    res.status(200).json(data);
+  } else {
+    res.status(500).send();
+  }
+});
+}
+
+
+
+

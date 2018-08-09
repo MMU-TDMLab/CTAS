@@ -21,6 +21,11 @@ export class DocService {
 
   constructor(private http: HttpClient) {}
 
+  readText() {
+    return this.http
+    .get(BACKEND_URL_Document + 'text');
+  }
+
   /**
   * This is the Get query. It requests the backend for the words and annotations and document ID.
    */

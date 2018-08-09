@@ -46,6 +46,7 @@ export class AnnotationComponent
   private annotationSub: Subscription;
   private authStatus: Subscription;
   private docSub: Subscription;
+  private readTextSub: Subscription;
   public userIsAuthenticated = false;
   public editing: boolean;
   public reference = '';
@@ -54,6 +55,7 @@ export class AnnotationComponent
   public wordId;
   public referencedText;
   public theWordId: string;
+  private fileText;
 
   constructor(
     public postsService: PostsService,
@@ -76,23 +78,25 @@ export class AnnotationComponent
     this.editing = false;
     this.annotation = '';
     this.editAnnotation = '';
-
     this.form = this.createForm();
+    this.readTextSub = this.docService.readText().subscribe(data => {
+      this.fileText = data;
+    });
 
-    this.annotationService.getWords();
+    // this.annotationService.getWords();
+
+    // this.annotationSub = this.annotationService
+    //   .getWordUpdateListenerTwo()
+    //   .subscribe((theHardWords: ComplexWord[]) => {
+      //     this.thewords = [];
+      //     this.theHardWords = theHardWords;
+      //     this.theHardWords.map(word => {
+        //       this.thewords.push(word.word);
+        //       this.wordWithAnnotation.push(word);
+        //     });
+        //   });
+
     this.postsService.getPosts();
-
-    this.annotationSub = this.annotationService
-      .getWordUpdateListenerTwo()
-      .subscribe((theHardWords: ComplexWord[]) => {
-        this.thewords = [];
-        this.theHardWords = theHardWords;
-        this.theHardWords.map(word => {
-          this.thewords.push(word.word);
-          this.wordWithAnnotation.push(word);
-        });
-      });
-
     this.postsSub = this.postsService
       .getPostUpdateListenerTwo()
       .subscribe((posts: Post[]) => {
@@ -625,5 +629,6 @@ export class AnnotationComponent
     this.authStatus.unsubscribe();
     this.annotationSub.unsubscribe();
     this.docSub.unsubscribe();
+    this.readTextSub.unsubscribe();
   }
 }
