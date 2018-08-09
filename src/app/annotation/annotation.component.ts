@@ -605,6 +605,7 @@ export class AnnotationComponent
    * Run the urlify method which gets hold of all the references in the post and checks which ones are a link.
    */
   ngAfterViewChecked() {
+    console.clear();
     // this.highlight(this.thewords);
     this.highlightDocumentSpecificWords(this.docWords);
     this.urlify(this.reference);
@@ -654,8 +655,17 @@ export class AnnotationComponent
       }, {});
 
       /* Now that `counts` has our object, we can log it. */
-      console.log(counts);
-      console.log(JSON.stringify(counts));
+      // console.log(counts);
+
+      for (const key in counts) {
+        if (counts.hasOwnProperty(key)) {
+          // console.log(counts[key] >= 3);
+          if (counts[key] < 7) {
+            console.log( key, ' -> ' , counts[key] );
+          }
+        }
+    }
+      // console.log(JSON.stringify(counts));
     } catch (e) {}
   }
 
