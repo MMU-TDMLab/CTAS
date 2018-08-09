@@ -88,13 +88,13 @@ export class AnnotationComponent
     // this.annotationSub = this.annotationService
     //   .getWordUpdateListenerTwo()
     //   .subscribe((theHardWords: ComplexWord[]) => {
-      //     this.thewords = [];
-      //     this.theHardWords = theHardWords;
-      //     this.theHardWords.map(word => {
-        //       this.thewords.push(word.word);
-        //       this.wordWithAnnotation.push(word);
-        //     });
-        //   });
+    //     this.thewords = [];
+    //     this.theHardWords = theHardWords;
+    //     this.theHardWords.map(word => {
+    //       this.thewords.push(word.word);
+    //       this.wordWithAnnotation.push(word);
+    //     });
+    //   });
 
     this.postsService.getPosts();
     this.postsSub = this.postsService
@@ -284,18 +284,21 @@ export class AnnotationComponent
         if (theWord && theAnnotation) {
           if (
             confirm(
-              theWord + ' has previously been annotated as ' + theAnnotation + ' would you like to use this annotation?'
+              theWord +
+                ' has previously been annotated as ' +
+                theAnnotation +
+                ' would you like to use this annotation?'
             )
           ) {
-              this.docService.addWord(theWord, theAnnotation, this.id);
-              this.word = '';
-              // this.ngOnInit();
-              setTimeout(() => {
-                this.ngOnInit();
-              }, 400);
-            } else {
-              alert('You can create you\'re own annotation for this word.');
-            }
+            this.docService.addWord(theWord, theAnnotation, this.id);
+            this.word = '';
+            // this.ngOnInit();
+            setTimeout(() => {
+              this.ngOnInit();
+            }, 400);
+          } else {
+            alert('You can create you\'re own annotation for this word.');
+          }
         }
 
         const node = this.highlightRange(
@@ -568,8 +571,8 @@ export class AnnotationComponent
       this.word = '';
       this.wordReference = '';
       setTimeout(() => {
-          this.ngOnInit();
-        }, 400);
+        this.ngOnInit();
+      }, 400);
     } else {
       alert(this.word + ' has not been deleted.');
     }
@@ -593,8 +596,7 @@ export class AnnotationComponent
         res.push(t);
       });
       high.innerHTML = res.join(' ');
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   /**
@@ -606,18 +608,55 @@ export class AnnotationComponent
     // this.highlight(this.thewords);
     this.highlightDocumentSpecificWords(this.docWords);
     this.urlify(this.reference);
+    this.textChecker(this.fileText);
   }
 
   // Determine if an element is in the visible viewport
   isInViewport(element) {
-  const rect = element.getBoundingClientRect();
-  const html = document.documentElement;
-  return (
-    rect.top >= 0 &&
-    rect.left >= 0 &&
-    rect.bottom <= (window.innerHeight || html.clientHeight) &&
-    rect.right <= (window.innerWidth || html.clientWidth)
-  );
+    const rect = element.getBoundingClientRect();
+    const html = document.documentElement;
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || html.clientHeight) &&
+      rect.right <= (window.innerWidth || html.clientWidth)
+    );
+  }
+
+  /**
+   * Below is a regular expression that finds alphanumeric characters,
+   * Next is a string that could easily be replaced with a reference to a form control,
+   * Lastly, we have an array that will hold any words matching our pattern.
+   */
+  textChecker(fileText) {
+    try {
+      const pattern = /\w+/g,
+        string = fileText.toLowerCase(),
+        matchedWords = string.match(pattern);
+
+      /* The Array.prototype.reduce method assists us in producing a single value from an
+       array. In this case, we're going to use it to output an object with results. */
+      const counts = matchedWords.reduce((stats, word) => {
+        /* `stats` is the object that we'll be building up over time.
+           `word` is each individual entry in the `matchedWords` array */
+        if (stats.hasOwnProperty(word)) {
+          /* `stats` already has an entry for the current `word`.
+               As a result, let's increment the count for that `word`. */
+          stats[word] = stats[word] + 1;
+        } else {
+          /* `stats` does not yet have an entry for the current `word`.
+               As a result, let's add a new entry, and set count to 1. */
+          stats[word] = 1;
+        }
+        /* Because we are building up `stats` over numerous iterations,
+           we need to return it for the next pass to modify it. */
+        return stats;
+      }, {});
+
+      /* Now that `counts` has our object, we can log it. */
+      console.log(counts);
+      console.log(JSON.stringify(counts));
+    } catch (e) {}
   }
 
   /**
