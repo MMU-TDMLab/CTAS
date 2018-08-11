@@ -1,0 +1,43 @@
+<div class="container" style='padding-left: 3.5em;'>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+       <div id="regions_div" style="width: 1170px; height: 800px;"></div>
+
+       <script>
+       google.charts.load('current', {
+        'packages':['geochart'],
+        // Note: you will need to get a mapsApiKey for your project.
+        // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
+        'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
+      });
+      google.charts.setOnLoadCallback(drawRegionsMap);
+
+      function drawRegionsMap() {
+        var data = google.visualization.arrayToDataTable([
+          ['Country', 'Occurrences'],
+          ['Germany', 55],
+          ['United States', 328],
+          ['Brazil', 119],
+          ['United Kingdom', 39],
+          ['Italy', 39],
+          ['Canada', 40]
+        ]);
+
+        // **
+        // Germany --> 55
+        // Brazil --> 104
+        // UK --> 39
+        // US --> 129 + 76 + 45 + 42 + 36 = 328
+        // U.S. --> 76
+        // USA --> 45
+        // America --> 42
+        // LA --> 36
+        // São Paulo --> 115 + 104 = 119
+
+        var options = {};
+
+        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+        chart.draw(data, options);
+      }
+    </script>
+</div>

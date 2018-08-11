@@ -709,7 +709,7 @@ export class AnnotationComponent
   ngOnDestroy() {
     this.postsSub.unsubscribe();
     this.authStatus.unsubscribe();
-    this.annotationSub.unsubscribe();
+    // this.annotationSub.unsubscribe();
     this.docSub.unsubscribe();
     this.readTextSub.unsubscribe();
   }
