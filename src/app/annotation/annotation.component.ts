@@ -676,29 +676,33 @@ export class AnnotationComponent
 
   highlightPossibleWords(words: string[]) {
     try {
-      const high = document.getElementById('scrollable');
-      const paragraph = high.innerHTML.split(' ');
-      const res = [];
+      if (this.role === 'student') {
+        return;
+      } else {
+        const high = document.getElementById('scrollable');
+        const paragraph = high.innerHTML.split(' ');
+        const res = [];
 
-      paragraph.map(word => {
-        let t = word;
-        if (words.indexOf(word) > -1) {
-          t =
-            '<a class="optional" style="background-color:#dcdfe5; text-decoration: underline;">' +
-            word +
-            '</a>';
-        }
-        res.push(t);
-      });
-      high.innerHTML = res.join(' ');
-      const elementsToMakeClickable = document.getElementsByClassName(
-        'clickable'
-      );
-      const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
-      elementsToMakeClickableArray.map(element => {
-        element.addEventListener('click', this.viewAnnotation.bind(this));
-      });
-      document.getElementById('btnHighLight').style.visibility = 'visible';
+        paragraph.map(word => {
+          let t = word;
+          if (words.indexOf(word) > -1) {
+            t =
+              '<a class="optional" style="background-color:#dcdfe5; text-decoration: underline;">' +
+              word +
+              '</a>';
+          }
+          res.push(t);
+        });
+        high.innerHTML = res.join(' ');
+        const elementsToMakeClickable = document.getElementsByClassName(
+          'clickable'
+        );
+        const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
+        elementsToMakeClickableArray.map(element => {
+          element.addEventListener('click', this.viewAnnotation.bind(this));
+        });
+        document.getElementById('btnHighLight').style.visibility = 'visible';
+      }
     } catch (e) {}
   }
 
