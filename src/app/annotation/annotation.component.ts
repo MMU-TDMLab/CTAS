@@ -43,7 +43,7 @@ export class AnnotationComponent
   public theHardWords = [];
   public wordWithAnnotation = [];
   private postsSub: Subscription;
-  private annotationSub: Subscription;
+  // private annotationSub: Subscription;
   private authStatus: Subscription;
   private docSub: Subscription;
   private readTextSub: Subscription;
@@ -56,7 +56,6 @@ export class AnnotationComponent
   public referencedText;
   public theWordId: string;
   private fileText;
-  // private theObjectKeys: string[];
 
   constructor(
     public postsService: PostsService,
