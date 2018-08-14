@@ -42,3 +42,5 @@ Thumbs.db
 /config/config.js
 
 nodemon\.json
+
+backend/documents/vocabMod_cs

@@ -605,7 +605,7 @@ export class AnnotationComponent
    * Run the urlify method which gets hold of all the references in the post and checks which ones are a link.
    */
   ngAfterViewChecked() {
-    // console.clear();
+    console.clear();
     // this.highlight(this.thewords);
     this.highlightDocumentSpecificWords(this.docWords);
     this.urlify(this.reference);
@@ -631,8 +631,10 @@ export class AnnotationComponent
    */
   textChecker(fileText) {
     try {
+      // console.log(fileText);
       const pattern = /\w+/g,
-        string = fileText.toLowerCase(),
+        // string = fileText.toLowerCase(),
+        string = fileText,
         matchedWords = string.match(pattern);
 
       /* The Array.prototype.reduce method assists us in producing a single value from an
