@@ -1,6 +1,9 @@
 const DocumentWord = require('../models/document-words');
+const Post = require('../models/post');
 
 const infrequentWords = [];
+
+// let postBody = '';
 
 exports.newWord = (req, res, next) => {
   const word = new DocumentWord({
@@ -73,14 +76,26 @@ exports.deleteWord = (req, res, next) => {
 
 exports.readText = (req, res, next) => {
   if (infrequentWords.length > 0) {
+    Post.findOne({
+      _id: req.params.id
+    }).then(result => {
+      if (result) {
+        checkIfWordsMatch(result.body, hardWords => {
+          // let jointWords = hardWords.join(' ');
+          res.status(200).json(hardWords);
+        });
+      } else {
+        res.status(404).json({
+          message: 'Post not found!'
+        });
+      }
+    });
     // infrequentWordsString = infrequentWords.join(' ');
-    // console.log(infrequentWordsString);
-    res.status(200).json(infrequentWords);
+    // res.status(200).json(hardWords);
   } else {
     res.status(500).send();
   }
 }
-
 
 parseFileIntoMemory();
 
@@ -119,6 +134,18 @@ function parseFileIntoMemory() {
         console.log('Read entire file.')
       })
     );
+}
+
+function checkIfWordsMatch(body, callback) {
+  const hardWords = [];
+  const words = body.split(' ');
+
+  words.map( (word) => {
+    if (infrequentWords.includes(word)) {
+      let = hardWords.push(word);
+    }
+  });
+  return callback(hardWords);
 }
 
 exports.readTexty = (req, res, next) => {

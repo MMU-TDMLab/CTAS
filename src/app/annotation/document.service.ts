@@ -21,9 +21,9 @@ export class DocService {
 
   constructor(private http: HttpClient) {}
 
-  readText() {
+  readText(id: string) {
     return this.http
-    .get(BACKEND_URL_Document + 'text');
+    .get(BACKEND_URL_Document + id);
   }
 
   /**

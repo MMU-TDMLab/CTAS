@@ -3,7 +3,7 @@ const router = express.Router();
 
 const DocumentWordsController = require('../controllers/documentWords');
 
-router.get('/text', DocumentWordsController.readText);
+router.get('/:id', DocumentWordsController.readText);
 
 router.post("/new-word", DocumentWordsController.newWord);
 
