@@ -610,7 +610,6 @@ export class AnnotationComponent
     this.highlightDocumentSpecificWords(this.docWords);
     this.urlify(this.reference);
     this.highlightPossibleWords(this.fileText);
-    console.log(this.fileText);
     // this.textChecker(this.fileText);
   }
 
