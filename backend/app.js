@@ -14,7 +14,7 @@ const app = express();
 
 // mongoose.connect(`mongodb+srv://${config.name}:${config.pw}@cluster0-hhltm.mongodb.net/node-angular`)
 // mongoose.connect(`mongodb://${config.name}:${config.pw}@ds161700.mlab.com:61700/angular-file-system`)
-mongoose.connect("mongodb://" + process.env.MONGO_ATLAS_NAME + ":" + process.env.MONGO_ATLAS_PW + "@ds161700.mlab.com:61700/angular-file-system")
+mongoose.connect("mongodb://" + process.env.MONGO_ATLAS_NAME + ":" + process.env.MONGO_ATLAS_PW + "@ds161700.mlab.com:61700/angular-file-system", { useNewUrlParser: true })
 .then(() => {
     console.log('Connected to the database!')
   })

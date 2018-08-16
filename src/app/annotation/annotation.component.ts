@@ -555,6 +555,7 @@ export class AnnotationComponent
     this.authStatus.unsubscribe();
     // this.annotationSub.unsubscribe();
     this.docSub.unsubscribe();
-    this.readTextSub.unsubscribe();
+    /// FIX BELOW
+    // this.readTextSub.unsubscribe();
   }
 }
