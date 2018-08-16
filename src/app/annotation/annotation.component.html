@@ -18,7 +18,7 @@
           </div>
           <br>
           <div id="reference">
-              {{ referencedText }}
+            {{ referencedText }}
             <!-- {{ reference }} -->
           </div>
           <br>
@@ -29,8 +29,8 @@
       <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || this.role == 'admin'">
         <ng-template [ngIf]="!diffWordsClicked">
           <button type="button" id="difficultWords" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#exampleModal">
-              Check for Difficult Words
-            </button>
+            Check for Difficult Words
+          </button>
         </ng-template>
         <div>
           <a class="btn btn-warning btn-sd" id="btnHighLight" (click)="highlightSelection()">
@@ -41,8 +41,6 @@
       </ng-template>
       <ng-template [ngIf]='word'>
         <form [formGroup]='form'>
-          <!-- <span class="badge badge-info" id="wordRef">{{ wordReference }}</span> -->
-          <!-- <span class="badge badge-light" id="wordRef">{{ wordReference }}</span> -->
           <div class="alert alert-warning alert-dismissible fade show" id="annotation" role="alert">
             <strong>{{ word }}</strong>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)='resetAlertBox(false)'>
@@ -56,12 +54,6 @@
                   {{ showingAnnotation }}
                 </div>
               </ng-template>
-              <!-- <ng-template [ngIf]="userIsAuthenticated && showingAnnotation && editing && docTrue">
-                <div class="alert alert-info" role="alert">
-                  <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="{{ showingAnnotation }}" rows="3" formControlName="annotation"></textarea>
-                </div>
-                <button class="btn btn-success btn-sm" id="saveEditBtn" type="button" (click)='onEditSub()' [disabled]="!form.valid">Save Edited Annotation</button>
-              </ng-template> -->
               <ng-template [ngIf]="userIsAuthenticated && showingAnnotation && editing && !docTrue">
                 <div class="alert alert-info" role="alert">
                   <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="{{ showingAnnotation }}" rows="3" formControlName="annotation"></textarea>
@@ -72,27 +64,19 @@
                 <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Describe Word" rows="3" formControlName="annotation"></textarea>
               </ng-template>
             </div>
-            <!-- annotationFromForm.valid -->
           </ng-template>
           <ng-template [ngIf]="userIsAuthenticated && form.valid && !editing && (this.role == 'teacher' ||  this.role == 'admin')">
-            <!-- <button class="btn btn-success btn-sm" id="postbtn" type="button" (click)='onAnnotate()' [disabled]="!form.valid">Save To All Documents</button> -->
             <button class="btn btn-success btn-sm" id="postDocbtn" type="button" (click)='addToDoc()' [disabled]="!form.valid">Save To This Document</button>
           </ng-template>
-          <!-- <ng-template [ngIf]="userIsAuthenticated && !editing && showingAnnotation && docTrue && (this.role == 'teacher' ||  this.role == 'admin')">
-            <div>
-              <button class="btn btn-secondary btn-sm margin-top" type="button" (click)='onEditWord()'>Edit Annotation</button>
-            </div>
-            <button class="btn btn-danger btn-sm" id="deleteBtn" type="button" (click)='onDelete()'>Delete Annotation</button>
-          </ng-template> -->
           <ng-template [ngIf]="userIsAuthenticated && !editing && showingAnnotation && !docTrue && (this.role == 'teacher' ||  this.role == 'admin')">
             <div>
               <button class="btn btn-secondary btn-sm margin-top" type="button" (click)='onDocEditWord()'>Edit Annotation
-                  <i class="fas fa-pencil-alt margin-left"></i>
+                <i class="fas fa-pencil-alt margin-left"></i>
               </button>
             </div>
             <button class="btn btn-danger btn-sm margin-top" type="button" (click)='onDocDelete()'>Delete Annotation
-                <i class="far fa-trash-alt margin-left"></i>
-          </button>
+              <i class="far fa-trash-alt margin-left"></i>
+            </button>
           </ng-template>
         </form>
         <ng-template [ngIf]="userIsAuthenticated && this.role == 'student'">
@@ -104,23 +88,22 @@
     </div>
   </ng-container>
 </div>
-
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Check for difficult words</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          Checking for difficult words could take a few seconds, do you still want to proceed?
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" (click)="possibleWords()" data-dismiss="modal">Continue</button>
-        </div>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Check for difficult words</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Checking for difficult words could take a few seconds, do you still want to proceed?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="possibleWords()" data-dismiss="modal">Continue</button>
       </div>
     </div>
   </div>
+</div>

@@ -150,40 +150,6 @@ export class AnnotationComponent
   }
 
   /**
-   * Highlight method gets the (complex words) from the database, passing them through this method which gets the #id of the
-   * element of the HTML which shows the post. Runs the text from that element through a map where if any (complex word) match
-   * any word from the post or better said the text inside the (#scrollable) div. It will then wrap it in an <a> tag and give
-   * it different styles and click listner.
-   */
-  // highlight(words: string[]) {
-  //   try {
-  //     const high = document.getElementById('scrollable');
-  //     const paragraph = high.innerHTML.split(' ');
-  //     const res = [];
-
-  //     paragraph.map(word => {
-  //       let t = word;
-  //       if (words.indexOf(word) > -1) {
-  //         t =
-  //           '<a class="clickable" style="background-color: yellow; text-decoration: underline;">' +
-  //           word +
-  //           '</a>';
-  //       }
-  //       res.push(t);
-  //     });
-  //     high.innerHTML = res.join(' ');
-  //     const elementsToMakeClickable = document.getElementsByClassName(
-  //       'clickable'
-  //     );
-  //     const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
-  //     elementsToMakeClickableArray.map(element => {
-  //       element.addEventListener('click', this.viewAnnotation.bind(this));
-  //     });
-  //     document.getElementById('btnHighLight').style.visibility = 'visible';
-  //   } catch (e) {}
-  // }
-
-  /**
    * documentSpecificWords method gets the (Per document words) from the database, passing them through this method which gets
    * the #id of the element of the HTML which shows the post. The same pretty much as the Highlight method. Runs the text from
    * that element through a map where if any (document word) match any word from the post or better said the text inside the
@@ -380,33 +346,6 @@ export class AnnotationComponent
   // }
 
   /**
-   * onAnnotation will be the method which stores the global words. It will check if the form is valid and if not
-   * then it will return. If the form is valid it will then ask the user if they are sure they want to save the word
-   * that they have highlighted to *All Documents*. The annotation recieves the value from the form.value.annotation.
-   * It then passes the value from the front end and calls the service 'addWord' passing the word that needs to be stored
-   * and the annotation associated with it. Then following by reseting the form. Else it will alert the user that the
-   * selected word has not been saved.
-   */
-  // onAnnotate() {
-  //   if (!this.form.valid) {
-  //     return;
-  //   }
-  //   if (
-  //     confirm(
-  //       'Are you sure you want to save ' + this.word + ' to all documents?'
-  //     )
-  //   ) {
-  //     this.annotation = this.form.value.annotation;
-  //     this.annotationService.addWord(this.word, this.annotation);
-  //     this.form.reset();
-  //     this.word = '';
-  //     this.ngOnInit();
-  //   } else {
-  //     alert(this.word + ' has not been saved.');
-  //   }
-  // }
-
-  /**
    * addToDoc will be the method which stores the document specific words. It will check if the form is valid and if not
    * then it will return. If the form is valid it will then ask the user if they are sure they want to save the word
    * that they have highlighted to *This Document Only*. The annotation recieves the value from the form.value.annotation.
@@ -436,41 +375,6 @@ export class AnnotationComponent
       alert(this.word + ' has not been saved.');
     }
   }
-
-  /**
-   * onEditWord method gets called when the edit button has been clicked, this then sets editing to true, hides the edit
-   * button & delete button. Editing boolean hides button on the HTML page.
-   */
-  // onEditWord() {
-  //   this.editing = true;
-  //   document.getElementById('editBtn').style.visibility = 'hidden';
-  //   document.getElementById('deleteBtn').style.visibility = 'hidden';
-  // }
-
-  /**
-   * onEditSub handles the submission of an edit made to a Global Word. It will first ask for confimation, it will display
-   * a message asking if the user is sure that they want to edit this word on all documents. Editing then become false
-   * followed by grabbing the word and the form value of annotation and passing it through to the Annotation Service. Then
-   * the reset will happen in order to refresh the changes on the page. If the user does not confirm the change then it will
-   * return an alert saying the word has not been edited.
-   */
-  // onEditSub() {
-  //   if (
-  //     confirm(
-  //       'Are you sure you want to edit ' + this.word + ' on all documents?'
-  //     )
-  //   ) {
-  //     this.editing = false;
-  //     let theWord: string;
-  //     let theAnnotation: string;
-  //     theWord = this.word;
-  //     theAnnotation = this.form.value.annotation;
-  //     this.annotationService.editWord(theWord, theAnnotation);
-  //     this.resetAlertBox(true);
-  //   } else {
-  //     alert(this.word + ' has not been edited.');
-  //   }
-  // }
 
   /**
    * onDocEditWord method gets called when the edit button has been clicked, this then sets editing to true, hides the edit
@@ -523,33 +427,6 @@ export class AnnotationComponent
       this.ngOnInit();
     }
   }
-
-  /**
-   * onDelete method handles the deletion of the Global words. It will ask for confimation before deleting the selected
-   * word if so then it will run the following function. This will call the Annotation Service and it will pass the
-   * selected word that you want to delete. find all the words and make a refresh and set everything back to ''. If the
-   * user decides to cancel when the confimation is promted then no effect will be made to the page/word.
-   */
-  // onDelete() {
-  //   if (
-  //     confirm(
-  //       'Are you sure you want to DELETE ' + this.word + ' off all documents?'
-  //     )
-  //   ) {
-  //     let deleteWord: string;
-  //     deleteWord = this.word;
-  //     this.annotationService.deleteWord(deleteWord);
-  //     this.docService.getWords();
-  //     this.annotationService.getWords();
-  //     const index = this.thewords.indexOf(deleteWord);
-  //     this.thewords.splice(index);
-  //     this.word = '';
-  //     this.wordReference = '';
-  //     this.ngOnInit();
-  //   } else {
-  //     alert(this.word + ' has not been deleted.');
-  //   }
-  // }
 
   /**
    * onDocDelete method handles the deletion of the Document specific words. It will ask for confimation before deleting
