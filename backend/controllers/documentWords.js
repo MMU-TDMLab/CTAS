@@ -82,6 +82,7 @@ exports.readText = (req, res, next) => {
       if (result) {
         checkIfWordsMatch(result.body, hardWords => {
           // let jointWords = hardWords.join(' ');
+          console.log(hardWords);
           res.status(200).json(hardWords);
         });
       } else {
@@ -90,8 +91,6 @@ exports.readText = (req, res, next) => {
         });
       }
     });
-    // infrequentWordsString = infrequentWords.join(' ');
-    // res.status(200).json(hardWords);
   } else {
     res.status(500).send();
   }
@@ -113,7 +112,7 @@ function parseFileIntoMemory() {
     .pipe(es.mapSync((line) => {
         const lines = line.split('\t');
         const freq = Number(lines[1]);
-        if (freq <= 200) {
+        if (freq <= 500) {
           infrequentWords.push(lines[0]);
         }
         // pause the readstream
@@ -129,8 +128,6 @@ function parseFileIntoMemory() {
         console.log('Error while reading file.', err);
       })
       .on('end', () => {
-        // infrequentWordsString = infrequentWords.join(' ');
-        // res.status(200).json(infrequentWordsString);
         console.log('Read entire file.')
       })
     );
@@ -140,7 +137,7 @@ function checkIfWordsMatch(body, callback) {
   const hardWords = [];
   const words = body.split(' ');
 
-  words.map( (word) => {
+  words.map((word) => {
     if (infrequentWords.includes(word)) {
       let = hardWords.push(word);
     }
@@ -153,8 +150,8 @@ exports.readTexty = (req, res, next) => {
   const fs = require("fs"),
     path = require("path"),
     // filePath = path.join(__dirname, "../documents/vocab_cs");
-  // filePath = path.join(__dirname, "../documents/textfile.txt");
-  filePath = path.join(__dirname, "../documents/vocabMod_cs");
+    // filePath = path.join(__dirname, "../documents/textfile.txt");
+    filePath = path.join(__dirname, "../documents/vocabMod_cs");
 
   const readline = require('readline');
   const rl = readline.createInterface({

@@ -56,6 +56,7 @@ export class AnnotationComponent
   public referencedText;
   public theWordId: string;
   private fileText;
+  public diffWordsClicked: boolean;
 
   constructor(
     public postsService: PostsService,
@@ -78,10 +79,11 @@ export class AnnotationComponent
     this.editing = false;
     this.annotation = '';
     this.editAnnotation = '';
+    this.diffWordsClicked = false;
     this.form = this.createForm();
-    this.readTextSub = this.docService.readText(this.id).subscribe(data => {
-      this.fileText = data;
-    });
+    // this.readTextSub = this.docService.readText(this.id).subscribe(data => {
+    //   this.fileText = data;
+    // });
 
     // this.annotationService.getWords();
 
@@ -153,33 +155,33 @@ export class AnnotationComponent
    * any word from the post or better said the text inside the (#scrollable) div. It will then wrap it in an <a> tag and give
    * it different styles and click listner.
    */
-  highlight(words: string[]) {
-    try {
-      const high = document.getElementById('scrollable');
-      const paragraph = high.innerHTML.split(' ');
-      const res = [];
+  // highlight(words: string[]) {
+  //   try {
+  //     const high = document.getElementById('scrollable');
+  //     const paragraph = high.innerHTML.split(' ');
+  //     const res = [];
 
-      paragraph.map(word => {
-        let t = word;
-        if (words.indexOf(word) > -1) {
-          t =
-            '<a class="clickable" style="background-color: yellow; text-decoration: underline;">' +
-            word +
-            '</a>';
-        }
-        res.push(t);
-      });
-      high.innerHTML = res.join(' ');
-      const elementsToMakeClickable = document.getElementsByClassName(
-        'clickable'
-      );
-      const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
-      elementsToMakeClickableArray.map(element => {
-        element.addEventListener('click', this.viewAnnotation.bind(this));
-      });
-      document.getElementById('btnHighLight').style.visibility = 'visible';
-    } catch (e) {}
-  }
+  //     paragraph.map(word => {
+  //       let t = word;
+  //       if (words.indexOf(word) > -1) {
+  //         t =
+  //           '<a class="clickable" style="background-color: yellow; text-decoration: underline;">' +
+  //           word +
+  //           '</a>';
+  //       }
+  //       res.push(t);
+  //     });
+  //     high.innerHTML = res.join(' ');
+  //     const elementsToMakeClickable = document.getElementsByClassName(
+  //       'clickable'
+  //     );
+  //     const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
+  //     elementsToMakeClickableArray.map(element => {
+  //       element.addEventListener('click', this.viewAnnotation.bind(this));
+  //     });
+  //     document.getElementById('btnHighLight').style.visibility = 'visible';
+  //   } catch (e) {}
+  // }
 
   /**
    * documentSpecificWords method gets the (Per document words) from the database, passing them through this method which gets
@@ -385,24 +387,24 @@ export class AnnotationComponent
    * and the annotation associated with it. Then following by reseting the form. Else it will alert the user that the
    * selected word has not been saved.
    */
-  onAnnotate() {
-    if (!this.form.valid) {
-      return;
-    }
-    if (
-      confirm(
-        'Are you sure you want to save ' + this.word + ' to all documents?'
-      )
-    ) {
-      this.annotation = this.form.value.annotation;
-      this.annotationService.addWord(this.word, this.annotation);
-      this.form.reset();
-      this.word = '';
-      this.ngOnInit();
-    } else {
-      alert(this.word + ' has not been saved.');
-    }
-  }
+  // onAnnotate() {
+  //   if (!this.form.valid) {
+  //     return;
+  //   }
+  //   if (
+  //     confirm(
+  //       'Are you sure you want to save ' + this.word + ' to all documents?'
+  //     )
+  //   ) {
+  //     this.annotation = this.form.value.annotation;
+  //     this.annotationService.addWord(this.word, this.annotation);
+  //     this.form.reset();
+  //     this.word = '';
+  //     this.ngOnInit();
+  //   } else {
+  //     alert(this.word + ' has not been saved.');
+  //   }
+  // }
 
   /**
    * addToDoc will be the method which stores the document specific words. It will check if the form is valid and if not
@@ -439,11 +441,11 @@ export class AnnotationComponent
    * onEditWord method gets called when the edit button has been clicked, this then sets editing to true, hides the edit
    * button & delete button. Editing boolean hides button on the HTML page.
    */
-  onEditWord() {
-    this.editing = true;
-    document.getElementById('editBtn').style.visibility = 'hidden';
-    document.getElementById('deleteBtn').style.visibility = 'hidden';
-  }
+  // onEditWord() {
+  //   this.editing = true;
+  //   document.getElementById('editBtn').style.visibility = 'hidden';
+  //   document.getElementById('deleteBtn').style.visibility = 'hidden';
+  // }
 
   /**
    * onEditSub handles the submission of an edit made to a Global Word. It will first ask for confimation, it will display
@@ -452,23 +454,23 @@ export class AnnotationComponent
    * the reset will happen in order to refresh the changes on the page. If the user does not confirm the change then it will
    * return an alert saying the word has not been edited.
    */
-  onEditSub() {
-    if (
-      confirm(
-        'Are you sure you want to edit ' + this.word + ' on all documents?'
-      )
-    ) {
-      this.editing = false;
-      let theWord: string;
-      let theAnnotation: string;
-      theWord = this.word;
-      theAnnotation = this.form.value.annotation;
-      this.annotationService.editWord(theWord, theAnnotation);
-      this.resetAlertBox(true);
-    } else {
-      alert(this.word + ' has not been edited.');
-    }
-  }
+  // onEditSub() {
+  //   if (
+  //     confirm(
+  //       'Are you sure you want to edit ' + this.word + ' on all documents?'
+  //     )
+  //   ) {
+  //     this.editing = false;
+  //     let theWord: string;
+  //     let theAnnotation: string;
+  //     theWord = this.word;
+  //     theAnnotation = this.form.value.annotation;
+  //     this.annotationService.editWord(theWord, theAnnotation);
+  //     this.resetAlertBox(true);
+  //   } else {
+  //     alert(this.word + ' has not been edited.');
+  //   }
+  // }
 
   /**
    * onDocEditWord method gets called when the edit button has been clicked, this then sets editing to true, hides the edit
@@ -528,26 +530,26 @@ export class AnnotationComponent
    * selected word that you want to delete. find all the words and make a refresh and set everything back to ''. If the
    * user decides to cancel when the confimation is promted then no effect will be made to the page/word.
    */
-  onDelete() {
-    if (
-      confirm(
-        'Are you sure you want to DELETE ' + this.word + ' off all documents?'
-      )
-    ) {
-      let deleteWord: string;
-      deleteWord = this.word;
-      this.annotationService.deleteWord(deleteWord);
-      this.docService.getWords();
-      this.annotationService.getWords();
-      const index = this.thewords.indexOf(deleteWord);
-      this.thewords.splice(index);
-      this.word = '';
-      this.wordReference = '';
-      this.ngOnInit();
-    } else {
-      alert(this.word + ' has not been deleted.');
-    }
-  }
+  // onDelete() {
+  //   if (
+  //     confirm(
+  //       'Are you sure you want to DELETE ' + this.word + ' off all documents?'
+  //     )
+  //   ) {
+  //     let deleteWord: string;
+  //     deleteWord = this.word;
+  //     this.annotationService.deleteWord(deleteWord);
+  //     this.docService.getWords();
+  //     this.annotationService.getWords();
+  //     const index = this.thewords.indexOf(deleteWord);
+  //     this.thewords.splice(index);
+  //     this.word = '';
+  //     this.wordReference = '';
+  //     this.ngOnInit();
+  //   } else {
+  //     alert(this.word + ' has not been deleted.');
+  //   }
+  // }
 
   /**
    * onDocDelete method handles the deletion of the Document specific words. It will ask for confimation before deleting
@@ -609,7 +611,7 @@ export class AnnotationComponent
     // this.highlight(this.thewords);
     this.highlightDocumentSpecificWords(this.docWords);
     this.urlify(this.reference);
-    this.highlightPossibleWords(this.fileText);
+    // this.highlightPossibleWords(this.fileText);
     // this.textChecker(this.fileText);
   }
 
@@ -625,55 +627,15 @@ export class AnnotationComponent
     );
   }
 
-  /**
-   * Below is a regular expression that finds alphanumeric characters,
-   * Next is a string that could easily be replaced with a reference to a form control,
-   * Lastly, we have an array that will hold any words matching our pattern.
-   */
-  // textChecker(fileText) {
-  //   try {
-  //     const pattern = /\w+/g,
-  //       // string = fileText.toLowerCase(),
-  //       string = fileText,
-  //       matchedWords = string.match(pattern);
-
-  //     /* The Array.prototype.reduce method assists us in producing a single value from an
-  //      array. In this case, we're going to use it to output an object with results. */
-  //     const counts = matchedWords.reduce((stats, word) => {
-  //       /* `stats` is the object that we'll be building up over time.
-  //          `word` is each individual entry in the `matchedWords` array */
-  //       if (stats.hasOwnProperty(word)) {
-  //         /* `stats` already has an entry for the current `word`.
-  //              As a result, let's increment the count for that `word`. */
-  //         stats[word] = stats[word] + 1;
-  //       } else {
-  //         /* `stats` does not yet have an entry for the current `word`.
-  //              As a result, let's add a new entry, and set count to 1. */
-  //         stats[word] = 1;
-  //       }
-  //       /* Because we are building up `stats` over numerous iterations,
-  //          we need to return it for the next pass to modify it. */
-  //       return stats;
-  //     }, {});
-
-  //     /* Now that `counts` has our object, we can log it. */
-  //     // console.log(counts);
-
-  //     const theObjectKeys = [];
-  //     for (const key in counts) {
-  //       if (counts.hasOwnProperty(key)) {
-  //         if (counts[key] < 10) {
-  //           // this.theObjectKeys = key;
-  //           theObjectKeys.push(key);
-  //           this.highlightPossibleWords(theObjectKeys);
-  //           // console.log(key, ' -> ' , counts[key]);
-  //         }
-  //       }
-  //   }
-  //   // console.log(theObjectKeys);
-  //     // console.log(JSON.stringify(counts));
-  //   } catch (e) {}
-  // }
+  possibleWords() {
+    // document.getElementById('#difficultWords').style.visibility = 'hidden';
+    // this.isLoading = true;
+    this.diffWordsClicked = true;
+    this.readTextSub = this.docService.readText(this.id).subscribe(data => {
+      this.fileText = data;
+      this.highlightPossibleWords(this.fileText);
+    });
+  }
 
   highlightPossibleWords(words: string[]) {
     try {
