@@ -82,6 +82,7 @@ exports.readText = (req, res, next) => {
       if (result) {
         checkIfWordsMatch(result.body, hardWords => {
           // let jointWords = hardWords.join(' ');
+          // let checkedNew = hardWords.split('.').join("");
           console.log(hardWords);
           res.status(200).json(hardWords);
         });
@@ -112,7 +113,7 @@ function parseFileIntoMemory() {
     .pipe(es.mapSync((line) => {
         const lines = line.split('\t');
         const freq = Number(lines[1]);
-        if (freq <= 500) {
+        if (freq <= 10000) {
           infrequentWords.push(lines[0]);
         }
         // pause the readstream
