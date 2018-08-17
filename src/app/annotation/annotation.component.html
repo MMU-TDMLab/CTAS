@@ -28,20 +28,21 @@
     <div class="column right">
       <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || this.role == 'admin'">
         <ng-template [ngIf]="!diffWordsClicked">
-          <button type="button" id="difficultWords" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#exampleModal">
-            Check for Difficult Words
+          <button type="button" id="difficultWords" class="btn btn-secondary btn-sm shadow mb-5 rounded" data-toggle="modal" data-target="#exampleModal">
+            Difficult Words
+            <i class="fas fa-search"></i>
           </button>
         </ng-template>
         <div>
-          <a class="btn btn-warning btn-sd" id="btnHighLight" (click)="highlightSelection()">
-            <i class="fas fa-highlighter"></i>
+          <a class="btn btn-warning btn-sm shadow mb-5 rounded" id="btnHighLight" (click)="highlightSelection()">
             Selected Text
+            <i class="fas fa-highlighter"></i>
           </a>
         </div>
       </ng-template>
       <ng-template [ngIf]='word'>
         <form [formGroup]='form'>
-          <div class="alert alert-warning alert-dismissible fade show" id="annotation" role="alert">
+          <div class="alert alert-warning alert-dismissible fade show shadow rounded" id="annotation" role="alert">
             <strong>{{ word }}</strong>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)='resetAlertBox(false)'>
               <span aria-hidden="true">&times;</span>
@@ -50,13 +51,13 @@
           <ng-template [ngIf]="userIsAuthenticated && (this.role == 'teacher' || this.role == 'admin')">
             <div class="form-group">
               <ng-template [ngIf]="userIsAuthenticated && showingAnnotation && !editing">
-                <div class="alert alert-info" role="alert">
+                <div class="alert alert-info shadow rounded" role="alert">
                   {{ showingAnnotation }}
                 </div>
               </ng-template>
               <ng-template [ngIf]="userIsAuthenticated && showingAnnotation && editing && !docTrue">
                 <div class="alert alert-info" role="alert">
-                  <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="{{ showingAnnotation }}" rows="3" formControlName="annotation"></textarea>
+                  <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="{{ showingAnnotation }}" rows="3" formControlName="annotation" value="{{ showingAnnotation }}"></textarea>
                 </div>
                 <button class="btn btn-success btn-sm" id="saveDocEditBtn" type="button" (click)='onDocEditSub()' [disabled]="!form.valid">Save Edited Annotation</button>
               </ng-template>
@@ -70,11 +71,11 @@
           </ng-template>
           <ng-template [ngIf]="userIsAuthenticated && !editing && showingAnnotation && !docTrue && (this.role == 'teacher' ||  this.role == 'admin')">
             <div>
-              <button class="btn btn-secondary btn-sm margin-top" type="button" (click)='onDocEditWord()'>Edit Annotation
+              <button class="btn btn-secondary btn-sm margin-top shadow rounded" id="editAnnotation" type="button" (click)='onDocEditWord()'>Edit Annotation
                 <i class="fas fa-pencil-alt margin-left"></i>
               </button>
             </div>
-            <button class="btn btn-danger btn-sm margin-top" type="button" (click)='onDocDelete()'>Delete Annotation
+            <button class="btn btn-danger btn-sm margin-top shadow rounded" type="button" (click)='onDocDelete()'>Delete Annotation
               <i class="far fa-trash-alt margin-left"></i>
             </button>
           </ng-template>

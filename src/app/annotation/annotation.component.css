@@ -27,7 +27,8 @@
 }
 
 #btnHighLight {
-  margin-top: 2.5em;
+  margin-top: 0.75em;
+  min-width: 11.25em;
   visibility: hidden;
 }
 
@@ -44,7 +45,7 @@
 }
 
 #annotation {
-  margin-top: 1.75em;
+  margin-top: 0.5em;
 }
 
 .highlighted {
@@ -113,4 +114,15 @@ mat-spinner {
 
 .margin-left {
   margin-left: 0.5em;
+}
+
+#difficultWords {
+  min-width: 11.25em;
+  background-color: #5c85d6;
+  border-color: #5c85d6;
+}
+
+#editAnnotation {
+  background-color: #2eb8b8;
+  border-color: #2eb8b8;
 }

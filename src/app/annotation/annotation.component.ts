@@ -163,7 +163,8 @@ export class AnnotationComponent
 
       paragraph.map(word => {
         let t = word;
-        if (words.indexOf(word) > -1) {
+        const withoutPunct = t.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g,'');
+          if (words.indexOf(withoutPunct) > -1) {
           t =
             '<a class="clickable" style="background-color: yellow; text-decoration: underline;">' +
             word +
@@ -204,15 +205,6 @@ export class AnnotationComponent
     this.setWord = e;
     this.word = e;
     this.docService.getWords();
-    // this.annotationService.getWords();
-
-    // this.theHardWords.map(word => {
-    //   if (word.word === this.setWord) {
-    //     this.wordReference = 'Global Word';
-    //     this.docTrue = true;
-    //     this.showingAnnotation = word.annotation;
-    //   }
-    // });
 
     this.docWords.map(word => {
       if (word.word === this.setWord && word.document_id === this.id) {
@@ -260,7 +252,6 @@ export class AnnotationComponent
           ) {
             this.docService.addWord(theWord, theAnnotation, this.id);
             this.word = '';
-            // this.ngOnInit();
             setTimeout(() => {
               this.ngOnInit();
             }, 400);
@@ -363,11 +354,10 @@ export class AnnotationComponent
       )
     ) {
       this.annotation = this.form.value.annotation;
+      this.word = this.word.split('.').join('').split(',').join('').split('\'').join('').split(' ');
       this.docService.addWord(this.word, this.annotation, this.id);
       this.form.reset();
       this.word = '';
-      // this.showingAnnotation = '';
-      // this.ngOnInit();
       setTimeout(() => {
         this.ngOnInit();
       }, 400);
@@ -525,7 +515,8 @@ export class AnnotationComponent
 
         paragraph.map(word => {
           let t = word;
-          if (words.indexOf(word) > -1) {
+          const withoutPunct = t.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g,'');
+          if (words.indexOf(withoutPunct) > -1) {
             t =
               '<a class="optional" style="background-color:#dcdfe5; text-decoration: underline;">' +
               word +
@@ -555,7 +546,8 @@ export class AnnotationComponent
     this.authStatus.unsubscribe();
     // this.annotationSub.unsubscribe();
     this.docSub.unsubscribe();
-    /// FIX BELOW
-    // this.readTextSub.unsubscribe();
+    if (this.fileText) {
+      this.readTextSub.unsubscribe();
+    }
   }
 }
