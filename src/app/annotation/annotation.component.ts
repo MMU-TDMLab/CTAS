@@ -163,7 +163,7 @@ export class AnnotationComponent
 
       paragraph.map(word => {
         let t = word;
-        const withoutPunct = t.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g,'');
+        const withoutPunct = t.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g, '');
           if (words.indexOf(withoutPunct) > -1) {
           t =
             '<a class="clickable" style="background-color: yellow; text-decoration: underline;">' +
@@ -312,29 +312,12 @@ export class AnnotationComponent
       'style',
       'background-color: yellow; display: inline; text-decoration: underline;'
     );
-    // newNode.onclick = () => {
-    //   if (confirm('Are you sure you want to delete ' + range + '?')) {
-    //     this.deletenode(newNode);
-    //   } else {
-    //     alert(range + ' has not been deleted.');
-    //   }
-    // };
 
     // Add Text for replacement (for multiple nodes only)
     newNode.appendChild(range.cloneContents());
     // Apply Node around selection (used for individual nodes only)
     return newNode;
   }
-
-  /**
-   * This deletes the annotation if you click the word two times and it will ask you before deleting it.
-   * Currently this is not used but could always be added.
-   */
-  // deletenode(node) {
-  //   const contents = document.createTextNode(node.innerText);
-  //   node.parentNode.replaceChild(contents, node);
-  //   this.resetAlertBox(true);
-  // }
 
   /**
    * addToDoc will be the method which stores the document specific words. It will check if the form is valid and if not
@@ -515,7 +498,7 @@ export class AnnotationComponent
 
         paragraph.map(word => {
           let t = word;
-          const withoutPunct = t.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g,'');
+          const withoutPunct = t.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g, '');
           if (words.indexOf(withoutPunct) > -1) {
             t =
               '<a class="optional" style="background-color:#dcdfe5; text-decoration: underline;">' +

@@ -3,8 +3,6 @@ const Post = require('../models/post');
 
 const infrequentWords = [];
 
-// let postBody = '';
-
 exports.newWord = (req, res, next) => {
   const word = new DocumentWord({
     word: req.body.word,
@@ -143,54 +141,3 @@ function checkIfWordsMatch(body, callback) {
   });
   return callback(hardWords);
 }
-
-// exports.readTexty = (req, res, next) => {
-//   // Read the file and print its contents.
-//   const fs = require("fs"),
-//     path = require("path"),
-//     // filePath = path.join(__dirname, "../documents/vocab_cs");
-//     // filePath = path.join(__dirname, "../documents/textfile.txt");
-//     filePath = path.join(__dirname, "../documents/vocabMod_cs");
-
-//   const readline = require('readline');
-//   const rl = readline.createInterface({
-//     input: fs.createReadStream(filePath)
-//   });
-//   const infrequentWords = [];
-//   let error = false;
-//   rl.on('line', function (line) {
-//     const lines = line.split('\t');
-//     try {
-//       const freq = Number(lines[1]);
-//       if (freq <= 200) {
-//         // const obj = {
-//         //   word: lines[0],
-//         //   freq: freq,
-//         // }
-//         infrequentWords.push(lines[0]);
-//       }
-//       infrequentWordsString = infrequentWords.join(' ');
-//       //   // console.log(`Word ${word.word} : freq ${word.freq}`);
-
-//     } catch (error) {
-//       error = true;
-//     }
-//   });
-
-//   rl.on("close", () => {
-//     if (!error) {
-//       res.status(200).json(infrequentWordsString);
-//     } else {
-//       res.status(500).send();
-//     }
-//   })
-
-//   // fs.readFile(filePath, { encoding: "utf-8" }, function(err, data) {
-//   //   if (!err) {
-//   //     // console.log("received data: " + data);
-//   //     res.status(200).json(data);
-//   //   } else {
-//   //     res.status(500).send();
-//   //   }
-//   // });
-// }
