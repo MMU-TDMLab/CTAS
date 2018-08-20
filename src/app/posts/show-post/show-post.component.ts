@@ -81,6 +81,7 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   onAnnotation(postId: string) {
     if (this.annoClicked === false) {
       this.annoClicked = true;
+      this.postsService.pageVisitCount(postId);
       this.router.navigate(['/annotation', postId]);
     }
     this.annoClicked = false;

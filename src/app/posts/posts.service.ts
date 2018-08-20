@@ -109,28 +109,6 @@ export class PostsService {
       });
   }
 
-  // addPost(id: string, header: string, message: string, body: string, references: string, poster: string) {
-  //   let postData: Post;
-  //   postData = {
-  //   id: id,
-  //   header: header,
-  //   message: message,
-  //   body: body,
-  //   references: references,
-  //   poster: poster
-  // };
-  //   this.http
-  //     .post(BACKEND_URL, postData)
-  //     .subscribe(
-  //       response => {
-  //         console.log(response);
-  //       },
-  //       error => {
-  //         console.log(error);
-  //       }
-  //     );
-  // }
-
   /**
    * This is the Put method, You provide the header, message, body and reference and the ID of
    * the Post and the Poster is not required to be provided since they should not change.
@@ -182,5 +160,21 @@ export class PostsService {
         this.posts = updatedPosts;
         this.postsUpdated.next([...this.posts]);
       });
+  }
+
+  pageVisitCount(postId: string) {
+    const postViewCount = {
+      postId: postId
+    };
+    return this.http
+    .post(BACKEND_URL + '/page-count', postViewCount)
+    .subscribe(
+      response => {
+        console.log(response);
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
 }

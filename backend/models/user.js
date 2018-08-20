@@ -16,9 +16,12 @@ const userSchema = mongoose.Schema({
     required: true
   },
   answers: {
-    type: String,
-    // required: true
-  }
+    type: String
+  },
+  visits: [{
+    postId: mongoose.Schema.Types.ObjectId,
+    visitCount: Number
+  }]
 });
 
 userSchema.plugin(uniqueVal);

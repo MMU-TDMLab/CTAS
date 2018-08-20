@@ -95,19 +95,19 @@ exports.getPosts = (req, res, next) => {
 
 exports.getPostById = (req, res, next) => {
   Post.findById(req.params.id).then(post => {
-    if (post) {
-      res.status(200).json(post);
-    } else {
-      res.status(404).json({
-        message: 'Post not found!'
+      if (post) {
+        res.status(200).json(post);
+      } else {
+        res.status(404).json({
+          message: 'Post not found!'
+        });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "Fetching post failed!"
       });
-    }
-  })
-  .catch(error => {
-    res.status(500).json({
-      message: "Fetching post failed!"
     });
-  });
 }
 
 exports.deletePost = (req, res, next) => {
@@ -132,24 +132,85 @@ exports.deletePost = (req, res, next) => {
         })
       } else {
         Post.deleteOne({
-          _id: req.params.id,
-          poster: req.userData.userId,
-        }).then(result => {
-          if (result.n > 0) {
-            res.status(200).json({
-              message: "Admin Deletion successful!"
+            _id: req.params.id,
+            poster: req.userData.userId,
+          }).then(result => {
+            if (result.n > 0) {
+              res.status(200).json({
+                message: "Admin Deletion successful!"
+              });
+            } else {
+              res.status(401).json({
+                message: "Not authorised!"
+              });
+            }
+          })
+          .catch(error => {
+            res.status(500).json({
+              message: "Post not deleted!"
             });
-          } else {
-            res.status(401).json({
-              message: "Not authorised!"
-            });
-          }
-        })
-        .catch(error => {
-          res.status(500).json({
-            message: "Post not deleted!"
           });
-        });
       }
     })
+}
+
+exports.pageVisitCount = (req, res, next) => {
+  User.findById({
+    _id: req.userData.userId
+  }, 'visits', function (err, pageVists) {
+    if (err) {
+      res.status(401).json({
+        message: "Error Occured!"
+      })
+    } else {
+      // console.log(pageVists);
+      const pageCounts = pageVists.visits;
+      pageCounts.map(page => {
+        const postViewed = req.body.postId;
+        if (page.postId === postViewed) {
+        //   User.findByIdAndUpdate({
+        //       _id: req.userData.userId
+        //     }, {
+        //       $set: {
+        //         visits: $inc
+        //       }
+        //     }, {
+        //       upsert: false
+        //     },
+        //     (err) => {
+        //       if (err) {
+        //         console.log('Error Occured');
+        //       } else {
+        //         res.status(200).json({
+        //           message: "Update successful!"
+        //         })
+        //       }
+        //     });
+        }
+      });
+      // const pageAlreadyVisited = pageCounts.visitCount ++;
+      res.status(200).json({
+        message: "Update successful!"
+      })
+    }
+  });
+  // User.findByIdAndUpdate({
+  //   _id: req.userData.userId
+  // },
+  // {
+  //   $set: {
+  //     visits: $inc
+  //   }
+  // }, {
+  //   upsert: false
+  // },
+  // (err) => {
+  //   if (err) {
+  //     console.log('Error Occured');
+  //   } else {
+  //     res.status(200).json({
+  //       message: "Update successful!"
+  //     })
+  //   }
+  // });
 }

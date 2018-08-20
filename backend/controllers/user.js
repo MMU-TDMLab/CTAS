@@ -34,7 +34,7 @@ exports.userLogin = (req, res, next) => {
     .then(user => {
       if (!user) {
         return res.status(401).json({
-          message: 'Auth failed'
+          message: 'Invalid Credentials'
         });
       }
       fetchedUser = user;
@@ -43,7 +43,7 @@ exports.userLogin = (req, res, next) => {
     .then(result => {
       if (!result) {
         return res.status(401).json({
-          message: 'Auth failed'
+          message: 'Invalid Credentials'
         });
       }
       const token = jwt.sign(
@@ -53,7 +53,8 @@ exports.userLogin = (req, res, next) => {
       );
       res.status(200).json({
         token: token,
-        expiresIn: 3600,
+        expiresIn: 7200,
+        // expiresIn: 3600,
         userId: fetchedUser._id,
         role: fetchedUser.role
       });

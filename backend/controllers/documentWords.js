@@ -99,8 +99,8 @@ function parseFileIntoMemory() {
   const fs = require('fs'),
     es = require('event-stream'),
     path = require("path"),
-    // filePath = path.join(__dirname, "../documents/vocab_cs");
-    filePath = path.join(__dirname, "../documents/vocabMod_cs");
+    filePath = path.join(__dirname, "../documents/vocab_cs");
+    // filePath = path.join(__dirname, "../documents/vocabMod_cs");
 
   console.log(`Starting to process file: ${filePath}`);
 
@@ -109,7 +109,7 @@ function parseFileIntoMemory() {
     .pipe(es.mapSync((line) => {
         const lines = line.split('\t');
         const freq = Number(lines[1]);
-        if (freq <= 10000) {
+        if (freq <= 20000) {
           infrequentWords.push(lines[0]);
         }
         // pause the readstream
