@@ -457,7 +457,7 @@ export class AnnotationComponent
    * Run the urlify method which gets hold of all the references in the post and checks which ones are a link.
    */
   ngAfterViewChecked() {
-    // console.clear();
+    console.clear();
     // this.highlight(this.thewords);
     this.highlightDocumentSpecificWords(this.docWords);
     this.urlify(this.reference);

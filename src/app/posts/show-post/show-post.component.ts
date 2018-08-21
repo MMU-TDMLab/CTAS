@@ -33,8 +33,7 @@ export class ShowPostComponent implements OnInit, OnDestroy {
     private router: Router,
     private authService: AuthService,
     public route: ActivatedRoute
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.isLoading = true;
@@ -81,7 +80,9 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   onAnnotation(postId: string) {
     if (this.annoClicked === false) {
       this.annoClicked = true;
-      this.postsService.pageVisitCount(postId);
+      if (this.role === 'student') {
+        this.postsService.pageVisitCount(postId);
+      }
       this.router.navigate(['/annotation', postId]);
     }
     this.annoClicked = false;
