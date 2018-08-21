@@ -1,5 +1,16 @@
 const mongoose = require('mongoose');
 const uniqueVal = require('mongoose-unique-validator');
+const Schema = mongoose.Schema;
+
+const visitsSchema = new Schema ({
+  postId: {
+    type: String
+  },
+  visitCount: {
+    type: Number,
+    default: 1
+  }
+})
 
 const userSchema = mongoose.Schema({
   email: {
@@ -18,10 +29,7 @@ const userSchema = mongoose.Schema({
   answers: {
     type: String
   },
-  visits: [{
-    postId: mongoose.Schema.Types.ObjectId,
-    visitCount: Number
-  }]
+  visits: [visitsSchema]
 });
 
 userSchema.plugin(uniqueVal);

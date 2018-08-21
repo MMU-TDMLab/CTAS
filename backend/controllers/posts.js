@@ -157,60 +157,97 @@ exports.deletePost = (req, res, next) => {
 exports.pageVisitCount = (req, res, next) => {
   User.findById({
     _id: req.userData.userId
-  }, 'visits', function (err, pageVists) {
+  }, 'visits', function (err) {
     if (err) {
       res.status(401).json({
         message: "Error Occured!"
       })
     } else {
-      // console.log(pageVists);
-      const pageCounts = pageVists.visits;
-      pageCounts.map(page => {
-        const postViewed = req.body.postId;
-        if (page.postId === postViewed) {
-        //   User.findByIdAndUpdate({
-        //       _id: req.userData.userId
-        //     }, {
-        //       $set: {
-        //         visits: $inc
-        //       }
-        //     }, {
-        //       upsert: false
-        //     },
-        //     (err) => {
-        //       if (err) {
-        //         console.log('Error Occured');
-        //       } else {
-        //         res.status(200).json({
-        //           message: "Update successful!"
-        //         })
-        //       }
-        //     });
+      User.findOneAndUpdate({
+        "visits.postId" : req.body.postId,
+      }, {
+        $inc : { "visits.$.visitCount" : 1 }
+      }, (err, doc) => {
+        if (err) {
+          console.log(err);
+        } else {
+          if (doc === null ) {
+            const postToAdd = {
+              postId : req.body.postId
+            };
+            User.findByIdAndUpdate({
+              _id: req.userData.userId
+            },
+            {$push: { visits : postToAdd }},
+            (err, doc) => {
+              if(err) {
+                res.status(401).json({
+                  message: "Error Occured!"
+                })
+              } else {
+                res.status(200).json({
+                  message: "Success!"
+                })
+              }
+            }
+          );
+          } else {
+            res.status(200).json({
+              message: "Success!"
+            })
+          }
         }
       });
-      // const pageAlreadyVisited = pageCounts.visitCount ++;
-      res.status(200).json({
-        message: "Update successful!"
-      })
+
+      // const pageCounts = pageVists.visits;
+      // pageCounts.map(page => {
+      //   const postViewed = req.body.postId;
+      //   if (page.postId.toString() === postViewed) {
+      //     User.findOneAndUpdate({
+      //       "visits.postId" : page.postId,
+      //     }, {
+      //       $inc : { "visits.$.visitCount" : 1 }
+      //     }, {
+      //       upsert : true
+      //     }, (err, doc) => {
+      //       if (err) {
+      //         console.log(err);
+      //       } else {
+      //         console.log(doc);
+      //       }
+      //     });
+          // User.findByIdAndUpdate({
+          //     _id: req.userData.userId
+          //   },
+          //   User.findOneAndUpdate({
+          //     postViewed:postId
+          //   }, {
+          //     $inc : {'visits.visitCount' : 1}
+          //   })
+          //   {
+          //     $set: {
+          //       visits:
+          //       [{
+          //         "postId": postViewed,
+          //         $inc: { visitCount: 1 }
+          //       }]
+          //     }
+          //   }, {
+          //     upsert: false
+          //   },
+          //   (err) => {
+          //     if (err) {
+          //       res.status(401).json({
+          //         message: "Error Occured!"
+          //       })
+          //     } else {
+          //       res.status(200).json({
+          //         message: "Update successful!"
+          //       })
+          //     }
+          //   });
+        // }
+      // });
     }
   });
-  // User.findByIdAndUpdate({
-  //   _id: req.userData.userId
-  // },
-  // {
-  //   $set: {
-  //     visits: $inc
-  //   }
-  // }, {
-  //   upsert: false
-  // },
-  // (err) => {
-  //   if (err) {
-  //     console.log('Error Occured');
-  //   } else {
-  //     res.status(200).json({
-  //       message: "Update successful!"
-  //     })
-  //   }
-  // });
 }
