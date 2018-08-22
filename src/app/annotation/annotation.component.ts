@@ -33,7 +33,7 @@ export class AnnotationComponent
   public thewords: string[];
   public role: string;
   public id: string;
-  public setWord: string;
+  // public setWord: string;
   public selectedPost: string;
   public annotation: string;
   public editAnnotation: string;
@@ -50,7 +50,6 @@ export class AnnotationComponent
   public userIsAuthenticated = false;
   public editing: boolean;
   public reference = '';
-  public wordReference = '';
   public docTrue: boolean;
   public wordId;
   public referencedText;
@@ -164,7 +163,8 @@ export class AnnotationComponent
       paragraph.map(word => {
         let t = word;
         const withoutPunct = t.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g, '');
-          if (words.indexOf(withoutPunct) > -1) {
+        // const wordWithoutPunch = word.replace(/[.,\/#!$%\^&\*;:{}=\_~()]/g, '');
+        if (words.indexOf(withoutPunct) > -1) {
           t =
             '<a class="clickable" style="background-color: yellow; text-decoration: underline;">' +
             word +
@@ -202,18 +202,19 @@ export class AnnotationComponent
    * @param e - e is the word that the user has clicked.
    */
   findAnnotation(e) {
-    this.setWord = e;
+    // this.setWord = e;
     this.word = e;
     this.docService.getWords();
 
     this.docWords.map(word => {
-      if (word.word === this.setWord && word.document_id === this.id) {
-        this.wordReference = 'Document Specific Word';
+      if (word.word === this.word && word.document_id === this.id) {
         this.docTrue = false;
         this.wordId = word.document_id;
         this.showingAnnotation = word.annotation;
         this.theWordId = word._id;
       }
+      const withoutPunct = this.word.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g, '');
+      this.word = withoutPunct;
     });
   }
 
@@ -337,7 +338,14 @@ export class AnnotationComponent
       )
     ) {
       this.annotation = this.form.value.annotation;
-      this.word = this.word.split('.').join('').split(',').join('').split('\'').join('').split(' ');
+      this.word = this.word
+        .split('.')
+        .join('')
+        .split(',')
+        .join('')
+        .split('\'')
+        .join('')
+        .split(' ');
       this.docService.addWord(this.word, this.annotation, this.id);
       this.form.reset();
       this.word = '';
@@ -355,8 +363,10 @@ export class AnnotationComponent
    */
   onDocEditWord() {
     this.editing = true;
-    document.getElementById('editDocBtn').style.visibility = 'hidden';
-    document.getElementById('deleteDocBtn').style.visibility = 'hidden';
+    try {
+      document.getElementById('#editDocBtn').style.visibility = 'hidden';
+      document.getElementById('#deleteDocBtn').style.visibility = 'hidden';
+    } catch (e) {}
   }
 
   /**
@@ -393,7 +403,6 @@ export class AnnotationComponent
   resetAlertBox(callNgOnInit: boolean) {
     this.word = '';
     this.annotation = '';
-    this.wordReference = '';
     this.form.reset();
     this.editing = false;
     if (callNgOnInit) {
@@ -421,7 +430,6 @@ export class AnnotationComponent
       // const index = this.docWords.indexOf(deleteWord);
       // this.docWords.splice(index);
       this.word = '';
-      this.wordReference = '';
       setTimeout(() => {
         this.ngOnInit();
       }, 400);
@@ -457,7 +465,7 @@ export class AnnotationComponent
    * Run the urlify method which gets hold of all the references in the post and checks which ones are a link.
    */
   ngAfterViewChecked() {
-    console.clear();
+    // console.clear();
     // this.highlight(this.thewords);
     this.highlightDocumentSpecificWords(this.docWords);
     this.urlify(this.reference);
@@ -478,7 +486,6 @@ export class AnnotationComponent
   }
 
   possibleWords() {
-    // document.getElementById('#difficultWords').style.visibility = 'hidden';
     // this.isLoading = true;
     this.diffWordsClicked = true;
     this.readTextSub = this.docService.readText(this.id).subscribe(data => {
@@ -511,7 +518,9 @@ export class AnnotationComponent
         const elementsToMakeClickable = document.getElementsByClassName(
           'clickable'
         );
-        const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
+        const elementsToMakeClickableArray = Array.from(
+          elementsToMakeClickable
+        );
         elementsToMakeClickableArray.map(element => {
           element.addEventListener('click', this.viewAnnotation.bind(this));
         });
