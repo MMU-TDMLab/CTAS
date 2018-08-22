@@ -162,7 +162,7 @@ export class AnnotationComponent
 
       paragraph.map(word => {
         let t = word;
-        const withoutPunct = t.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g, '');
+        const withoutPunct = t.replace(/[.,\/#!$%\^&\*;:{}=\_`'~()]/g, '');
         // const wordWithoutPunch = word.replace(/[.,\/#!$%\^&\*;:{}=\_~()]/g, '');
         if (words.indexOf(withoutPunct) > -1) {
           t =
