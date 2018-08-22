@@ -213,7 +213,7 @@ export class AnnotationComponent
         this.showingAnnotation = word.annotation;
         this.theWordId = word._id;
       }
-      const withoutPunct = this.word.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g, '');
+      const withoutPunct = this.word.replace(/[.,\/#!$%\^&\*;:{}=\_`'~()]/g, '');
       this.word = withoutPunct;
     });
   }

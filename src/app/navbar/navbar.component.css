@@ -12,6 +12,11 @@
   font-family: courier;
 }
 
+#navRight {
+  margin-left: 24em;
+}
+
+
 /* #navfix2 {
   background-color: blue;
 } */
