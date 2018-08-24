@@ -1,22 +1,23 @@
+
 .navbar-nav {
   width: 100%;
   text-align: center;
 }
 
-.navbar-brand {
-  font-family: courier;
-}
-
 .nav-item-cust {
   padding-left: 50px;
-  font-family: courier;
 }
 
-#navRight {
-  margin-left: 24em;
+#navbarColor {
+  color: black;
+}
+
+.mr-auto {
+  margin-right: auto !important;
 }
 
 
-/* #navfix2 {
-  background-color: blue;
-} */
+
+#navbar {
+  font-family: Arial, Helvetica Neue, Helvetica, sans-serif !important;
+}
