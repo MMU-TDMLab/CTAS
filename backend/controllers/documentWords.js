@@ -3,6 +3,18 @@ const Post = require('../models/post');
 
 const infrequentWords = [];
 
+/**
+ * This is the documentWords backend manager, this will take care of adding new words, finding words
+ * updating words, deleting words and also specially reading the big file which identifies which words are
+ * the difficult words.
+ */
+
+/**
+ * New word saves the new word which has been passed over from the request.
+ * @param {*} req : Request holds the body word, annotation and document id.
+ * @param {*} res : Response holds the status of the save, if it catches an
+ * error it will pass it to the frontend and display the appropiate message.
+ */
 exports.newWord = (req, res, next) => {
   const word = new DocumentWord({
     word: req.body.word,
@@ -24,6 +36,10 @@ exports.newWord = (req, res, next) => {
     });
 }
 
+/**
+ * This findWords finds all the words in the database.
+ * @param {*} res : Response holds all the words.
+ */
 exports.findWords = (req, res, next) => {
   DocumentWord.find()
     .then(documents => {
@@ -34,6 +50,14 @@ exports.findWords = (req, res, next) => {
     });
 }
 
+/**
+ * updateWords finds the word by ID and updates the annotation which
+ * comes from the body.
+ * @param {*} req Request will hold the id of the post from the params and
+ * change the annotation to the one in the request body.
+ * @param {*} res Response holds the status of the update, if it catches an
+ * error it will pass it to the frontend and display the appropiate message.
+ */
 exports.updateWord = (req, res, next) => {
   DocumentWord.findByIdAndUpdate({
       _id: req.params.id
@@ -55,6 +79,13 @@ exports.updateWord = (req, res, next) => {
     });
 }
 
+/**
+ *
+ * @param {*} req Request will hold the word id in the params, and delete
+ * the word by the id of the word.
+ * @param {*} res Response holds the status of the delete, if it catches an
+ * error it will pass it to the frontend and display the appropiate message.
+ */
 exports.deleteWord = (req, res, next) => {
   DocumentWord.findByIdAndRemove({
       _id: req.params.id
@@ -72,6 +103,13 @@ exports.deleteWord = (req, res, next) => {
     });
 }
 
+/**
+ * The readText checks the post ID and it gets the hard words from that particular post. It calls the checkIfWordsMatch
+ * which checks if the words from the post match any of the difficult words with the set criteria. If so send the word/s
+ * over to the frontend.
+ * @param {*} req Request holds the post id via the params.
+ * @param {*} res If post is not found then it will return error, if not it will work through the function.
+ */
 exports.readText = (req, res, next) => {
   if (infrequentWords.length > 0) {
     Post.findOne({
@@ -79,7 +117,6 @@ exports.readText = (req, res, next) => {
     }).then(result => {
       if (result) {
         checkIfWordsMatch(result.body, hardWords => {
-          console.log(hardWords);
           res.status(200).json(hardWords);
         });
       } else {
