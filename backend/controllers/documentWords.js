@@ -146,7 +146,7 @@ function parseFileIntoMemory() {
     .pipe(es.mapSync((line) => {
         const lines = line.split('\t');
         const freq = Number(lines[1]);
-        if (freq <= 20000) {
+        if (freq >= 20000) {
           infrequentWords.push(lines[0]);
         }
         // pause the readstream
@@ -169,10 +169,12 @@ function parseFileIntoMemory() {
 
 function checkIfWordsMatch(body, callback) {
   const hardWords = [];
-  const words = body.split(' ');
+  const lowerCaseBody = body.toLowerCase();
+  const words = lowerCaseBody.split(' ');
 
   words.map((word) => {
-    if (infrequentWords.includes(word)) {
+    if (!infrequentWords.includes(word)) {
+      console.log(word);
       let = hardWords.push(word);
     }
   });
