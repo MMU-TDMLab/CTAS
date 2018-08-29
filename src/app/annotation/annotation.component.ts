@@ -532,20 +532,6 @@ export class AnnotationComponent
     } catch (e) {}
   }
 
-// userTimer() {
-// TimeMe.initialize({
-// 	currentPageName: 'my-home-page', // current page
-// 	idleTimeoutInSeconds: 30 // seconds
-// });
-// }
-
-// userTimer() {
-//   const numIterations = 1000;
-//   for (let i = 0; i < numIterations; i++) {
-//     console.log(numIterations);
-//   }
-// }
-
   /**
    * When the user closes the page or navigates away from the page, all the subscriptions get unsubscribed so we do not have issues
    * or any unnessasary waste of memory.
