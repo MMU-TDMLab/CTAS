@@ -56,6 +56,8 @@ export class AnnotationComponent
   public theWordId: string;
   private fileText;
   public diffWordsClicked: boolean;
+  private startTime;
+  private endTime;
 
   constructor(
     public postsService: PostsService,
@@ -74,6 +76,7 @@ export class AnnotationComponent
    * When everything has gone through the loading spinner gets set to false.
    */
   ngOnInit() {
+    this.startTime = Date.now();
     this.id = this.route.snapshot.paramMap.get('postId');
     this.editing = false;
     this.annotation = '';
@@ -469,6 +472,7 @@ export class AnnotationComponent
     // this.highlight(this.thewords);
     this.highlightDocumentSpecificWords(this.docWords);
     this.urlify(this.reference);
+    // this.userTimer();
     // this.textChecker(this.fileText);
   }
 
@@ -528,19 +532,20 @@ export class AnnotationComponent
     } catch (e) {}
   }
 
-  // userTimer() {
-  //   let count = 30;
+// userTimer() {
+// TimeMe.initialize({
+// 	currentPageName: 'my-home-page', // current page
+// 	idleTimeoutInSeconds: 30 // seconds
+// });
+// }
 
-  //   var counter = setInterval(timer, 1000); // 1000 will  run it every 1 second
-  //   function timer() {
-  //     count = count - 1;
-  //       if (count <= 0) {
-  //         console.log('hey');
-  //       // counter ended, do something here
-  //       return;
-  //       }
-  //   }
-  // }
+// userTimer() {
+//   const numIterations = 1000;
+//   for (let i = 0; i < numIterations; i++) {
+//     console.log(numIterations);
+//   }
+// }
+
   /**
    * When the user closes the page or navigates away from the page, all the subscriptions get unsubscribed so we do not have issues
    * or any unnessasary waste of memory.
@@ -553,5 +558,17 @@ export class AnnotationComponent
     if (this.fileText) {
       this.readTextSub.unsubscribe();
     }
+    this.endTime = Date.now();
+    const totalTime = this.endTime - this.startTime;
+    console.log(totalTime);
+
+    // function millisToMinutesAndSeconds(millis) {
+    //   const minutes = Math.floor(millis / 60000);
+    //   const seconds = ((millis % 60000) / 1000).toFixed(0);
+    //   return (seconds == 60 ? (minutes + 1) + ':00' : minutes + ':' + (seconds < 10 ? '0' : '') + seconds);
+    // }
+
+    // millisToMinutesAndSeconds(298999); // "4:59"
+    // millisToMinutesAndSeconds(60999);  // "1:01"
   }
 }
