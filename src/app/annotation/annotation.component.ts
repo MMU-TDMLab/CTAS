@@ -469,7 +469,6 @@ export class AnnotationComponent
     // this.highlight(this.thewords);
     this.highlightDocumentSpecificWords(this.docWords);
     this.urlify(this.reference);
-    // this.highlightPossibleWords(this.fileText);
     // this.textChecker(this.fileText);
   }
 
@@ -529,6 +528,19 @@ export class AnnotationComponent
     } catch (e) {}
   }
 
+  // userTimer() {
+  //   let count = 30;
+
+  //   var counter = setInterval(timer, 1000); // 1000 will  run it every 1 second
+  //   function timer() {
+  //     count = count - 1;
+  //       if (count <= 0) {
+  //         console.log('hey');
+  //       // counter ended, do something here
+  //       return;
+  //       }
+  //   }
+  // }
   /**
    * When the user closes the page or navigates away from the page, all the subscriptions get unsubscribed so we do not have issues
    * or any unnessasary waste of memory.

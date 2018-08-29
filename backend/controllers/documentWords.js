@@ -174,7 +174,7 @@ function checkIfWordsMatch(body, callback) {
 
   words.map((word) => {
     if (!infrequentWords.includes(word)) {
-      console.log(word);
+      // console.log(word);
       let = hardWords.push(word);
     }
   });

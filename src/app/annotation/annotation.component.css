@@ -104,8 +104,6 @@ mat-spinner {
   position: fixed;
   left: 55em;
   max-width: 200px;
-  /* margin-left: 2em; */
-  /* flex: 0 0 230px; */
 }
 
 #wordRef {
