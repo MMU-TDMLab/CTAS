@@ -544,17 +544,25 @@ export class AnnotationComponent
     if (this.fileText) {
       this.readTextSub.unsubscribe();
     }
-    this.endTime = Date.now();
-    const totalTime = this.endTime - this.startTime;
-    console.log(totalTime);
-
-    // function millisToMinutesAndSeconds(millis) {
-    //   const minutes = Math.floor(millis / 60000);
-    //   const seconds = ((millis % 60000) / 1000).toFixed(0);
-    //   return (seconds == 60 ? (minutes + 1) + ':00' : minutes + ':' + (seconds < 10 ? '0' : '') + seconds);
+    // if (this.role === 'admin') {
+      this.endTime = Date.now();
+      const totalTime = this.endTime - this.startTime;
+        let minute, seconds;
+        // day, hour,
+        seconds = Math.floor(totalTime / 1000);
+        minute = Math.floor(seconds / 60);
+        seconds = seconds % 60;
+        minute = minute % 60;
+        // hour = Math.floor(minute / 60);
+        // day = Math.floor(hour / 24);
+        // hour = hour % 24;
+        console.log(seconds);
+        return {
+            // day: day,
+            // hour: hour,
+            minute: minute,
+            seconds: seconds
+        };
     // }
-
-    // millisToMinutesAndSeconds(298999); // "4:59"
-    // millisToMinutesAndSeconds(60999);  // "1:01"
   }
 }
