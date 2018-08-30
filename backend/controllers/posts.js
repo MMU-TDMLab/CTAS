@@ -198,56 +198,6 @@ exports.pageVisitCount = (req, res, next) => {
           }
         }
       });
-
-      // const pageCounts = pageVists.visits;
-      // pageCounts.map(page => {
-      //   const postViewed = req.body.postId;
-      //   if (page.postId.toString() === postViewed) {
-      //     User.findOneAndUpdate({
-      //       "visits.postId" : page.postId,
-      //     }, {
-      //       $inc : { "visits.$.visitCount" : 1 }
-      //     }, {
-      //       upsert : true
-      //     }, (err, doc) => {
-      //       if (err) {
-      //         console.log(err);
-      //       } else {
-      //         console.log(doc);
-      //       }
-      //     });
-          // User.findByIdAndUpdate({
-          //     _id: req.userData.userId
-          //   },
-          //   User.findOneAndUpdate({
-          //     postViewed:postId
-          //   }, {
-          //     $inc : {'visits.visitCount' : 1}
-          //   })
-          //   {
-          //     $set: {
-          //       visits:
-          //       [{
-          //         "postId": postViewed,
-          //         $inc: { visitCount: 1 }
-          //       }]
-          //     }
-          //   }, {
-          //     upsert: false
-          //   },
-          //   (err) => {
-          //     if (err) {
-          //       res.status(401).json({
-          //         message: "Error Occured!"
-          //       })
-          //     } else {
-          //       res.status(200).json({
-          //         message: "Update successful!"
-          //       })
-          //     }
-          //   });
-        // }
-      // });
     }
   });
 }

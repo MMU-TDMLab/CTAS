@@ -33,7 +33,6 @@ export class AnnotationComponent
   public thewords: string[];
   public role: string;
   public id: string;
-  // public setWord: string;
   public selectedPost: string;
   public annotation: string;
   public editAnnotation: string;
@@ -554,6 +553,7 @@ export class AnnotationComponent
         // day = Math.floor(hour / 24);
         // hour = hour % 24;
         this.modifiedTime = 'Seconds: ' + seconds;
+        this.docService.userActiveDate(this.date, this.modifiedTime);
         return {
             // day: day,
             // hour: hour,

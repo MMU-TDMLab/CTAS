@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
+const Activity = require('../models/user-activity');
 
 exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
@@ -64,4 +65,8 @@ exports.userLogin = (req, res, next) => {
         message: 'Invalid authentication credentials!'
       });
     });
+}
+
+exports.userActivity = (req, res, next) => {
+
 }

@@ -22,12 +22,11 @@ export class DocService {
   constructor(private http: HttpClient) {}
 
   readText(id: string) {
-    return this.http
-    .get(BACKEND_URL_Document + id);
+    return this.http.get(BACKEND_URL_Document + id);
   }
 
   /**
-  * This is the Get query. It requests the backend for the words and annotations and document ID.
+   * This is the Get query. It requests the backend for the words and annotations and document ID.
    */
   getWords() {
     this.http
@@ -53,7 +52,7 @@ export class DocService {
   /**
    * This is a normal get word as observable.
    */
-    getWordUpdateListenerTwo() {
+  getWordUpdateListenerTwo() {
     return this.docWordUpdate.asObservable();
   }
 
@@ -71,7 +70,11 @@ export class DocService {
    * @param document_id The document the word/annotation is getting saved too.
    */
   addWord(word: string, annotation: string, document_id: string) {
-    const docWord: DocWord = { word: word, annotation: annotation, document_id: document_id };
+    const docWord: DocWord = {
+      word: word,
+      annotation: annotation,
+      document_id: document_id
+    };
     // console.log(docWord);
     return this.http
       .post(BACKEND_URL_Document + '/new-word', docWord)
@@ -86,13 +89,13 @@ export class DocService {
   }
 
   /**
-  * This is the Put query, this will update the annotation on the given word.
+   * This is the Put query, this will update the annotation on the given word.
    * @param wordID The word ID you would like to make changes on.
    * @param theAnnotation The annotation that you are changing so the updated annotation.
    */
   editWord(wordID: string, theAnnotation: string) {
     const anno = {
-      annotation: theAnnotation,
+      annotation: theAnnotation
     };
     this.http
       .put(BACKEND_URL_Document + '/update' + wordID, anno)
@@ -116,7 +119,7 @@ export class DocService {
    */
   deleteWord(wordID: string) {
     this.http
-    .delete(BACKEND_URL_Document + '/delete-word' + wordID)
+      .delete(BACKEND_URL_Document + '/delete-word' + wordID)
       .subscribe(() => {
         // const result = this.docWords.filter(
         //   theword => theword.word !== word
@@ -124,5 +127,22 @@ export class DocService {
         // this.docWords = result;
         // this.docWordUpdate.next([...this.docWords]);
       });
+  }
+
+  userActiveDate(date: string, time: string) {
+    const dates = {
+      date: date,
+      time: time
+    };
+    return this.http
+      .post(BACKEND_URL_Document + '/page-activity', dates)
+      .subscribe(
+        response => {
+          console.log(response);
+        },
+        error => {
+          console.log(error);
+        }
+      );
   }
 }
