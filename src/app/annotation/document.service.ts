@@ -129,13 +129,14 @@ export class DocService {
       });
   }
 
-  userActiveDate(date: string, time: string) {
+  userActiveDate(date: string, time: string, postId: string) {
     const dates = {
       date: date,
-      time: time
+      time: time,
+      postId: postId
     };
     return this.http
-      .post(BACKEND_URL_Document + '/page-activity', dates)
+      .post(BACKEND_URL_Document + 'page-activity', dates)
       .subscribe(
         response => {
           console.log(response);

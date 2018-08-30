@@ -68,5 +68,22 @@ exports.userLogin = (req, res, next) => {
 }
 
 exports.userActivity = (req, res, next) => {
-
+  const userActivity = new Activity({
+    userId: req.userData.userId,
+    visitDate: req.body.date,
+    visitDurationSeconds: req.body.time,
+    postId: req.body.postId
+  });
+  userActivity.save()
+    .then(result => {
+      res.status(200).json({
+        message: 'User Activity has been added successfully!',
+        result: result
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: 'User Activity not recorded!'
+      })
+    });
 }

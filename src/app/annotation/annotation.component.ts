@@ -552,8 +552,8 @@ export class AnnotationComponent
         // hour = Math.floor(minute / 60);
         // day = Math.floor(hour / 24);
         // hour = hour % 24;
-        this.modifiedTime = 'Seconds: ' + seconds;
-        this.docService.userActiveDate(this.date, this.modifiedTime);
+        this.modifiedTime = seconds + ' Seconds';
+        this.docService.userActiveDate(this.date, this.modifiedTime, this.id);
         return {
             // day: day,
             // hour: hour,

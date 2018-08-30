@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const visitSchema = new Schema ({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId
+  },
   postId: {
     type: String
   },
@@ -9,7 +12,7 @@ const visitSchema = new Schema ({
     type: String
   },
   visitDurationSeconds: {
-    type: Number
+    type: String
   }
 });
 
