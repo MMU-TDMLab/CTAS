@@ -58,6 +58,8 @@ export class AnnotationComponent
   public diffWordsClicked: boolean;
   private startTime;
   private endTime;
+  private date;
+  private modifiedTime;
 
   constructor(
     public postsService: PostsService,
@@ -86,19 +88,6 @@ export class AnnotationComponent
     // this.readTextSub = this.docService.readText(this.id).subscribe(data => {
     //   this.fileText = data;
     // });
-
-    // this.annotationService.getWords();
-
-    // this.annotationSub = this.annotationService
-    //   .getWordUpdateListenerTwo()
-    //   .subscribe((theHardWords: ComplexWord[]) => {
-    //     this.thewords = [];
-    //     this.theHardWords = theHardWords;
-    //     this.theHardWords.map(word => {
-    //       this.thewords.push(word.word);
-    //       this.wordWithAnnotation.push(word);
-    //     });
-    //   });
 
     this.postsService.getPosts();
     this.postsSub = this.postsService
@@ -544,25 +533,33 @@ export class AnnotationComponent
     if (this.fileText) {
       this.readTextSub.unsubscribe();
     }
-    // if (this.role === 'admin') {
+
+      if (this.role === 'admin') {
+      const currentDate = new Date();
+      // const day = currentDate.getDate();
+      // const month = currentDate.getMonth() + 1;
+      // const year = currentDate.getFullYear();
+      // this.date = 'Date: ' + day + '/' + month + '/' + year;
+      this.date = currentDate;
+
       this.endTime = Date.now();
       const totalTime = this.endTime - this.startTime;
-        let minute, seconds;
-        // day, hour,
+        let seconds;
+        // day, hour, minute
         seconds = Math.floor(totalTime / 1000);
-        minute = Math.floor(seconds / 60);
         seconds = seconds % 60;
-        minute = minute % 60;
+        // minute = Math.floor(seconds / 60);
+        // minute = minute % 60;
         // hour = Math.floor(minute / 60);
         // day = Math.floor(hour / 24);
         // hour = hour % 24;
-        console.log(seconds);
+        this.modifiedTime = 'Seconds: ' + seconds;
         return {
             // day: day,
             // hour: hour,
-            minute: minute,
+            // minute: minute,
             seconds: seconds
         };
-    // }
+    }
   }
 }
