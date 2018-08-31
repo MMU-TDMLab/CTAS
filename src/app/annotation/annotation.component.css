@@ -124,3 +124,11 @@ mat-spinner {
   background-color: #2eb8b8;
   border-color: #2eb8b8;
 }
+
+.difScale {
+  margin-bottom: 1em;
+}
+
+.textCenter {
+  text-align: center;
+}

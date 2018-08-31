@@ -1,7 +1,9 @@
 const DocumentWord = require('../models/document-words');
 const Post = require('../models/post');
 
-const infrequentWords = [];
+const infrequentWords20 = [];
+const infrequentWords10 = [];
+const infrequentWords5 = [];
 
 /**
  * This is the documentWords backend manager, this will take care of adding new words, finding words
@@ -111,12 +113,13 @@ exports.deleteWord = (req, res, next) => {
  * @param {*} res If post is not found then it will return error, if not it will work through the function.
  */
 exports.readText = (req, res, next) => {
-  if (infrequentWords.length > 0) {
+  if (infrequentWords20.length > 0) {
     Post.findOne({
       _id: req.params.id
     }).then(result => {
       if (result) {
         checkIfWordsMatch(result.body, hardWords => {
+          // console.log(hardWords[2]);
           res.status(200).json(hardWords);
         });
       } else {
@@ -126,7 +129,9 @@ exports.readText = (req, res, next) => {
       }
     });
   } else {
-    res.status(500).send();
+    res.status(500).json({
+      message: 'Internal Error'
+    });
   }
 }
 
@@ -136,7 +141,8 @@ function parseFileIntoMemory() {
   const fs = require('fs'),
     es = require('event-stream'),
     path = require("path"),
-    filePath = path.join(__dirname, "../documents/vocab_cs");
+    // filePath = path.join(__dirname, "../documents/vocab_cs");
+    filePath = path.join(__dirname, "../documents/vocab_cs 2");
     // filePath = path.join(__dirname, "../documents/vocabMod_cs");
 
   console.log(`Starting to process file: ${filePath}`);
@@ -147,7 +153,13 @@ function parseFileIntoMemory() {
         const lines = line.split('\t');
         const freq = Number(lines[1]);
         if (freq >= 20000) {
-          infrequentWords.push(lines[0]);
+          infrequentWords20.push(lines[0]);
+        }
+        if (freq >= 13000) {
+          infrequentWords10.push(lines[0]);
+        }
+        if (freq >= 10000) {
+          infrequentWords5.push(lines[0]);
         }
         // pause the readstream
         s.pause();
@@ -158,7 +170,7 @@ function parseFileIntoMemory() {
         s.resume();
       })
       .on('error', (err) => {
-        infrequentWords = [];
+        infrequentWords20 = [];
         console.log('Error while reading file.', err);
       })
       .on('end', () => {
@@ -168,15 +180,27 @@ function parseFileIntoMemory() {
 }
 
 function checkIfWordsMatch(body, callback) {
-  const hardWords = [];
+  const hardWords20 = [];
+  const hardWords10 = [];
+  const hardWords5 = [];
+  const arrayOfArrays = [hardWords20, hardWords10, hardWords5];
   const lowerCaseBody = body.toLowerCase();
   const words = lowerCaseBody.split(' ');
 
   words.map((word) => {
-    if (!infrequentWords.includes(word)) {
-      // console.log(word);
-      let = hardWords.push(word);
+    if (!infrequentWords20.includes(word)) {
+      let = hardWords20.push(word);
+    }
+    if (!infrequentWords10.includes(word)) {
+      let = hardWords10.push(word);
+    }
+    if (!infrequentWords5.includes(word)) {
+      let = hardWords5.push(word);
     }
   });
-  return callback(hardWords);
+  // console.log('20 ',hardWords20.length);
+  // console.log('10 ', hardWords10.length);
+  // console.log('5 ', hardWords5.length);
+  // console.log('5: ', arrayOfArrays[0], ' 10: ', arrayOfArrays[1], ' 20: ', arrayOfArrays[2]);
+  return callback(arrayOfArrays);
 }

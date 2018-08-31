@@ -54,7 +54,7 @@ export class AnnotationComponent
   public referencedText;
   public theWordId: string;
   private fileText;
-  public diffWordsClicked: boolean;
+  // public diffWordsClicked: boolean;
   private startTime;
   private endTime;
   private date;
@@ -82,7 +82,7 @@ export class AnnotationComponent
     this.editing = false;
     this.annotation = '';
     this.editAnnotation = '';
-    this.diffWordsClicked = false;
+    // this.diffWordsClicked = false;
     this.form = this.createForm();
     // this.readTextSub = this.docService.readText(this.id).subscribe(data => {
     //   this.fileText = data;
@@ -134,6 +134,11 @@ export class AnnotationComponent
           Validators.required,
           Validators.minLength(8),
           Validators.maxLength(250)
+        ]
+      }),
+      difficulty: new FormControl(null, {
+        validators: [
+          Validators.required
         ]
       })
     });
@@ -204,7 +209,10 @@ export class AnnotationComponent
         this.showingAnnotation = word.annotation;
         this.theWordId = word._id;
       }
-      const withoutPunct = this.word.replace(/[.,\/#!$%\^&\*;:{}=\_`'~()]/g, '');
+      const withoutPunct = this.word.replace(
+        /[.,\/#!$%\^&\*;:{}=\_`'~()]/g,
+        ''
+      );
       this.word = withoutPunct;
     });
   }
@@ -460,7 +468,6 @@ export class AnnotationComponent
     // this.highlight(this.thewords);
     this.highlightDocumentSpecificWords(this.docWords);
     this.urlify(this.reference);
-    // this.userTimer();
     // this.textChecker(this.fileText);
   }
 
@@ -477,15 +484,14 @@ export class AnnotationComponent
   }
 
   possibleWords() {
-    // this.isLoading = true;
-    this.diffWordsClicked = true;
     this.readTextSub = this.docService.readText(this.id).subscribe(data => {
-      this.fileText = data;
-      this.highlightPossibleWords(this.fileText);
-    });
+          this.fileText = data;
+          this.highlightPossibleWords(this.fileText, this.form.value.difficulty);
+        });
+    // this.diffWordsClicked = true;
   }
 
-  highlightPossibleWords(words: string[]) {
+  highlightPossibleWords(words: string[], diff: string) {
     try {
       if (this.role === 'student') {
         return;
@@ -497,11 +503,29 @@ export class AnnotationComponent
         paragraph.map(word => {
           let t = word;
           const withoutPunct = t.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g, '');
-          if (words.indexOf(withoutPunct) > -1) {
-            t =
-              '<a class="optional" style="background-color:#dcdfe5; text-decoration: underline;">' +
-              word +
-              '</a>';
+          if (diff === 'beginner') {
+            if (words[0].indexOf(withoutPunct) > -1) {
+              t =
+                '<a class="optional" style="background-color:#dcdfe5; text-decoration: underline;">' +
+                word +
+                '</a>';
+            }
+          }
+          if (diff === 'intermediate') {
+            if (words[1].indexOf(withoutPunct) > -1) {
+              t =
+                '<a class="optional" style="background-color:#dcdfe5; text-decoration: underline;">' +
+                word +
+                '</a>';
+            }
+          }
+          if (diff === 'advanced') {
+            if (words[2].indexOf(withoutPunct) > -1) {
+              t =
+                '<a class="optional" style="background-color:#dcdfe5; text-decoration: underline;">' +
+                word +
+                '</a>';
+            }
           }
           res.push(t);
         });
@@ -520,6 +544,10 @@ export class AnnotationComponent
     } catch (e) {}
   }
 
+  modalClosed() {
+    this.form.reset();
+  }
+
   /**
    * When the user closes the page or navigates away from the page, all the subscriptions get unsubscribed so we do not have issues
    * or any unnessasary waste of memory.
@@ -532,8 +560,7 @@ export class AnnotationComponent
     if (this.fileText) {
       this.readTextSub.unsubscribe();
     }
-
-      if (this.role === 'admin') {
+    if (this.role === 'student') {
       const currentDate = new Date();
       // const day = currentDate.getDate();
       // const month = currentDate.getMonth() + 1;
@@ -543,23 +570,23 @@ export class AnnotationComponent
 
       this.endTime = Date.now();
       const totalTime = this.endTime - this.startTime;
-        let seconds;
-        // day, hour, minute
-        seconds = Math.floor(totalTime / 1000);
-        seconds = seconds % 60;
-        // minute = Math.floor(seconds / 60);
-        // minute = minute % 60;
-        // hour = Math.floor(minute / 60);
-        // day = Math.floor(hour / 24);
-        // hour = hour % 24;
-        this.modifiedTime = seconds + ' Seconds';
-        this.docService.userActiveDate(this.date, this.modifiedTime, this.id);
-        return {
-            // day: day,
-            // hour: hour,
-            // minute: minute,
-            seconds: seconds
-        };
+      let seconds;
+      // day, hour, minute
+      seconds = Math.floor(totalTime / 1000);
+      seconds = seconds % 60;
+      // minute = Math.floor(seconds / 60);
+      // minute = minute % 60;
+      // hour = Math.floor(minute / 60);
+      // day = Math.floor(hour / 24);
+      // hour = hour % 24;
+      this.modifiedTime = seconds + ' Seconds';
+      this.docService.userActiveDate(this.date, this.modifiedTime, this.id);
+      return {
+        // day: day,
+        // hour: hour,
+        // minute: minute,
+        seconds: seconds
+      };
     }
   }
 }

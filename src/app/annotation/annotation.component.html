@@ -9,7 +9,6 @@
       <div *ngFor="let post of posts;">
         <ng-template [ngIf]="post.id === id">
           <strong id="stronger">{{ post.header }}</strong>
-          <!-- style="overflow-y: scroll; height:500px;" -->
           <div id="scrollable">
             {{ selectedPost }}
           </div>
@@ -27,12 +26,12 @@
     </div>
     <div class="column right">
       <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || this.role == 'admin'">
-        <ng-template [ngIf]="!diffWordsClicked">
-          <button type="button" id="difficultWords" class="btn btn-secondary btn-sm shadow mb-5 rounded" data-toggle="modal" data-target="#exampleModal">
-            Difficult Words
-            <i class="fas fa-search"></i>
-          </button>
-        </ng-template>
+        <!-- <ng-template [ngIf]="!diffWordsClicked"> -->
+        <button type="button" id="difficultWords" class="btn btn-secondary btn-sm shadow mb-5 rounded" data-toggle="modal" data-target="#exampleModal">
+          Difficult Words
+          <i class="fas fa-search"></i>
+        </button>
+        <!-- </ng-template> -->
         <div>
           <a class="btn btn-warning btn-sm shadow mb-5 rounded" id="btnHighLight" (click)="highlightSelection()">
             Selected Text
@@ -57,7 +56,8 @@
               </ng-template>
               <ng-template [ngIf]="userIsAuthenticated && showingAnnotation && editing && !docTrue">
                 <div class="alert alert-info" role="alert">
-                  <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="{{ showingAnnotation }}" rows="3" formControlName="annotation" value="{{ showingAnnotation }}"></textarea>
+                  <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="{{ showingAnnotation }}" rows="3" formControlName="annotation"
+                    value="{{ showingAnnotation }}"></textarea>
                 </div>
                 <button class="btn btn-success btn-sm" id="saveDocEditBtn" type="button" (click)='onDocEditSub()' [disabled]="!form.valid">Save Edited Annotation</button>
               </ng-template>
@@ -93,17 +93,40 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Check for difficult words</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <h5 class="modal-title" id="exampleModalLabel">Text Scanner</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modalClosed()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        Checking for difficult words could take a few seconds, do you still want to proceed?
-      </div>
+      <form [formGroup]='form'>
+        <div class="modal-body textCenter">
+          <h6 class="card-subtitle mb-2 text-muted textCenter">Text Scanner Difficulty Scale</h6>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="difficulty" id="inlineRadio1" value="beginner" formControlName="difficulty">
+            <label class="form-check-label" for="inlineRadio1">Beginner</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="difficulty" id="inlineRadio2" value="intermediate" formControlName="difficulty">
+            <label class="form-check-label" for="inlineRadio2">Intermediate</label>
+          </div>
+          <div class="form-check form-check-inline difScale">
+            <input class="form-check-input" type="radio" name="difficulty" id="inlineRadio3" value="advanced" formControlName="difficulty">
+            <label class="form-check-label" for="inlineRadio3">Advanced</label>
+          </div>
+          <hr>
+          <ng-template [ngIf]="!form.value.difficulty">
+            Please pick one of these options!
+          </ng-template>
+          <ng-template [ngIf]="form.value.difficulty">
+            Checking for difficult words could take a few seconds, do you still want to proceed?
+          </ng-template>
+        </div>
+      </form>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" (click)="possibleWords()" data-dismiss="modal">Continue</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modalClosed()">Close</button>
+        <ng-template [ngIf]="form.value.difficulty">
+          <button type="button" class="btn btn-primary" (click)="possibleWords()" data-dismiss="modal">Continue</button>
+        </ng-template>
       </div>
     </div>
   </div>

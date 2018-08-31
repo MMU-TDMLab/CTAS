@@ -139,10 +139,10 @@ export class DocService {
       .post(BACKEND_URL_Document + 'page-activity', dates)
       .subscribe(
         response => {
-          console.log(response);
+          // console.log(response);
         },
         error => {
-          console.log(error);
+          // console.log(error);
         }
       );
   }
