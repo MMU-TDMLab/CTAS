@@ -26,12 +26,10 @@
     </div>
     <div class="column right">
       <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || this.role == 'admin'">
-        <!-- <ng-template [ngIf]="!diffWordsClicked"> -->
         <button type="button" id="difficultWords" class="btn btn-secondary btn-sm shadow mb-5 rounded" data-toggle="modal" data-target="#exampleModal">
           Difficult Words
           <i class="fas fa-search"></i>
         </button>
-        <!-- </ng-template> -->
         <div>
           <a class="btn btn-warning btn-sm shadow mb-5 rounded" id="btnHighLight" (click)="highlightSelection()">
             Selected Text

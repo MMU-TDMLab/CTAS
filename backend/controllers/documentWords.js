@@ -119,7 +119,6 @@ exports.readText = (req, res, next) => {
     }).then(result => {
       if (result) {
         checkIfWordsMatch(result.body, hardWords => {
-          // console.log(hardWords[2]);
           res.status(200).json(hardWords);
         });
       } else {
@@ -198,9 +197,5 @@ function checkIfWordsMatch(body, callback) {
       let = hardWords5.push(word);
     }
   });
-  // console.log('20 ',hardWords20.length);
-  // console.log('10 ', hardWords10.length);
-  // console.log('5 ', hardWords5.length);
-  // console.log('5: ', arrayOfArrays[0], ' 10: ', arrayOfArrays[1], ' 20: ', arrayOfArrays[2]);
   return callback(arrayOfArrays);
 }

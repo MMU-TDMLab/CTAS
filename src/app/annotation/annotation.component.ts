@@ -465,10 +465,8 @@ export class AnnotationComponent
    */
   ngAfterViewChecked() {
     // console.clear();
-    // this.highlight(this.thewords);
     this.highlightDocumentSpecificWords(this.docWords);
     this.urlify(this.reference);
-    // this.textChecker(this.fileText);
   }
 
   // Determine if an element is in the visible viewport
