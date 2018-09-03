@@ -98,7 +98,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         validators: [
           Validators.required,
           Validators.minLength(3),
-          Validators.maxLength(15)
+          Validators.maxLength(20)
         ]
       }),
       message: new FormControl(null, {
@@ -155,7 +155,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         this.form.value.body,
         this.form.value.references
       );
-      this.router.navigate(['/module']);
+      this.router.navigate(['/course']);
     }
     this.isLoading = false;
     this.form.reset();

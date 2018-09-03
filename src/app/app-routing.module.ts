@@ -15,12 +15,13 @@ const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'course', component: CourseComponent, canActivate: [AuthGuard] },
-  { path: 'module/:text', component: ModuleComponent, canActivate: [AuthGuard]  },
-  // { path: 'module', component: ModuleComponent, canActivate: [AuthGuard]  },
-  { path: 'edit/:postId', component: ModuleComponent, canActivate: [AuthGuard]  },
+  { path: 'module/:text', component: ModuleComponent, canActivate: [AuthGuard] },
+  { path: 'module/:text/edit/:postId', component: ModuleComponent, canActivate: [AuthGuard] },
   { path: 'annotation', component: AnnotationComponent, canActivate: [AuthGuard] },
   { path: 'annotation/:postId', component: AnnotationComponent, canActivate: [AuthGuard] },
   { path: 'auth', loadChildren: './auth/auth.module#AuthModule'}
+  // { path: 'module', component: ModuleComponent, canActivate: [AuthGuard]  },
+  // { path: 'edit/:postId', component: ModuleComponent, canActivate: [AuthGuard] },›
 ];
 
 @NgModule({

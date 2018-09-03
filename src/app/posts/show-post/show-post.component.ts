@@ -56,11 +56,9 @@ export class ShowPostComponent implements OnInit, OnDestroy {
             this.posts = posts;
           }
         });
-
+        this.posts.reverse();
         // console.log(thePosts.moduleName);
         // console.log(this.moduleNameWithoutPunc);
-
-        this.posts.reverse();
       });
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authStatus = this.authService
@@ -80,10 +78,11 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   onEdit(postId: string) {
     if (this.editClicked === false) {
       this.editClicked = true;
-      this.router.navigate(['/edit', postId]);
+      this.router.navigate(['/module', this.theModuleName, 'edit', postId]);
+      // this.router.navigate(['/edit', postId]);
     } else {
       this.editClicked = false;
-      this.router.navigate(['/module']);
+      this.router.navigate(['/course']);
     }
   }
 
