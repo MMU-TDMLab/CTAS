@@ -499,33 +499,31 @@ export class AnnotationComponent
         const res = [];
 
         paragraph.map(word => {
-          let t = word;
-          const withoutPunct = t.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g, '');
+          let wordsInParagraph = word;
+          const withoutPunct = wordsInParagraph.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g, '');
           if (diff === 'beginner') {
             if (words[0].indexOf(withoutPunct) > -1) {
-              t =
+              wordsInParagraph =
                 '<a class="optional" style="background-color:#dcdfe5; text-decoration: underline;">' +
                 word +
                 '</a>';
             }
-          }
-          if (diff === 'intermediate') {
+          } else if (diff === 'intermediate') {
             if (words[1].indexOf(withoutPunct) > -1) {
-              t =
+              wordsInParagraph =
                 '<a class="optional" style="background-color:#dcdfe5; text-decoration: underline;">' +
                 word +
                 '</a>';
             }
-          }
-          if (diff === 'advanced') {
+          } else if (diff === 'advanced') {
             if (words[2].indexOf(withoutPunct) > -1) {
-              t =
+              wordsInParagraph =
                 '<a class="optional" style="background-color:#dcdfe5; text-decoration: underline;">' +
                 word +
                 '</a>';
             }
           }
-          res.push(t);
+          res.push(wordsInParagraph);
         });
         high.innerHTML = res.join(' ');
         const elementsToMakeClickable = document.getElementsByClassName(

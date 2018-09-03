@@ -26,7 +26,7 @@
     </div>
     <div class="column right">
       <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || this.role == 'admin'">
-        <button type="button" id="difficultWords" class="btn btn-secondary btn-sm shadow mb-5 rounded" data-toggle="modal" data-target="#exampleModal">
+        <button type="button" id="difficultWords" class="btn btn-secondary btn-sm shadow mb-5 rounded" data-toggle="modal" data-target="#exampleModal" data-backdrop="static" data-keyboard="false">
           Difficult Words
           <i class="fas fa-search"></i>
         </button>
