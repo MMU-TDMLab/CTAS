@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+// import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-module',
@@ -7,6 +9,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ModuleComponent implements OnInit {
   createPost = true;
+  private theModuleName;
+  public moduleNameWithoutPunc;
 
-  ngOnInit() {}
+  constructor(public route: ActivatedRoute) {}
+
+  ngOnInit() {
+
+    this.theModuleName = this.route.snapshot.paramMap.get('text');
+    const withoutPunct = this.theModuleName.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g, ' ');
+    this.moduleNameWithoutPunc = withoutPunct;
+
+    // this.route.paramMap.subscribe((paramMap: ParamMap) => {
+    //   if (paramMap.has('postId')) {
+    //   }
+    // });
+  }
 }

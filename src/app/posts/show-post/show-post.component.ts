@@ -28,6 +28,9 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   private authStatus: Subscription;
   public userIsAuthenticated = false;
 
+  private theModuleName;
+  public moduleNameWithoutPunc;
+
   constructor(
     public postsService: PostsService,
     private router: Router,
@@ -36,6 +39,11 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.theModuleName = this.route.snapshot.paramMap.get('text');
+    const withoutPunct = this.theModuleName.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g, ' ');
+    this.moduleNameWithoutPunc = withoutPunct;
+    console.log(this.moduleNameWithoutPunc);
+
     this.isLoading = true;
     this.postsService.getPosts();
     this.role = this.authService.getUserRole();
