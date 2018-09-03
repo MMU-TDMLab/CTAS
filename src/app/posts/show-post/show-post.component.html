@@ -1,33 +1,36 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 <div class="container">
   <ng-template [ngIf]="posts.length > 0 && !isLoading">
-    <div class="card" *ngFor="let post of posts; let $index=index;">
-      <ng-template [ngIf]="post.moduleName === this.moduleNameWithoutPunc">
-      <div id="accordion">
-        <div class="card-body">
-          <h5 class="mb-0">
-            <button class="btn btn-link" data-toggle="collapse" [attr.data-target]="'#demo' + $index" aria-expanded="true" aria-controls="collapseOne">
-              {{ post.header }}
-            </button>
-          </h5>
-          <div id="demo{{$index}}" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordion">
-            <div class="card-body">
-              {{ post.message }}
-              <hr>
-              <a class="btn btn-dark btn-sm" id="btnPro" (click)="onAnnotation(post.id)"> View Document
-                <i class="far fa-file-alt"></i>
-              </a>
+    <!-- <div class="card" *ngFor="let post of posts; let $index=index;"> -->
+    <ng-template ngFor let-post [ngForOf]="posts" let-$index="index">
+      <div class="card" *ngIf="post.moduleName === this.moduleNameWithoutPunc">
+        <!-- <ng-template [ngIf]="post.moduleName === this.moduleNameWithoutPunc"> -->
+        <div id="accordion">
+          <div class="card-body">
+            <h5 class="mb-0">
+              <button class="btn btn-link" data-toggle="collapse" [attr.data-target]="'#demo' + $index" aria-expanded="true"
+                aria-controls="collapseOne">
+                {{ post.header }}
+              </button>
+            </h5>
+            <div id="demo{{$index}}" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordion">
+              <div class="card-body">
+                {{ post.message }}
+                <hr>
+                <a class="btn btn-dark btn-sm" id="btnPro" (click)="onAnnotation(post.id)"> View Document
+                  <i class="far fa-file-alt"></i>
+                </a>
+              </div>
             </div>
+            <ng-template [ngIf]="userIsAuthenticated && userId == post.poster || userIsAuthenticated && this.role == 'admin'">
+              <hr>
+              <button class="btn btn-outline-primary btn-sm" id="editBtn" (click)="onEdit(post.id)">Edit</button>
+              <button class="btn btn-outline-danger btn-sm" id="deleteBtn" (click)="onDelete(post.id)">Delete</button>
+            </ng-template>
           </div>
-          <ng-template [ngIf]="userIsAuthenticated && userId == post.poster || userIsAuthenticated && this.role == 'admin'">
-            <hr>
-            <button class="btn btn-outline-primary btn-sm" id="editBtn" (click)="onEdit(post.id)">Edit</button>
-            <button class="btn btn-outline-danger btn-sm" id="deleteBtn" (click)="onDelete(post.id)">Delete</button>
-          </ng-template>
         </div>
       </div>
     </ng-template>
-    </div>
   </ng-template>
   <div>
     <p *ngIf="posts.length <= 0 && !isLoading">No posts added yet!</p>
