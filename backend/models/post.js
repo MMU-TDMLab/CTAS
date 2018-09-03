@@ -20,7 +20,11 @@ const postSchema = mongoose.Schema({
   poster: {
     type: mongoose.Schema.Types.ObjectId,  // Gets the ID of the user who posted
     ref: 'User',
-    required: true }
+    required: true
+  },
+  moduleName: {
+    type: String
+  }
 });
 
 module.exports = mongoose.model('Post', postSchema);

@@ -10,4 +10,5 @@ export interface Post {
   body: string;
   references: string;
   poster: string;
+  moduleName?: string;
 }

@@ -8,6 +8,7 @@ exports.createPost = (req, res, next) => {
     body: req.body.body,
     references: req.body.references,
     poster: req.userData.userId,
+    moduleName: req.body.moduleName
   });
   post.save().then(createdPost => {
       res.status(201).json({

@@ -28,6 +28,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   private authStatus: Subscription;
   public userIsAuthenticated = false;
   public btnText = 'Create Post';
+  private theModuleName;
+  public moduleNameWithoutPunc;
 
   constructor(
     public postsService: PostsService,
@@ -42,6 +44,9 @@ export class CreatePostComponent implements OnInit, OnDestroy {
    * is set in the URL.
    */
   ngOnInit() {
+    this.theModuleName = this.route.snapshot.paramMap.get('text');
+    const withoutPunct = this.theModuleName.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g, ' ');
+    this.moduleNameWithoutPunc = withoutPunct;
     this.form = this.createForm();
     this.role = this.authService.getUserRole();
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
@@ -58,7 +63,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
             message: postData.message,
             body: postData.body,
             references: postData.references,
-            poster: postData.poster
+            poster: postData.poster,
+            moduleName: postData.moduleName
           };
           this.form.setValue({
             header: this.post.header,
@@ -138,7 +144,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         this.form.value.message,
         this.form.value.body,
         this.form.value.references,
-        this.postId
+        this.postId,
+        this.moduleNameWithoutPunc
       );
     } else {
       this.postsService.updatePost(

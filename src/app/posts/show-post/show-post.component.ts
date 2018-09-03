@@ -26,9 +26,8 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   private editClicked = false;
   private annoClicked = false;
   private authStatus: Subscription;
-  public userIsAuthenticated = false;
-
   private theModuleName;
+  public userIsAuthenticated = false;
   public moduleNameWithoutPunc;
 
   constructor(
@@ -42,8 +41,6 @@ export class ShowPostComponent implements OnInit, OnDestroy {
     this.theModuleName = this.route.snapshot.paramMap.get('text');
     const withoutPunct = this.theModuleName.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g, ' ');
     this.moduleNameWithoutPunc = withoutPunct;
-    console.log(this.moduleNameWithoutPunc);
-
     this.isLoading = true;
     this.postsService.getPosts();
     this.role = this.authService.getUserRole();
@@ -51,8 +48,18 @@ export class ShowPostComponent implements OnInit, OnDestroy {
     this.postsSub = this.postsService
       .getPostUpdateListenerTwo()
       .subscribe((posts: Post[]) => {
+        const thePosts = posts;
         this.isLoading = false;
-        this.posts = posts;
+        // this.posts = posts;
+        thePosts.map(post => {
+          if (post.moduleName === this.moduleNameWithoutPunc) {
+            this.posts = posts;
+          }
+        });
+
+        // console.log(thePosts.moduleName);
+        // console.log(this.moduleNameWithoutPunc);
+
         this.posts.reverse();
       });
     this.userIsAuthenticated = this.authService.getIsAuth();

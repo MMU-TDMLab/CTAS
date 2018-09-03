@@ -15,14 +15,8 @@ export class ModuleComponent implements OnInit {
   constructor(public route: ActivatedRoute) {}
 
   ngOnInit() {
-
     this.theModuleName = this.route.snapshot.paramMap.get('text');
     const withoutPunct = this.theModuleName.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g, ' ');
     this.moduleNameWithoutPunc = withoutPunct;
-
-    // this.route.paramMap.subscribe((paramMap: ParamMap) => {
-    //   if (paramMap.has('postId')) {
-    //   }
-    // });
   }
 }

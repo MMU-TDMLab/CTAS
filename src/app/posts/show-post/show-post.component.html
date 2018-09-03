@@ -2,6 +2,7 @@
 <div class="container">
   <ng-template [ngIf]="posts.length > 0 && !isLoading">
     <div class="card" *ngFor="let post of posts; let $index=index;">
+      <ng-template [ngIf]="post.moduleName === this.moduleNameWithoutPunc">
       <div id="accordion">
         <div class="card-body">
           <h5 class="mb-0">
@@ -25,8 +26,7 @@
           </ng-template>
         </div>
       </div>
-      <div>
-      </div>
+    </ng-template>
     </div>
   </ng-template>
   <div>

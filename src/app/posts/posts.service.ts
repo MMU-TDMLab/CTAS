@@ -36,7 +36,8 @@ export class PostsService {
               id: post._id,
               body: post.body,
               references: post.references,
-              poster: post.poster
+              poster: post.poster,
+              moduleName: post.moduleName
             };
           });
         })
@@ -68,7 +69,8 @@ export class PostsService {
    * @param id Gets post by the ID.
    */
   getPost(id: string) {
-    return this.http.get<{ _id: string, header: string, message: string, body: string, references: string, poster: string }>(
+    // tslint:disable-next-line:max-line-length
+    return this.http.get<{ _id: string, header: string, message: string, body: string, references: string, poster: string, moduleName: string }>(
       BACKEND_URL + id
     );
   }
@@ -82,12 +84,13 @@ export class PostsService {
    * @param references The reference of the post provided by the user when creating the post.
    * @param poster The poster of the post provided by the user when creating the post.
    */
-  addPost(header: string, message: string, body: string, references: string, poster: string) {
+  addPost(header: string, message: string, body: string, references: string, poster: string, moduleName: string) {
     const postData = {
       header: header,
       message: message,
       body: body,
-      references: references
+      references: references,
+      moduleName: moduleName
     };
     console.log(postData);
     this.http
@@ -102,7 +105,8 @@ export class PostsService {
           message: message,
           body: body,
           references: references,
-          poster: poster
+          poster: poster,
+          moduleName: moduleName
         };
         this.posts.push(post);
         this.postsUpdated.next([...this.posts]);
@@ -126,7 +130,7 @@ export class PostsService {
         message: message,
         body: body,
         references: references,
-        poster: null
+        poster: null,
       };
     this.http
       .put(BACKEND_URL + id, postData)
@@ -139,7 +143,7 @@ export class PostsService {
           message: message,
           body: body,
           references: references,
-          poster: null
+          poster: null,
         };
         updatedPosts[oldPostIndex] = post;
         this.posts = updatedPosts;
