@@ -155,7 +155,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         this.form.value.body,
         this.form.value.references
       );
-      this.router.navigate(['/course']);
+      this.router.navigate(['/module', this.theModuleName]);
     }
     this.isLoading = false;
     this.form.reset();

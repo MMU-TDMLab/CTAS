@@ -57,8 +57,6 @@ export class ShowPostComponent implements OnInit, OnDestroy {
           }
         });
         this.posts.reverse();
-        // console.log(thePosts.moduleName);
-        // console.log(this.moduleNameWithoutPunc);
       });
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authStatus = this.authService
@@ -82,7 +80,7 @@ export class ShowPostComponent implements OnInit, OnDestroy {
       // this.router.navigate(['/edit', postId]);
     } else {
       this.editClicked = false;
-      this.router.navigate(['/course']);
+      this.router.navigate(['/module', this.theModuleName]);
     }
   }
 
