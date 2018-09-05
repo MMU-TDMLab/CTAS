@@ -26,6 +26,7 @@ import { DocService } from './document.service';
 export class AnnotationComponent
   implements OnInit, OnDestroy, AfterViewChecked {
   public form: FormGroup;
+  public secondForm: FormGroup;
   public posts: Post[] = [];
   public words: ComplexWord[] = [];
   public docWord: DocWord[] = [];
@@ -84,6 +85,7 @@ export class AnnotationComponent
     this.editAnnotation = '';
     // this.diffWordsClicked = false;
     this.form = this.createForm();
+    this.secondForm = this.createSecondForm();
     // this.readTextSub = this.docService.readText(this.id).subscribe(data => {
     //   this.fileText = data;
     // });
@@ -135,7 +137,12 @@ export class AnnotationComponent
           Validators.minLength(8),
           Validators.maxLength(250)
         ]
-      }),
+      })
+    });
+  }
+
+  createSecondForm(): FormGroup {
+    return new FormGroup({
       difficulty: new FormControl(null, {
         validators: [
           Validators.required

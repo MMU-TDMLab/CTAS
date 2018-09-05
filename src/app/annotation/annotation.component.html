@@ -96,7 +96,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form [formGroup]='form'>
+      <form [formGroup]='secondForm'>
         <div class="modal-body textCenter">
           <h6 class="card-subtitle mb-2 text-muted textCenter">Text Scanner Difficulty Scale</h6>
           <div class="form-check form-check-inline">
@@ -112,17 +112,17 @@
             <label class="form-check-label" for="inlineRadio3">Advanced</label>
           </div>
           <hr>
-          <ng-template [ngIf]="!form.value.difficulty">
+          <ng-template [ngIf]="!secondForm.value.difficulty">
             Please pick one of these options!
           </ng-template>
-          <ng-template [ngIf]="form.value.difficulty">
+          <ng-template [ngIf]="secondForm.value.difficulty">
             Checking for difficult words could take a few seconds, do you still want to proceed?
           </ng-template>
         </div>
       </form>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modalClosed()">Close</button>
-        <ng-template [ngIf]="form.value.difficulty">
+        <ng-template [ngIf]="secondForm.value.difficulty">
           <button type="button" class="btn btn-primary" (click)="possibleWords()" data-dismiss="modal">Continue</button>
         </ng-template>
       </div>
