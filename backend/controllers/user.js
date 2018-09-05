@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 const Activity = require('../models/user-activity');
+const AnnotationClick = require('../models/annotation-activity');
 
 exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
@@ -87,3 +88,25 @@ exports.userActivity = (req, res, next) => {
       })
     });
 }
+
+exports.userAnnotationActivity = (req, res, next) => {
+  const userAnnotationActivity = new AnnotationClick({
+    word: req.body.word,
+    userId: req.userData.userId,
+    visitDate: req.body.date,
+    postId: req.body.postId
+  });
+  userAnnotationActivity.save()
+    .then(result => {
+      res.status(200).json({
+        message: 'User Activity has been added successfully!',
+        result: result
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: 'User Activity not recorded!'
+      })
+    });
+}
+

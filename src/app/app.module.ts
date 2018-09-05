@@ -6,7 +6,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { CourseComponent } from './course/course.component';
 import { ModuleComponent } from './course/module/module.component';
@@ -24,7 +23,6 @@ import { DocService } from './annotation/document.service';
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
     NavbarComponent,
     CourseComponent,
     ModuleComponent,

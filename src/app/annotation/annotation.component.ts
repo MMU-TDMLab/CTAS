@@ -195,6 +195,9 @@ export class AnnotationComponent
   viewAnnotation(e) {
     this.resetAlertBox(false);
     const word = e.target.textContent;
+    if (this.role === 'student') {
+      this.docService.annotationClick(word, this.date, this.id);
+    }
     this.findAnnotation(word);
   }
 
@@ -491,7 +494,7 @@ export class AnnotationComponent
   possibleWords() {
     this.readTextSub = this.docService.readText(this.id).subscribe(data => {
           this.fileText = data;
-          this.highlightPossibleWords(this.fileText, this.form.value.difficulty);
+          this.highlightPossibleWords(this.fileText, this.secondForm.value.difficulty);
         });
     // this.diffWordsClicked = true;
   }
@@ -548,7 +551,7 @@ export class AnnotationComponent
   }
 
   modalClosed() {
-    this.form.reset();
+    this.secondForm.reset();
   }
 
   /**

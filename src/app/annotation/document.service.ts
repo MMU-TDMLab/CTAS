@@ -146,4 +146,22 @@ export class DocService {
         }
       );
   }
+
+  annotationClick(word: string, date: string, postId: string) {
+    const information = {
+      word: word,
+      date: date,
+      postId: postId
+    };
+    return this.http
+    .post(BACKEND_URL_Document + 'annotation-activity', information)
+    .subscribe(
+      response => {
+        // console.log(response);
+      },
+      error => {
+        // console.log(error);
+      }
+    );
+  }
 }

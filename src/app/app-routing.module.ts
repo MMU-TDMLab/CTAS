@@ -1,7 +1,6 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
-import { HomeComponent } from './home/home.component';
 import { CourseComponent } from './course/course.component';
 import { ModuleComponent } from './course/module/module.component';
 import { AuthGuard } from './auth/auth.guard';
@@ -12,8 +11,7 @@ import { AnnotationComponent } from './annotation/annotation.component';
  * user is authenticated before accessing that route.
  */
 const appRoutes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent },
+  { path: '', redirectTo: '/course', pathMatch: 'full' },
   { path: 'course', component: CourseComponent, canActivate: [AuthGuard] },
   { path: 'module/:text', component: ModuleComponent, canActivate: [AuthGuard] },
   { path: 'module/:text/edit/:postId', component: ModuleComponent, canActivate: [AuthGuard] },
