@@ -6,7 +6,7 @@ exports.getAllAnalytics = (req, res, next) => {
       console.log('activities controller: ', documents);
       res.status(200).json({
         message: 'Activities were fetched succesfully!',
-        words: documents
+        analytics: documents
       });
     });
 }

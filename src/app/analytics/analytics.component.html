@@ -1,5 +1,23 @@
 <div class="container">
-  <p>
-    analytics works!
-  </p>
+  <br>
+  <h1> Analytics </h1>
+  <br>
+  <table class="table table-bordered table-inverse">
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>Post Visited</th>
+        <th>Visit Date</th>
+        <th>Visit Duration</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let analytic of analytics; let count=index">
+        <th>{{ analytic.userId }}</th>
+        <th>{{ analytic.postId }}</th>
+        <th>{{ analytic.visitDate }}</th>
+        <th>{{ analytic.visitDurationSeconds }}</th>
+      </tr>
+    </tbody>
+  </table>
 </div>

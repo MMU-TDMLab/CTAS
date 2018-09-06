@@ -497,7 +497,6 @@ export class AnnotationComponent
           this.fileText = data;
           this.highlightPossibleWords(this.fileText, this.secondForm.value.difficulty);
         });
-    // this.diffWordsClicked = true;
   }
 
   highlightPossibleWords(words: string[], diff: string) {

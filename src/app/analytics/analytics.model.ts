@@ -1,5 +1,5 @@
 export interface Analytics {
-  _id?: string;
+  _id: string;
   userId: String;
   visitDate: String;
   visitDurationSeconds: String;
