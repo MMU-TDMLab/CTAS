@@ -5,6 +5,7 @@ import { CourseComponent } from './course/course.component';
 import { ModuleComponent } from './course/module/module.component';
 import { AuthGuard } from './auth/auth.guard';
 import { AnnotationComponent } from './annotation/annotation.component';
+import { AnalyticsComponent } from './analytics/analytics.component';
 
 /**
  * This takes care of the routes. The 'canActivate: [AuthGuard]' checks if the
@@ -13,6 +14,7 @@ import { AnnotationComponent } from './annotation/annotation.component';
 const appRoutes: Routes = [
   { path: '', redirectTo: '/course', pathMatch: 'full' },
   { path: 'course', component: CourseComponent, canActivate: [AuthGuard] },
+  { path: 'analytics', component: AnalyticsComponent, canActivate: [AuthGuard] },
   { path: 'module/:text', component: ModuleComponent, canActivate: [AuthGuard] },
   { path: 'module/:text/edit/:postId', component: ModuleComponent, canActivate: [AuthGuard] },
   { path: 'annotation', component: AnnotationComponent, canActivate: [AuthGuard] },

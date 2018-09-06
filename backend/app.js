@@ -6,6 +6,7 @@ const postsRoutes = require('./routes/posts');
 const userRoutes = require('./routes/user');
 const wordsRoutes = require('./routes/words');
 const documentsWordsRoutes = require('./routes/documentWords');
+const analyticsRoutes = require('./routes/analytics');
 
 //load config file
 // const config = require('../config/config');
@@ -42,5 +43,6 @@ app.use('/api/posts', postsRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/words', wordsRoutes);
 app.use('/api/documentWords', documentsWordsRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 module.exports = app;

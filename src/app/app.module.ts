@@ -9,16 +9,18 @@ import { AppRoutingModule } from './app-routing.module';
 import { NavbarComponent } from './navbar/navbar.component';
 import { CourseComponent } from './course/course.component';
 import { ModuleComponent } from './course/module/module.component';
-import { PostsService } from './posts/posts.service';
-import { AuthService } from './auth/auth.service';
 import { AuthInterceptor } from './auth/auth-interceptor';
 import { AnnotationComponent } from './annotation/annotation.component';
-import { AnnotationService } from './annotation/annotation.service';
 import { ErrorInterceptor } from './error-interceptor';
 import { ErrorComponent } from './error/error.component';
 import { AngularMaterialModule } from './angular-material.module';
 import { PostsModule } from './posts/posts.module';
+import { AnalyticsComponent } from './analytics/analytics.component';
+import { PostsService } from './posts/posts.service';
+import { AuthService } from './auth/auth.service';
 import { DocService } from './annotation/document.service';
+import { AnnotationService } from './annotation/annotation.service';
+import { AnalyticsService } from './analytics/analyitics.service';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import { DocService } from './annotation/document.service';
     ModuleComponent,
     AnnotationComponent,
     ErrorComponent,
+    AnalyticsComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,7 +43,7 @@ import { DocService } from './annotation/document.service';
     PostsModule,
   ],
   providers: [
-    PostsService, AnnotationService, AuthService, DocService,
+    PostsService, AnnotationService, AuthService, DocService, AnalyticsService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],

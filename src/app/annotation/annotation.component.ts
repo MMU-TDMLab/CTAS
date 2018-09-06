@@ -55,7 +55,6 @@ export class AnnotationComponent
   public referencedText;
   public theWordId: string;
   private fileText;
-  // public diffWordsClicked: boolean;
   private startTime;
   private endTime;
   private date;

@@ -13,15 +13,28 @@ import { Subscription } from 'rxjs';
  */
 export class NavbarComponent implements OnInit, OnDestroy {
   private authListener: Subscription;
+  private authStatus: Subscription;
+  public isLoading = true;
+  public role: string;
   userIsAuthenticated = false;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   ngOnInit() {
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authListener = this.authService.getAuthStatus().subscribe(isAuthenticated => {
       this.userIsAuthenticated = isAuthenticated;
     });
+
+    this.role = this.authService.getUserRole();
+    this.userIsAuthenticated = this.authService.getIsAuth();
+    this.authStatus = this.authService
+      .getAuthStatus()
+      .subscribe(isAuthenticated => {
+        this.userIsAuthenticated = isAuthenticated;
+        this.role = this.authService.getUserRole();
+      });
+    this.isLoading = false;
   }
 
   /**
@@ -37,6 +50,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy() {
     this.authListener.unsubscribe();
+    this.authStatus.unsubscribe();
   }
 
 }

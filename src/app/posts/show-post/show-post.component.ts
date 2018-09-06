@@ -19,7 +19,7 @@ import { AuthService } from '../../auth/auth.service';
  */
 export class ShowPostComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
-  isLoading = false;
+  isLoading: boolean;
   userId: string;
   role: string;
   private postsSub: Subscription;
