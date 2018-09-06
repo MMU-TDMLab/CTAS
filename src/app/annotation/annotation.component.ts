@@ -196,6 +196,8 @@ export class AnnotationComponent
     this.resetAlertBox(false);
     const word = e.target.textContent;
     if (this.role === 'student') {
+      const currentDate = new Date();
+      this.date = currentDate;
       this.docService.annotationClick(word, this.date, this.id);
     }
     this.findAnnotation(word);
