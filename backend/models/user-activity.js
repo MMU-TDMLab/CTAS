@@ -3,10 +3,12 @@ const Schema = mongoose.Schema;
 
 const visitSchema = new Schema ({
   userId: {
-    type: mongoose.Schema.Types.ObjectId
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // Reference to your User model
   },
   postId: {
-    type: String
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Post', // Reference to your Post model
   },
   visitDate: {
     type: String
