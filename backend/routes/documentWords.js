@@ -14,7 +14,6 @@ router.get('', DocumentWordsController.findWords);
 router.put('/update:id', DocumentWordsController.updateWord);
 
 router.delete('/delete-word:id', DocumentWordsController.deleteWord);
-// router.delete("/delete-word:word", DocumentWordsController.deleteWord);
 
 router.post('/page-activity', authCheck, UserController.userActivity);
 

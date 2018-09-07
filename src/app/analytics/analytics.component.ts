@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { Analytics } from './analytics.model';
+import { Clicks } from './clicks.model';
 import { AuthService } from '../auth/auth.service';
 import { AnalyticsService } from './analyitics.service';
 
@@ -13,11 +14,11 @@ import { AnalyticsService } from './analyitics.service';
 export class AnalyticsComponent implements OnInit, OnDestroy {
   private authStatusSub: Subscription;
   private analyticsSub: Subscription;
+  private userClicksSub: Subscription;
   public analytics: Analytics[] = [];
-  public analyticInfo = [];
+  public userClicks: Clicks[] = [];
   public userIsAuthenticated: boolean;
   public isLoading: boolean;
-  // public userId: string;
   public role: string;
 
   constructor(
@@ -43,12 +44,20 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
       .getWordUpdateListenerTwo()
       .subscribe((analytics: Analytics[]) => {
         this.analytics = analytics;
-        console.log(analytics);
+      });
+
+    this.analyticsService.getClicks();
+    this.userClicksSub = this.analyticsService
+      .getUserAnalyticsClicks()
+      .subscribe((userClicks: Clicks[]) => {
+        this.userClicks = userClicks;
+        console.log(this.userClicks);
       });
   }
 
   ngOnDestroy() {
     this.authStatusSub.unsubscribe();
     this.analyticsSub.unsubscribe();
+    this.userClicksSub.unsubscribe();
   }
 }

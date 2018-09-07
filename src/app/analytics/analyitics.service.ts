@@ -5,16 +5,17 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 
 import { Analytics } from './analytics.model';
+import { Clicks } from './clicks.model';
 import { environment } from '../../environments/environment';
 
 const BACKEND_URL_Analytics = environment.apiUrl + '/analytics';
 
 @Injectable({ providedIn: 'root' })
-
-
 export class AnalyticsService {
   private analytics: Analytics[] = [];
+  private userAnalytics: Clicks[] = [];
   private analyticsUpdate = new Subject<Analytics[]>();
+  private userAnalyticsUpdate = new Subject<Clicks[]>();
 
   constructor(private http: HttpClient) {}
 
@@ -34,30 +35,52 @@ export class AnalyticsService {
           });
         })
       )
-      .subscribe(result => {
-        this.analytics = result;
-        this.analyticsUpdate.next([...this.analytics]);
-      });
+      .subscribe(
+        result => {
+          this.analytics = result;
+          this.analyticsUpdate.next([...this.analytics]);
+        },
+        error => {
+          // console.log(error);
+        }
+      );
   }
 
-  // getAnalytics() {
-  //   // tslint:disable-next-line:max-line-length
-  //   return this.http.get<{ _id: string, userId: string, visitDate: string, visitDurationSeconds: string, postId: string }>(
-  //     BACKEND_URL_Analytics
-  //   );
-  // }
+  getClicks() {
+    this.http
+      .get<{ message: string; users: any }>(
+        BACKEND_URL_Analytics + '/user-clicks'
+      )
+      .pipe(
+        map(data => {
+          console.log('data: ', data);
+          return data.users.map(user => {
+            return {
+              _id: user.userId
+              // visits: [ ]
+            };
+          });
+        })
+      )
+      .subscribe(
+        result => {
+          this.userAnalytics = result;
+          this.userAnalyticsUpdate.next([...this.userAnalytics]);
+        },
+        error => {
+          console.log(error);
+        }
+      );
+  }
+
+  getUserAnalyticsClicks() {
+    return this.userAnalyticsUpdate.asObservable();
+  }
 
   /**
-   * This is a normal get word as observable.
+   * This gets analytics as observable.
    */
   getWordUpdateListenerTwo() {
     return this.analyticsUpdate.asObservable();
-  }
-
-  /**
-   * This gets the words as an observable with a type <any>.
-   */
-  getWordUpdateListener(): Observable<any> {
-    return this.http.get<any>(BACKEND_URL_Analytics);
   }
 }

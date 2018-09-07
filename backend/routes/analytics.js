@@ -7,8 +7,6 @@ const AnalyticsController = require('../controllers/analytics');
 
 router.get('', AnalyticsController.getAllAnalytics);
 
-// router.post('/page-activity', authCheck, UserController.userActivity);
-
-// router.post('/annotation-activity', authCheck, UserController.userAnnotationActivity);
+router.get('/user-clicks', AnalyticsController.getUserClicks);
 
 module.exports = router;
