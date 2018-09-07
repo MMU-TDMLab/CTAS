@@ -1,5 +1,6 @@
 const Post = require('../models/post');
 const User = require('../models/user');
+const mongoose = require('mongoose');
 
 exports.createPost = (req, res, next) => {
   const post = new Post({
@@ -165,8 +166,9 @@ exports.pageVisitCount = (req, res, next) => {
       })
     } else {
       User.findOneAndUpdate({
-        "visits.postId" : req.body.postId,
-      }, {
+        "visits.postId" : mongoose.Types.ObjectId(req.body.postId),
+        },
+      {
         $inc : { "visits.$.visitCount" : 1 }
       }, (err, doc) => {
         if (err) {
@@ -174,10 +176,10 @@ exports.pageVisitCount = (req, res, next) => {
         } else {
           if (doc === null ) {
             const postToAdd = {
-              postId : req.body.postId
+              postId : mongoose.Types.ObjectId(req.body.postId)
             };
             User.findByIdAndUpdate({
-              _id: req.userData.userId
+              _id: mongoose.Types.ObjectId(req.userData.userId)
             },
             {$push: { visits : postToAdd }},
             (err, doc) => {
