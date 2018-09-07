@@ -53,11 +53,14 @@ export class AnalyticsService {
       )
       .pipe(
         map(data => {
-          console.log('data: ', data);
           return data.users.map(user => {
+            console.log(user);
             return {
-              _id: user.userId
-              // visits: [ ]
+              _id: user._id,
+              visits: [user.visitCount]
+              // visitCount: user.visitCount,
+              // _id: user.userId,
+              // postId: user.postId
             };
           });
         })

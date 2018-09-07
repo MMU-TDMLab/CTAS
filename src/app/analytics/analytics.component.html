@@ -1,27 +1,25 @@
 <div class="container">
-    <!-- <br>
-    <h1> Analytics </h1>
+    <br>
+    <h1> Clicks Analytics </h1>
     <br>
     <table class="table table-bordered table-inverse">
       <thead>
         <tr>
           <th>User ID</th>
+          <th>Visits</th>
           <th>Post Visited</th>
-          <th>Visit Date</th>
-          <th>Visit Duration</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let analytic of analytics; let count=index">
-          <th>{{ analytic.userId }}</th>
-          <th>{{ analytic.postId }}</th>
-          <th>{{ analytic.visitDate }}</th>
-          <th>{{ analytic.visitDurationSeconds }}</th>
+        <tr *ngFor="let userclick of userClicks; let count=index">
+          <th>{{ userclick._id }}</th>
+          <th>{{ userclick.postId }}</th>
+          <th>{{ userclick.visitCount }}</th>
         </tr>
       </tbody>
-    </table> -->
+    </table>
   <br>
-  <h1> Analytics </h1>
+  <h1> User Analytics </h1>
   <br>
   <table class="table table-bordered table-inverse">
     <thead>

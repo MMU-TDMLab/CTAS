@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 
 const visitsSchema = new Schema ({
   postId: {
-    type: String
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Post', // Reference to your Post model
   },
   visitCount: {
     type: Number,
@@ -29,9 +30,14 @@ const userSchema = mongoose.Schema({
   answers: {
     type: String
   },
-  visits: [visitsSchema]
+  visits: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Visits', // Reference to your Visit model
+    }]
 });
 
 userSchema.plugin(uniqueVal);
 
 module.exports = mongoose.model('User', userSchema);
+// module.exports = mongoose.model('Post', postSchema);
+module.exports = mongoose.model('Visits', visitsSchema);
