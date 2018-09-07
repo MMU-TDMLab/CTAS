@@ -20,6 +20,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
   public userIsAuthenticated: boolean;
   public isLoading: boolean;
   public role: string;
+  public result = [];
 
   constructor(
     public authService: AuthService,
@@ -34,7 +35,6 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
       .getAuthStatus()
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
-        // this.userId = this.authService.getUserId();
         this.role = this.authService.getUserRole();
         this.isLoading = false;
       });
@@ -51,8 +51,34 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
       .getUserAnalyticsClicks()
       .subscribe((userClicks: Clicks[]) => {
         this.userClicks = userClicks;
-        console.log(this.userClicks);
+        this.parseVisitData(this.userClicks);
       });
+  }
+
+   parseVisitData = allUsers => {
+
+    this.result = [];
+
+    allUsers.forEach(userData => {
+      // For some reason `userData` is an Object with a single "user" property.
+      const user = userData.user;
+      const userId = user._id;
+
+      user.visits.forEach(userVisit => {
+        const visitCount = userVisit.visitCount;
+        const visitPostId = userVisit.postId;
+
+        // Now we have all the data for a single row!
+        // We have references for "userId", "visitCount", and "visitPostId"
+        this.result.push({
+          userId: userId,
+          visitCount: visitCount,
+          visitPostId: visitPostId
+        });
+      });
+    });
+    console.log(this.result);
+    return this.result;
   }
 
   ngOnDestroy() {

@@ -19,7 +19,6 @@ exports.getAllAnalytics = (req, res, next) => {
 exports.getUserClicks = (req, res, next) => {
   User.find()
     .then(documents => {
-      // console.log('activities controller: ', documents);
       res.status(200).json({
         message: 'Activities were fetched succesfully!',
         users: documents
