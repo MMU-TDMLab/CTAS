@@ -6,7 +6,7 @@
     <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#multiCollapseExample2"
       aria-expanded="false" aria-controls="multiCollapseExample2">User Analytics</button>
     <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#multiCollapseExample3"
-      aria-expanded="false" aria-controls="multiCollapseExample3">Toggle both elements</button>
+      aria-expanded="false" aria-controls="multiCollapseExample3">Word Analytics</button>
   </div>
   <br>
   <div class="row">
@@ -59,8 +59,24 @@
     <div class="col">
       <div class="collapse multi-collapse" id="multiCollapseExample3">
         <div class="card card-body">
-          Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim
-          keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+          <table class="table table-bordered table-inverse">
+            <thead>
+              <tr>
+                <th>Word Visited</th>
+                <th>User ID</th>
+                <th>Visit Date</th>
+                <th>Post Visited</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let userAnnotion of userAnnotions; let count=index">
+                <th>{{ userAnnotion.word }}</th>
+                <th>{{ userAnnotion.userId }}</th>
+                <th>{{ userAnnotion.visitDate }}</th>
+                <th>{{ userAnnotion.postId }}</th>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

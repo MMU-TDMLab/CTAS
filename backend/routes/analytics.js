@@ -9,4 +9,6 @@ router.get('', AnalyticsController.getAllAnalytics);
 
 router.get('/user-clicks', AnalyticsController.getUserClicks);
 
+router.get('/user-annotation', AnalyticsController.getUserAnnoClicks);
+
 module.exports = router;

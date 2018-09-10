@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { Analytics } from './analytics.model';
 import { Clicks } from './clicks.model';
+import { AnnotationClick } from './user-annotion.model';
 import { environment } from '../../environments/environment';
 
 const BACKEND_URL_Analytics = environment.apiUrl + '/analytics';
@@ -14,8 +15,10 @@ const BACKEND_URL_Analytics = environment.apiUrl + '/analytics';
 export class AnalyticsService {
   private analytics: Analytics[] = [];
   private userAnalytics: Clicks[] = [];
+  private userAnnotion: AnnotationClick[] = [];
   private analyticsUpdate = new Subject<Analytics[]>();
   private userAnalyticsUpdate = new Subject<Clicks[]>();
+  private userAnnotationUpdate = new Subject<AnnotationClick[]>();
 
   constructor(private http: HttpClient) {}
 
@@ -54,7 +57,6 @@ export class AnalyticsService {
       .pipe(
         map(data => {
           return data.users.map(user => {
-            // console.log(user);
             return {
               user
               // _id: user._id,
@@ -77,6 +79,32 @@ export class AnalyticsService {
       );
   }
 
+  getAnnotationAnalytics() {
+    this.http
+      .get<{ message: string; words: any }>(BACKEND_URL_Analytics + '/user-annotation')
+      .pipe(
+        map(data => {
+          return data.words.map(user => {
+            return {
+              word: user.word,
+              userId: user.userId,
+              visitDate: user.visitDate,
+              postId: user.postId
+            };
+          });
+        })
+      )
+      .subscribe(
+        result => {
+          this.userAnnotion = result;
+          this.userAnnotationUpdate.next([...this.userAnnotion]);
+        },
+        error => {
+          // console.log(error);
+        }
+      );
+  }
+
   getUserAnalyticsClicks() {
     return this.userAnalyticsUpdate.asObservable();
   }
@@ -86,5 +114,9 @@ export class AnalyticsService {
    */
   getWordUpdateListenerTwo() {
     return this.analyticsUpdate.asObservable();
+  }
+
+  getUserAnnotationClicks() {
+    return this.userAnnotationUpdate.asObservable();
   }
 }

@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 
 import { Analytics } from './analytics.model';
 import { Clicks } from './clicks.model';
+import { AnnotationClick } from './user-annotion.model';
 import { AuthService } from '../auth/auth.service';
 import { AnalyticsService } from './analyitics.service';
 
@@ -15,8 +16,10 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
   private authStatusSub: Subscription;
   private analyticsSub: Subscription;
   private userClicksSub: Subscription;
+  private userAnnotationSub: Subscription;
   public analytics: Analytics[] = [];
   public userClicks: Clicks[] = [];
+  public userAnnotions: AnnotationClick[] = [];
   public userIsAuthenticated: boolean;
   public isLoading: boolean;
   public role: string;
@@ -53,10 +56,16 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
         this.userClicks = userClicks;
         this.parseVisitData(this.userClicks);
       });
+
+    this.analyticsService.getAnnotationAnalytics();
+    this.userAnnotationSub = this.analyticsService
+      .getUserAnnotationClicks()
+      .subscribe((userAnnotions: AnnotationClick[]) => {
+        this.userAnnotions = userAnnotions;
+      });
   }
 
-   parseVisitData = allUsers => {
-
+  parseVisitData = allUsers => {
     this.result = [];
 
     allUsers.forEach(userData => {
@@ -77,7 +86,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
         });
       });
     });
-    console.log(this.result);
+    // console.log(this.result);
     return this.result;
   }
 
@@ -85,5 +94,6 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
     this.authStatusSub.unsubscribe();
     this.analyticsSub.unsubscribe();
     this.userClicksSub.unsubscribe();
+    this.userAnnotationSub.unsubscribe();
   }
 }
