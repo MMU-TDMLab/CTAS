@@ -24,6 +24,9 @@ const postSchema = mongoose.Schema({
   },
   moduleName: {
     type: String
+  },
+  abstract: {
+    type: String
   }
 });
 

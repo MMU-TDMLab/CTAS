@@ -37,7 +37,8 @@ export class PostsService {
               body: post.body,
               references: post.references,
               poster: post.poster,
-              moduleName: post.moduleName
+              moduleName: post.moduleName,
+              abstract: post.abstract
             };
           });
         })
@@ -70,7 +71,7 @@ export class PostsService {
    */
   getPost(id: string) {
     // tslint:disable-next-line:max-line-length
-    return this.http.get<{ _id: string, header: string, message: string, body: string, references: string, poster: string, moduleName: string }>(
+    return this.http.get<{ _id: string, header: string, message: string, body: string, references: string, poster: string, moduleName: string, abstract: string }>(
       BACKEND_URL + id
     );
   }
@@ -84,13 +85,14 @@ export class PostsService {
    * @param references The reference of the post provided by the user when creating the post.
    * @param poster The poster of the post provided by the user when creating the post.
    */
-  addPost(header: string, message: string, body: string, references: string, poster: string, moduleName: string) {
+  addPost(header: string, message: string, body: string, references: string, poster: string, moduleName: string, abstract: string) {
     const postData = {
       header: header,
       message: message,
       body: body,
       references: references,
-      moduleName: moduleName
+      moduleName: moduleName,
+      abstract: abstract
     };
     console.log(postData);
     this.http
@@ -106,7 +108,8 @@ export class PostsService {
           body: body,
           references: references,
           poster: poster,
-          moduleName: moduleName
+          moduleName: moduleName,
+          abstract: abstract
         };
         this.posts.push(post);
         this.postsUpdated.next([...this.posts]);
@@ -122,7 +125,7 @@ export class PostsService {
    * @param body The body of the post provided by the user when updating the post.
    * @param references The reference of the post provided by the user when updating the post.
    */
-  updatePost(id: string, header: string, message: string, body: string, references: string) {
+  updatePost(id: string, header: string, message: string, body: string, references: string, abstract: string) {
     let postData: Post;
         postData = {
         id: id,
@@ -130,6 +133,7 @@ export class PostsService {
         message: message,
         body: body,
         references: references,
+        abstract: abstract,
         poster: null,
       };
     this.http
@@ -143,6 +147,7 @@ export class PostsService {
           message: message,
           body: body,
           references: references,
+          abstract: abstract,
           poster: null,
         };
         updatedPosts[oldPostIndex] = post;

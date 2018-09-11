@@ -9,7 +9,8 @@ exports.createPost = (req, res, next) => {
     body: req.body.body,
     references: req.body.references,
     poster: req.userData.userId,
-    moduleName: req.body.moduleName
+    moduleName: req.body.moduleName,
+    abstract: req.body.abstract
   });
   post.save().then(createdPost => {
       res.status(201).json({
@@ -35,6 +36,7 @@ exports.updatePost = (req, res, next) => {
     body: req.body.body,
     references: req.body.references,
     poster: req.userData.userId,
+    abstract: req.body.abstract
   });
   User.findOne({
       role: 'admin'

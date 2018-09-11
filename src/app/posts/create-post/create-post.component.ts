@@ -64,7 +64,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
             body: postData.body,
             references: postData.references,
             poster: postData.poster,
-            moduleName: postData.moduleName
+            moduleName: postData.moduleName,
+            abstract: postData.abstract,
           };
           this.form.setValue({
             header: this.post.header,
@@ -97,29 +98,36 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       header: new FormControl(null, {
         validators: [
           Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(20)
+          Validators.minLength(5),
+          Validators.maxLength(50)
         ]
       }),
       message: new FormControl(null, {
         validators: [
           Validators.required,
-          Validators.minLength(3),
+          Validators.minLength(5),
           Validators.maxLength(250)
         ]
       }),
       body: new FormControl(null, {
         validators: [
           Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(10000)
+          Validators.minLength(5),
+          Validators.maxLength(15000)
         ]
       }),
       references: new FormControl(null, {
         validators: [
           Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(250)
+          Validators.minLength(5),
+          Validators.maxLength(2000)
+        ]
+      }),
+      abstract: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.minLength(20),
+          Validators.maxLength(2000)
         ]
       })
     });
@@ -145,7 +153,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         this.form.value.body,
         this.form.value.references,
         this.postId,
-        this.moduleNameWithoutPunc
+        this.moduleNameWithoutPunc,
+        this.form.value.abstract
       );
     } else {
       this.postsService.updatePost(
@@ -153,7 +162,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         this.form.value.header,
         this.form.value.message,
         this.form.value.body,
-        this.form.value.references
+        this.form.value.references,
+        this.form.value.abstract
       );
       this.router.navigate(['/module', this.theModuleName]);
     }
