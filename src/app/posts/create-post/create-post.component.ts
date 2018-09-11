@@ -71,7 +71,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
             header: this.post.header,
             message: this.post.message,
             body: this.post.body,
-            references: this.post.references
+            references: this.post.references,
+            abstract: this.post.abstract
           });
         });
       } else {
