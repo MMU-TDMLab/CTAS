@@ -19,7 +19,6 @@ import { AnalyticsComponent } from './analytics/analytics.component';
 import { PostsService } from './posts/posts.service';
 import { AuthService } from './auth/auth.service';
 import { DocService } from './annotation/document.service';
-import { AnnotationService } from './annotation/annotation.service';
 import { AnalyticsService } from './analytics/analyitics.service';
 
 @NgModule({
@@ -43,7 +42,7 @@ import { AnalyticsService } from './analytics/analyitics.service';
     PostsModule,
   ],
   providers: [
-    PostsService, AnnotationService, AuthService, DocService, AnalyticsService,
+    PostsService, AuthService, DocService, AnalyticsService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],

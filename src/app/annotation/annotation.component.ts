@@ -4,11 +4,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { Post } from '../posts/post.model';
-import { ComplexWord } from '../annotation/complex-word.model';
 import { DocWord } from './document-word.model';
 import { PostsService } from '../posts/posts.service';
 import { AuthService } from '../auth/auth.service';
-import { AnnotationService } from './annotation.service';
 import { DocService } from './document.service';
 
 @Component({
@@ -28,7 +26,6 @@ export class AnnotationComponent
   public form: FormGroup;
   public secondForm: FormGroup;
   public posts: Post[] = [];
-  public words: ComplexWord[] = [];
   public docWord: DocWord[] = [];
   public isLoading = true;
   public thewords: string[];
@@ -43,7 +40,6 @@ export class AnnotationComponent
   public theHardWords = [];
   public wordWithAnnotation = [];
   private postsSub: Subscription;
-  // private annotationSub: Subscription;
   private authStatus: Subscription;
   private docSub: Subscription;
   private readTextSub: Subscription;
@@ -64,7 +60,6 @@ export class AnnotationComponent
     public postsService: PostsService,
     private authService: AuthService,
     public route: ActivatedRoute,
-    private annotationService: AnnotationService,
     private docService: DocService
   ) {}
 
@@ -445,27 +440,6 @@ export class AnnotationComponent
   }
 
   /**
-   * Urlify method gets hold of all the references in the post and checks which ones are a link and puts them
-   * into the HTML element on the html page.
-   */
-  urlify(reference) {
-    try {
-      const text = reference;
-      const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
-      // const urlRegex = /(https?:\/\/[^\s]+)/g;
-      const high = document.getElementById('reference');
-      // const paragraph = high.innerHTML.split(' ');
-      const res = [];
-      text.replace(urlRegex, url => {
-        let t = url;
-        t = '<a href="' + url + '"></a>';
-        res.push(t);
-      });
-      high.innerHTML = res.join(' ');
-    } catch (e) {}
-  }
-
-  /**
    * After View is checked, run the highlight method passing the (complex words from the database through).
    * Run the documentSpecificWords method passing the document specific words.
    * Run the urlify method which gets hold of all the references in the post and checks which ones are a link.
@@ -473,19 +447,6 @@ export class AnnotationComponent
   ngAfterViewChecked() {
     // console.clear();
     this.highlightDocumentSpecificWords(this.docWords);
-    this.urlify(this.reference);
-  }
-
-  // Determine if an element is in the visible viewport
-  isInViewport(element) {
-    const rect = element.getBoundingClientRect();
-    const html = document.documentElement;
-    return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <= (window.innerHeight || html.clientHeight) &&
-      rect.right <= (window.innerWidth || html.clientWidth)
-    );
   }
 
   possibleWords() {
@@ -557,36 +518,21 @@ export class AnnotationComponent
   ngOnDestroy() {
     this.postsSub.unsubscribe();
     this.authStatus.unsubscribe();
-    // this.annotationSub.unsubscribe();
     this.docSub.unsubscribe();
     if (this.fileText) {
       this.readTextSub.unsubscribe();
     }
     if (this.role === 'student') {
       const currentDate = new Date();
-      // const day = currentDate.getDate();
-      // const month = currentDate.getMonth() + 1;
-      // const year = currentDate.getFullYear();
-      // this.date = 'Date: ' + day + '/' + month + '/' + year;
       this.date = currentDate;
-
       this.endTime = Date.now();
       const totalTime = this.endTime - this.startTime;
       let seconds;
-      // day, hour, minute
       seconds = Math.floor(totalTime / 1000);
       seconds = seconds % 60;
-      // minute = Math.floor(seconds / 60);
-      // minute = minute % 60;
-      // hour = Math.floor(minute / 60);
-      // day = Math.floor(hour / 24);
-      // hour = hour % 24;
       this.modifiedTime = seconds + ' Seconds';
       this.docService.userActiveDate(this.date, this.modifiedTime, this.id);
       return {
-        // day: day,
-        // hour: hour,
-        // minute: minute,
         seconds: seconds
       };
     }
