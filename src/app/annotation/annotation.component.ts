@@ -82,12 +82,8 @@ export class AnnotationComponent
     this.editing = false;
     this.annotation = '';
     this.editAnnotation = '';
-    // this.diffWordsClicked = false;
     this.form = this.createForm();
     this.secondForm = this.createSecondForm();
-    // this.readTextSub = this.docService.readText(this.id).subscribe(data => {
-    //   this.fileText = data;
-    // });
 
     this.postsService.getPosts();
     this.postsSub = this.postsService

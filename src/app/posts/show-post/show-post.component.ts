@@ -50,7 +50,6 @@ export class ShowPostComponent implements OnInit, OnDestroy {
       .subscribe((posts: Post[]) => {
         const thePosts = posts;
         this.isLoading = false;
-        // this.posts = posts;
         thePosts.map(post => {
           if (post.moduleName === this.moduleNameWithoutPunc) {
             this.posts = posts;

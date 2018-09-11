@@ -26,7 +26,8 @@ const postSchema = mongoose.Schema({
     type: String
   },
   abstract: {
-    type: String
+    type: String,
+    required: true
   }
 });
 

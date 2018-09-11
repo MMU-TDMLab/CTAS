@@ -44,7 +44,6 @@ export class PostsService {
         })
       )
       .subscribe(transformedPosts => {
-        // console.log(transformedPosts);
         this.posts = transformedPosts;
         this.postsUpdated.next([...this.posts]);
       });
@@ -133,8 +132,8 @@ export class PostsService {
         message: message,
         body: body,
         references: references,
-        abstract: abstract,
         poster: null,
+        abstract: abstract,
       };
     this.http
       .put(BACKEND_URL + id, postData)
@@ -147,8 +146,8 @@ export class PostsService {
           message: message,
           body: body,
           references: references,
-          abstract: abstract,
           poster: null,
+          abstract: abstract,
         };
         updatedPosts[oldPostIndex] = post;
         this.posts = updatedPosts;

@@ -64,7 +64,7 @@ exports.updatePost = (req, res, next) => {
           }, post).then(result => {
             if (result.n > 0) {
               res.status(200).json({
-                message: "Admin Update successful!"
+                message: "Update successful!"
               });
             } else {
               res.status(401).json({
@@ -84,7 +84,6 @@ exports.updatePost = (req, res, next) => {
 exports.getPosts = (req, res, next) => {
   Post.find()
     .then(documents => {
-      // console.log(documents);
       res.status(200).json({
         message: 'Posts fetched succesfully!',
         posts: documents
