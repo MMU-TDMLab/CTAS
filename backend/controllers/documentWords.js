@@ -170,6 +170,8 @@ function parseFileIntoMemory() {
       })
       .on('error', (err) => {
         infrequentWords20 = [];
+        infrequentWords10 = [];
+        infrequentWords5 = [];
         console.log('Error while reading file.', err);
       })
       .on('end', () => {
