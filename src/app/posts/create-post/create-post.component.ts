@@ -99,15 +99,15 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       header: new FormControl(null, {
         validators: [
           Validators.required,
-          Validators.minLength(5),
-          Validators.maxLength(50)
+          Validators.minLength(3),
+          Validators.maxLength(200)
         ]
       }),
       message: new FormControl(null, {
         validators: [
           Validators.required,
-          Validators.minLength(5),
-          Validators.maxLength(250)
+          Validators.minLength(3),
+          Validators.maxLength(400)
         ]
       }),
       body: new FormControl(null, {

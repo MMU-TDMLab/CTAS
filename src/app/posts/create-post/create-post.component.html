@@ -3,7 +3,7 @@
   <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || userIsAuthenticated && this.role == 'admin'">
     <form [formGroup]='form' name="test" *ngIf="!isLoading">
       <div class="form-group">
-        <input type="text" class="form-control" name="header" placeholder="Post Title" formControlName="header">
+        <input type="text" class="form-control ng-pristine ng-invalid" name="header" placeholder="Post Title" formControlName="header">
       </div>
       <div class="input-group">
         <textarea class="form-control" rows="3" name="message" placeholder="Info (Description)" formControlName="message"></textarea>

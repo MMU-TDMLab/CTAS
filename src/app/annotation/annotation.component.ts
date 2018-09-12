@@ -123,7 +123,7 @@ export class AnnotationComponent
         validators: [
           Validators.required,
           Validators.minLength(8),
-          Validators.maxLength(250)
+          Validators.maxLength(450)
         ]
       })
     });
@@ -448,9 +448,9 @@ export class AnnotationComponent
 
   possibleWords() {
     this.readTextSub = this.docService.readText(this.id).subscribe(data => {
-          this.fileText = data;
-          this.highlightPossibleWords(this.fileText, this.secondForm.value.difficulty);
-        });
+      this.fileText = data;
+      this.highlightPossibleWords(this.fileText, this.secondForm.value.difficulty);
+    });
   }
 
   highlightPossibleWords(words: string[], diff: string) {
