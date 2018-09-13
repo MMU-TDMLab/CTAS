@@ -178,7 +178,7 @@ export class PostsService {
     .post(BACKEND_URL + '/page-count', postViewCount)
     .subscribe(
       response => {
-        console.log(response);
+        // console.log(response);
       },
       error => {
         console.log(error);

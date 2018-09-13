@@ -29,7 +29,6 @@ export class AnalyticsService {
         map(data => {
           return data.analytics.map(user => {
             return {
-              // _id: user._id,
               userId: user.userId,
               visitDate: user.visitDate,
               visitDurationSeconds: user.visitDurationSeconds,
@@ -59,11 +58,6 @@ export class AnalyticsService {
           return data.users.map(user => {
             return {
               user
-              // _id: user._id,
-              // visits: [user.visitCount]
-              // visitCount: user.visitCount,
-              // _id: user.userId,
-              // postId: user.postId
             };
           });
         })
@@ -109,9 +103,6 @@ export class AnalyticsService {
     return this.userAnalyticsUpdate.asObservable();
   }
 
-  /**
-   * This gets analytics as observable.
-   */
   getWordUpdateListenerTwo() {
     return this.analyticsUpdate.asObservable();
   }

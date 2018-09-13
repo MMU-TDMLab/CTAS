@@ -14,7 +14,7 @@ const visitSchema = new Schema ({
     type: String
   },
   visitDurationSeconds: {
-    type: String
+    type: Number
   }
 });
 

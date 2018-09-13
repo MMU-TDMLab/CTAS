@@ -41,15 +41,17 @@
                 <th>User ID</th>
                 <th>Post Visited</th>
                 <th>Visit Date</th>
-                <th>Visit Duration</th>
+                <th>Visit Duration In Seconds</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let analytic of analytics; let count=index">
-                <th>{{ analytic.userId }}</th>
-                <th>{{ analytic.postId }}</th>
-                <th>{{ analytic.visitDate }}</th>
-                <th>{{ analytic.visitDurationSeconds }}</th>
+                <!-- <ng-container *ngIf="analytic.visitDurationSeconds === 20"> -->
+                  <th>{{ analytic.userId }}</th>
+                  <th>{{ analytic.postId }}</th>
+                  <th>{{ analytic.visitDate }}</th>
+                  <th>{{ analytic.visitDurationSeconds }}</th>
+                <!-- </ng-container> -->
               </tr>
             </tbody>
           </table>

@@ -528,11 +528,13 @@ export class AnnotationComponent
       let seconds;
       seconds = Math.floor(totalTime / 1000);
       seconds = seconds % 60;
-      this.modifiedTime = seconds + ' Seconds';
-      this.docService.userActiveDate(this.date, this.modifiedTime, this.id);
-      return {
-        seconds: seconds
+      this.modifiedTime = seconds;
+      if (seconds >= 5) {
+        this.docService.userActiveDate(this.date, this.modifiedTime, this.id);
+        return {
+          seconds: seconds
       };
+      }
     }
   }
 }

@@ -6,10 +6,12 @@ const annotationClickSchema = new Schema ({
     type: String
   },
   userId: {
-    type: mongoose.Schema.Types.ObjectId
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   },
   postId: {
-    type: String
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Post'
   },
   visitDate: {
     type: String
