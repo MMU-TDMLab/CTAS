@@ -86,7 +86,6 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
         });
       });
     });
-    // console.log(this.result);
     return this.result;
   }
 

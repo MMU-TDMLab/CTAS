@@ -46,7 +46,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let analytic of analytics; let count=index">
-                <!-- <ng-container *ngIf="analytic.visitDurationSeconds === 20"> -->
+                <!-- <ng-container *ngIf="analytic.visitDurationSeconds >= 5"> -->
                   <th>{{ analytic.userId }}</th>
                   <th>{{ analytic.postId }}</th>
                   <th>{{ analytic.visitDate }}</th>
