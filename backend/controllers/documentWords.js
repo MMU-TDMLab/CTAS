@@ -151,13 +151,13 @@ function parseFileIntoMemory() {
     .pipe(es.mapSync((line) => {
         const lines = line.split('\t');
         const freq = Number(lines[1]);
-        if (freq >= 20000) {
+        if (freq >= 150000) {
           infrequentWords20.push(lines[0]);
         }
-        if (freq >= 13000) {
+        if (freq >= 75000) {
           infrequentWords10.push(lines[0]);
         }
-        if (freq >= 10000) {
+        if (freq >= 20000) {
           infrequentWords5.push(lines[0]);
         }
         // pause the readstream
@@ -188,6 +188,8 @@ function checkIfWordsMatch(body, callback) {
   const lowerCaseBody = body.toLowerCase();
   const words = lowerCaseBody.split(' ');
 
+  console.log(words);
+
   words.map((word) => {
     if (!infrequentWords20.includes(word)) {
       let = hardWords20.push(word);
@@ -199,5 +201,6 @@ function checkIfWordsMatch(body, callback) {
       let = hardWords5.push(word);
     }
   });
+  console.log(words);
   return callback(arrayOfArrays);
 }

@@ -153,7 +153,7 @@ export class AnnotationComponent
 
       paragraph.map(word => {
         let t = word;
-        const withoutPunct = t.replace(/[.,\/#!$%?\^&\*;:{}=\-_—`'‘’~()\n\t]/g, '');
+        const withoutPunct = t.replace(/[.,\/#!$%?\^&\*;:{}=\-_—–`'‘’~()\n\t]/g, '');
         // const withoutPunct = t.replace(/[.,\/#!$%\^&\*;:{}=\_`'~()]/g, '');
         // const wordWithoutPunch = word.replace(/[.,\/#!$%\^&\*;:{}=\_~()]/g, '');
         if (words.indexOf(withoutPunct) > -1) {
@@ -210,7 +210,7 @@ export class AnnotationComponent
         this.showingAnnotation = word.annotation;
         this.theWordId = word._id;
       }
-      const withoutPunct = this.word.replace(/[.,\/#!$%?\^&\*;:{}=\-_—`'‘’~()\n]/g, '');
+      const withoutPunct = this.word.replace(/[.,\/#!$%?\^&\*;:{}=\-_—–`'‘’~()\n]/g, '');
       this.word = withoutPunct;
     });
   }
@@ -335,7 +335,7 @@ export class AnnotationComponent
       )
     ) {
       this.annotation = this.form.value.annotation;
-      this.word = this.word.replace(/[.,\/#!$%?\^&\*;:{}=\-_—`'‘’~()\n\t]/g, '');
+      this.word = this.word.replace(/[.,\/#!$%?\^&\*;:{}=\-_—–`'‘’~()\n\t]/g, '');
       // this.word = this.word
       //   .split('.')
       //   .join('')
@@ -465,7 +465,7 @@ export class AnnotationComponent
         paragraph.map(word => {
           let wordsInParagraph = word;
           // const withoutPunct = wordsInParagraph.replace(/[.,\/#!$%?\^&\*;:{}=\_—`'‘’~()]/g, '');
-          const withoutPunct = wordsInParagraph.replace(/[.,\/#!$%?\^&\*;:{}=\-_—`'‘’~()\n\t]/g, '');
+          const withoutPunct = wordsInParagraph.replace(/[.,\/#!$%?\^&\*;:{}=\-_—–`'‘’~()\n\t]/g, '');
           if (diff === 'beginner') {
             if (words[0].indexOf(withoutPunct) > -1) {
               wordsInParagraph =
