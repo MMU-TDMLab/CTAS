@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 const postsRoutes = require('./routes/posts');
 const userRoutes = require('./routes/user');
@@ -8,9 +9,10 @@ const documentsWordsRoutes = require('./routes/documentWords');
 const analyticsRoutes = require('./routes/analytics');
 
 const app = express();
+console.log(process.env.MONGO_ATLAS_NAME);
 mongoose.set('useCreateIndex', true);
-// mongoose.connect("mongodb://" + process.env.MONGO_ATLAS_NAME + ":" + process.env.MONGO_ATLAS_PW + "@ds161700.mlab.com:61700/angular-file-system", { useNewUrlParser: true })
-mongoose.connect("mongodb://" + process.env.MONGO_ATLAS_NAME + ":" + process.env.MONGO_ATLAS_PW + "@ds155352.mlab.com:55352/ctas", { useNewUrlParser: true })
+
+mongoose.connect("mongodb+srv://" + process.env.MONGO_ATLAS_NAME + ":" + process.env.MONGO_ATLAS_PW + "@cluster0.4uxns.mongodb.net/ctasDB?retryWrites=true&w=majority", { useNewUrlParser: true })
 .then(() => {
     console.log('Connected to the database!')
   })

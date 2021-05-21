@@ -30,9 +30,8 @@ exports.createUser = (req, res, next) => {
 
 exports.userLogin = (req, res, next) => {
   let fetchedUser;
-  User.findOne({
-      email: req.body.email
-    })
+  
+  User.findOne({email: req.body.email})
     .then(user => {
       if (!user) {
         return res.status(401).json({
@@ -62,6 +61,7 @@ exports.userLogin = (req, res, next) => {
       });
     })
     .catch(err => {
+		//console.log(err);
       return res.status(401).json({
         message: 'Invalid authentication credentials!'
       });

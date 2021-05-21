@@ -8,6 +8,8 @@ import { DocWord } from './document-word.model';
 import { PostsService } from '../posts/posts.service';
 import { AuthService } from '../auth/auth.service';
 import { DocService } from './document.service';
+import { highlightManager } from '../highlighter/txt2JSON';
+import { highlightWords } from '../highlighter/jsFunctionManager';
 
 @Component({
   selector: 'app-annotation',
@@ -21,8 +23,10 @@ import { DocService } from './document.service';
  * This component also allows Teachers/Admins to create annotations on the fly with the highlight method.
  * Delete and edit annotations.
  */
+
 export class AnnotationComponent
   implements OnInit, OnDestroy, AfterViewChecked {
+  public docManager;
   public form: FormGroup;
   public secondForm: FormGroup;
   public posts: Post[] = [];
@@ -148,23 +152,9 @@ export class AnnotationComponent
   highlightDocumentSpecificWords(words: string[]) {
     try {
       const high = document.getElementById('scrollable');
-      const paragraph = high.innerHTML.split(' ');
-      const res = [];
+      if(!this.docManager)this.docManager = new highlightManager(high); //add in post //also or check if element is the same as high....
+      new highlightWords(this.docManager, words).apply('clickable');
 
-      paragraph.map(word => {
-        let t = word;
-        const withoutPunct = t.replace(/[.,\/#!$%?\^&\*;:{}=\-_—–`'‘’~()\n\t]/g, '');
-        // const withoutPunct = t.replace(/[.,\/#!$%\^&\*;:{}=\_`'~()]/g, '');
-        // const wordWithoutPunch = word.replace(/[.,\/#!$%\^&\*;:{}=\_~()]/g, '');
-        if (words.indexOf(withoutPunct) > -1) {
-          t =
-            '<a class="clickable" style="background-color: yellow; text-decoration: underline;">' +
-            word +
-            '</a>';
-        }
-        res.push(t);
-      });
-      high.innerHTML = res.join(' ');
       const elementsToMakeClickable = document.getElementsByClassName(
         'clickable'
       );
@@ -173,7 +163,7 @@ export class AnnotationComponent
         element.addEventListener('click', this.viewAnnotation.bind(this));
       });
       document.getElementById('btnHighLight').style.visibility = 'visible';
-    } catch (e) {}
+    } catch (e) {} //better solution than try catch here surely
   }
 
   /**
@@ -200,7 +190,7 @@ export class AnnotationComponent
    */
   findAnnotation(e) {
     // this.setWord = e;
-    this.word = e;
+    this.word = e.toLowerCase();
     this.docService.getWords();
 
     this.docWords.map(word => {
@@ -210,8 +200,6 @@ export class AnnotationComponent
         this.showingAnnotation = word.annotation;
         this.theWordId = word._id;
       }
-      const withoutPunct = this.word.replace(/[.,\/#!$%?\^&\*;:{}=\-_—–`'‘’~()\n]/g, '');
-      this.word = withoutPunct;
     });
   }
 
@@ -336,7 +324,7 @@ export class AnnotationComponent
     ) {
       this.annotation = this.form.value.annotation;
       this.word = this.word.replace(/[.,\/#!$%?\^&\*;:{}=\-_—–`'‘’~()\n\t]/g, '');
-      // this.word = this.word
+      this.word = this.word.trim().toLowerCase(); //removes whitespace surrounding word and sets word to lower case
       //   .split('.')
       //   .join('')
       //   .split(',')
@@ -429,7 +417,7 @@ export class AnnotationComponent
       // this.docWords.splice(index);
       this.word = '';
       setTimeout(() => {
-        this.ngOnInit();
+        this.ngOnInit(); //don't need to do this
       }, 400);
     } else {
       alert(this.word + ' has not been deleted.');
@@ -443,7 +431,7 @@ export class AnnotationComponent
    */
   ngAfterViewChecked() {
     // console.clear();
-    this.highlightDocumentSpecificWords(this.docWords);
+	this.highlightDocumentSpecificWords(this.docWords);
   }
 
   possibleWords() {
@@ -452,20 +440,64 @@ export class AnnotationComponent
       this.highlightPossibleWords(this.fileText, this.secondForm.value.difficulty);
     });
   }
-
+  documentSplitter(doc: string){
+    //use case: we don't want to effect formatting but we don't want new lines joining words or spaces
+    let document = doc.replace(/\r?\n|\r/g, ss=>" "+ss+" ").split(" ").filter(ss=>ss!="");
+    return document
+  }
+  highlightPossibleWords(words: string[], diff: string) { //don't want to refresh everytime neccecerily
+    try {
+      if (this.role === 'student') {
+        return;
+      } else {
+        const high = document.getElementById('scrollable');
+        if(!this.docManager)this.docManager = new highlightManager(high);
+        else this.docManager.reset();
+    
+        switch(diff){
+          case 'beginner':
+            var difficultWords = words[0];
+            break;
+          case 'intermediate':
+            var difficultWords = words[1];
+            break;
+          case 'advanced':
+            var difficultWords = words[2];
+            break;
+          default:
+            throw new Error("Difficulty level not received");
+        }
+        new highlightWords(this.docManager, difficultWords).apply();
+        
+        const elementsToMakeClickable = document.getElementsByClassName(
+          'clickable'
+        );
+        const elementsToMakeClickableArray = Array.from(
+          elementsToMakeClickable
+        );
+        elementsToMakeClickableArray.map(element => {
+          element.addEventListener('click', this.viewAnnotation.bind(this));
+        });
+        document.getElementById('btnHighLight').style.visibility = 'visible';
+      }
+    } catch (e){console.error(e);}
+  }
+ // DETECTING COMPLEX WORDS
+ /*
   highlightPossibleWords(words: string[], diff: string) {
     try {
       if (this.role === 'student') {
         return;
       } else {
         const high = document.getElementById('scrollable');
-        const paragraph = high.innerHTML.split(' ');
+        //const paragraph = high.innerHTML.split(' '); //new lines aren't spaces
+        const paragraph = this.documentSplitter(high.innerHTML) //works better doesn't damage format
         const res = [];
-
         paragraph.map(word => {
           let wordsInParagraph = word;
           // const withoutPunct = wordsInParagraph.replace(/[.,\/#!$%?\^&\*;:{}=\_—`'‘’~()]/g, '');
-          const withoutPunct = wordsInParagraph.replace(/[.,\/#!$%?\^&\*;:{}=\-_—–`'‘’~()\n\t]/g, '');
+          //const withoutPunct = wordsInParagraph.replace(/[.,\/#!$%?\^&\*;:{}=\-_—–`'‘’~()\n\t]/g, '').toLowerCase();
+          const withoutPunct = wordsInParagraph.replace(/[.,\/#!$%?\^&\*;:{}=\_`'‘’~()\n\t]/g, '').toLowerCase(); //keep conjuntions atm (—–) //generalize the function for this to avoid multiple uses of different regex, could get confusing!
           if (diff === 'beginner') {
             if (words[0].indexOf(withoutPunct) > -1) {
               wordsInParagraph =
@@ -504,6 +536,38 @@ export class AnnotationComponent
       }
     } catch (e) {}
   }
+
+    highlightDocumentSpecificWords(words: string[]) {
+    try {
+      const high = document.getElementById('scrollable');
+      //const paragraph = high.innerHTML.split(' '); //new lines aren't spaces this causes issues
+      const paragraph = this.documentSplitter(high.innerHTML); // has to be done in both places to maintain formatting
+      const res = [];
+      paragraph.map(word => { //changes made to the paragh effect future changes this needs to be redone, will have to think carefully
+        let t = word;
+        const withoutPunct = t.replace(/[.,\/#!$%?\^&\*;:{}=\-_—–`'‘’~()\n\t]/g, '').toLowerCase();
+        // const withoutPunct = t.replace(/[.,\/#!$%\^&\*;:{}=\_`'~()]/g, '');
+        // const wordWithoutPunch = word.replace(/[.,\/#!$%\^&\*;:{}=\_~()]/g, '');
+        if (words.indexOf(withoutPunct) > -1) {
+          t =
+            '<a class="clickable" style="background-color: yellow; text-decoration: underline;">' +
+            word +
+            '</a>';
+        }
+        res.push(t);
+      });
+      high.innerHTML = res.join(' ');
+      const elementsToMakeClickable = document.getElementsByClassName(
+        'clickable'
+      );
+      const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
+      elementsToMakeClickableArray.map(element => {
+        element.addEventListener('click', this.viewAnnotation.bind(this));
+      });
+      document.getElementById('btnHighLight').style.visibility = 'visible';
+    } catch (e) {} //better solution than try catch here surely
+  }
+  */
 
   modalClosed() {
     this.secondForm.reset();

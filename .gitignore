@@ -44,6 +44,11 @@ Thumbs.db
 nodemon\.json
 
 backend/documents/vocabMod_cs
+backend/cwi_module/datasets/*
+
+.env
+
+backend/node_modules
 
 backend/documents/vocab_cs
 

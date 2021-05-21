@@ -1,3 +1,19 @@
+# Setup
+Unzip datasets.7z in backend/cwi_module into folder datasets
+Install node packages
+Create MongoDB atlas cluster with a database named ctasDB - see backend/app.js
+Create a RSA key
+Create .env file with the following attributes:
+MONGO_ATLAS_NAME = username
+MONGO_ATLAS_PW = password
+JWT_KEY = {
+	'PRIVATE_KEY': private key
+	'PUBLIC_KEY': public key
+}
+
+Then run ng build to build the project
+Run nodemon ./backend/server.js to launch the backend server
+Run ng serve to launch angular
 # Ctas
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8.

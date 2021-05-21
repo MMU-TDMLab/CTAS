@@ -1,6 +1,9 @@
 const DocumentWord = require('../models/document-words');
 const Post = require('../models/post');
-
+const cwi_module = require('../cwi_module/cwi_model');
+const documentManager = require('../cwi_module/documentMangager');
+const _ = require("underscore");
+const CWI = new cwi_module();
 const infrequentWords20 = [];
 const infrequentWords10 = [];
 const infrequentWords5 = [];
@@ -118,9 +121,9 @@ exports.readText = (req, res, next) => {
       _id: req.params.id
     }).then(result => {
       if (result) {
-        checkIfWordsMatch(result.body, hardWords => {
+        checkIfWordsMatch(result.body).then(hardWords=>{
           res.status(200).json(hardWords);
-        });
+        }).catch(e=>console.error("Error finding complex words: \n"+e));
       } else {
         res.status(404).json({
           message: 'Post not found!'
@@ -179,28 +182,46 @@ function parseFileIntoMemory() {
       })
     );
 }
-
-function checkIfWordsMatch(body, callback) {
+/*CWI here*/
+async function checkIfWordsMatch(body) {
   const hardWords20 = [];
   const hardWords10 = [];
   const hardWords5 = [];
   const arrayOfArrays = [hardWords20, hardWords10, hardWords5];
   const lowerCaseBody = body.toLowerCase();
-  const words = lowerCaseBody.split(' ');
+ 
+  let doc = new documentManager(lowerCaseBody);
+  await doc.process(CWI).catch(e=>{throw new Error(e)})
+  let wordObj = {};
+  for(s of doc.sentences){
+    //console.log(s.sentence)
+    for(w of s.words){
+      if(w.word in wordObj) wordObj[w.word].push(w.complexity) 
+      else wordObj[w.word] = [w.complexity];
+    }
+  }
+  console.log(wordObj);
+  wordObjAvg = Object.fromEntries(Object.entries(wordObj).map(([key,value])=>{
+    let len = value.length;
+    let total = value.reduce((a,b)=>a+b,0);
+    let avg = parseFloat((total/len).toFixed(2));
+    if(avg>0.29){
+      if(avg<0.4){
+        let = hardWords20.push(key);
+      }
+      else if(avg<0.5){
+        let = hardWords10.push(key);
+        let = hardWords20.push(key);
+      }
+      else {
+        hardWords5.push(key);
+        let = hardWords20.push(key);
+        let = hardWords10.push(key);
+      }
+    }
+    return [key,avg];
+  }));
 
-  console.log(words);
-
-  words.map((word) => {
-    if (!infrequentWords20.includes(word)) {
-      let = hardWords20.push(word);
-    }
-    if (!infrequentWords10.includes(word)) {
-      let = hardWords10.push(word);
-    }
-    if (!infrequentWords5.includes(word)) {
-      let = hardWords5.push(word);
-    }
-  });
-  console.log(words);
-  return callback(arrayOfArrays);
+  console.log(arrayOfArrays);
+  return arrayOfArrays;
 }
