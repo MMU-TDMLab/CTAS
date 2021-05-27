@@ -27,6 +27,7 @@ import { highlightWords } from '../highlighter/jsFunctionManager';
 export class AnnotationComponent
   implements OnInit, OnDestroy, AfterViewChecked {
   public docManager;
+  public DifficultWords;
   public form: FormGroup;
   public secondForm: FormGroup;
   public posts: Post[] = [];
