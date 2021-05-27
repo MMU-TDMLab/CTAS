@@ -103,4 +103,32 @@ export class highlightManager{
         });   
         this.buildDoc();
     }
+	
+	
+	getItemIndex(start_,word){  //for grabbing word in context for definition selection
+		let at = 0
+		let strings = []
+		let start = null
+		let end = null
+		let periods = [null,null]
+		
+		for(let key in this.obj){
+			let cur = this.obj[key]
+			if(start==null && cur.char == '.'){
+				periods[0] = parseInt(key)+1;
+			}
+			if(start!=null && cur.char == '.'){
+				periods[1] = parseInt(key)+1;
+				break;
+			}
+			for(let i=0; i<cur.formatting.length+1;i++){
+				if(start == null && at == start_){
+					start = parseInt(key);
+				}
+				at += 1
+			}
+		}
+		return {'query':this.document.substr(start,word.length),'string':this.document.substr(periods[0],periods[1]-periods[0])}
+		
+	}
 }
