@@ -407,7 +407,7 @@ export class AnnotationComponent
     this.form.reset();
     this.editing = false;
     if (callNgOnInit) {
-      this.ngOnInit();
+      this.reInit();
     }
   }
 
