@@ -56,10 +56,12 @@ export class highlightManager{
                 highlightClass = this.clickable;
         }
         for(let index of this.occurs){
-            let i1 = index[0]; let i2 = index[1]; 
-            if(i1!=0 && this.obj[i1-1].char.match(/['’a-z—–-]/ig) || i2!=this.obj.length && this.obj[i2].char.match(/['’a-z—–-]/ig)){
-                continue; //don't want to match subwords i.e because shoudn't have cause highlighted
-            }
+            let i1 = index[0]; let i2 = index[1];
+			if(type == 'optional'){ //allow subwords that have been manually annotated
+				if(i1!=0 && this.obj[i1-1].char.match(/['’a-z—–-]/ig) || i2!=this.obj.length && this.obj[i2].char.match(/['’a-z—–-]/ig)){
+					continue; //don't want to match subwords i.e because shoudn't have cause highlighted
+				}
+			}
             let toHighlight = this.obj.slice(...index);
             for(let el of toHighlight){
                 el.tagged = false;
@@ -89,8 +91,8 @@ export class highlightManager{
         this.obj = this.obj.map(el=>{
             let pre = "";
             let post = "";
-            if(el.pre == this.clickable) pre = this.clickable;
-            if(el.post == '</endClickable>')post = '</endClickable>';
+            if(el.pre == this.clickable) pre = ''//this.clickable;
+            if(el.post == '</endClickable>')post = ''//</endClickable>';
             return {
                 "tagged":false,
                 "formatting":el.formatting,

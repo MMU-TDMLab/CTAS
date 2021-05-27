@@ -95,7 +95,7 @@ export class AnnotationComponent
         });
       });
 
-    this.docService.getWords();
+    this.docService.getWords();  //Gets previously annotated complex words
     this.docSub = this.docService
       .getWordUpdateListenerTwo()
       .subscribe((docWord: DocWord[]) => {
@@ -142,6 +142,23 @@ export class AnnotationComponent
       })
     });
   }
+  
+  reInit(){ //refetches annotated words, resets the highlights, highlights annotation then highlights complex words if they've been previously fetched
+    this.docService.getWords();  
+    this.docSub = this.docService
+      .getWordUpdateListenerTwo()
+      .subscribe((docWord: DocWord[]) => {
+        this.docWords = docWord;
+        this.docWords.map(doc => {
+          if (doc.document_id === this.id) {
+            this.docWords.push(doc.word);
+          }
+        });
+		this.docManager.reset()
+		this.highlightDocumentSpecificWords(this.docWords); 
+		if(this.DifficultWords)this.DifficultWords.apply()
+      });
+  }
 
   /**
    * documentSpecificWords method gets the (Per document words) from the database, passing them through this method which gets
@@ -153,7 +170,7 @@ export class AnnotationComponent
     try {
       const high = document.getElementById('scrollable');
       if(!this.docManager)this.docManager = new highlightManager(high); //add in post //also or check if element is the same as high....
-      new highlightWords(this.docManager, words).apply('clickable');
+	  new highlightWords(this.docManager, words).apply('clickable');
 
       const elementsToMakeClickable = document.getElementsByClassName(
         'clickable'
@@ -163,7 +180,7 @@ export class AnnotationComponent
         element.addEventListener('click', this.viewAnnotation.bind(this));
       });
       document.getElementById('btnHighLight').style.visibility = 'visible';
-    } catch (e) {} //better solution than try catch here surely
+    } catch (e) {} 
   }
 
   /**
@@ -325,19 +342,16 @@ export class AnnotationComponent
       this.annotation = this.form.value.annotation;
       this.word = this.word.replace(/[.,\/#!$%?\^&\*;:{}=\-_—–`'‘’~()\n\t]/g, '');
       this.word = this.word.trim().toLowerCase(); //removes whitespace surrounding word and sets word to lower case
-      //   .split('.')
-      //   .join('')
-      //   .split(',')
-      //   .join('')
-      //   .split('\'')
-      //   .join('')
-      //   .split(' ');
+   
       this.docService.addWord(this.word, this.annotation, this.id);
       this.form.reset();
       this.word = '';
+	  
+	  
       setTimeout(() => {
-        this.ngOnInit();
+        this.reInit();
       }, 400);
+	  
     } else {
       alert(this.word + ' has not been saved.');
     }
@@ -417,7 +431,7 @@ export class AnnotationComponent
       // this.docWords.splice(index);
       this.word = '';
       setTimeout(() => {
-        this.ngOnInit(); //don't need to do this
+        this.reInit(); 
       }, 400);
     } else {
       alert(this.word + ' has not been deleted.');
@@ -440,11 +454,7 @@ export class AnnotationComponent
       this.highlightPossibleWords(this.fileText, this.secondForm.value.difficulty);
     });
   }
-  documentSplitter(doc: string){
-    //use case: we don't want to effect formatting but we don't want new lines joining words or spaces
-    let document = doc.replace(/\r?\n|\r/g, ss=>" "+ss+" ").split(" ").filter(ss=>ss!="");
-    return document
-  }
+ 
   highlightPossibleWords(words: string[], diff: string) { //don't want to refresh everytime neccecerily
     try {
       if (this.role === 'student') {
@@ -467,7 +477,8 @@ export class AnnotationComponent
           default:
             throw new Error("Difficulty level not received");
         }
-        new highlightWords(this.docManager, difficultWords).apply();
+		this.DifficultWords = new highlightWords(this.docManager, difficultWords)
+        this.DifficultWords.apply();
         
         const elementsToMakeClickable = document.getElementsByClassName(
           'clickable'
