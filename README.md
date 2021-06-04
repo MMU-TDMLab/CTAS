@@ -3,7 +3,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Setup
 - Unzip datasets.7z in backend/cwi_module into folder backend/cwi_module/datasets 
-- Install node packages using `yarn install`
+- Install node packages using `yarn install` in both / and /backend
 - Create MongoDB atlas cluster with a database named ctasDB - see backend/app.js
 - Create a RSA key
 
