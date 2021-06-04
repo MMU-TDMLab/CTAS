@@ -9,6 +9,8 @@ router.get('/:id', DocumentWordsController.readText);
 
 router.post('/new-word', DocumentWordsController.newWord);
 
+router.post('/get-definition', DocumentWordsController.getDefinition)
+
 router.get('', DocumentWordsController.findWords);
 
 router.put('/update:id', DocumentWordsController.updateWord);

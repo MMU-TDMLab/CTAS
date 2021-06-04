@@ -7,8 +7,8 @@ export class highlightManager{
         this.obj = [];
         this.buildObj();
         this.occurs;
-        this.optional = '<a class="optional" style="background-color:#dcdfe5; text-decoration: underline;">'
-        this.clickable = '<a class="clickable" style="background-color: yellow; text-decoration: underline;">'
+        this.optional = '<a class="optional style=text-decoration:none">'
+        this.clickable = '<a class="clickable" style="background-color: yellow; text-decoration: none; cursor:pointer;">'
     } //we should store highlighted words;
     buildObj(){
         for(let i in this.docChars){
@@ -41,6 +41,7 @@ export class highlightManager{
         this.docUncased = this.document.toLowerCase();
     }
     findTokens(_word){
+		
         let word = _word.toLowerCase().replace(/[)(]/g,""); //remove brackets, issues with brackets;
         let occurs =  [...this.docUncased.matchAll(word)].map(el=>[el.index,el.index+el[0].length]);
         this.occurs = occurs;
@@ -106,6 +107,7 @@ export class highlightManager{
 	
 	
 	getItemIndex(start_,word){  //for grabbing word in context for definition selection
+		//console.log(start_);
 		let at = 0
 		let strings = []
 		let start = null
@@ -128,6 +130,7 @@ export class highlightManager{
 				at += 1
 			}
 		}
+		console.log(start);
 		return {'query':this.document.substr(start,word.length),'string':this.document.substr(periods[0],periods[1]-periods[0])}
 		
 	}

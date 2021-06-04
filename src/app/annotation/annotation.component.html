@@ -4,12 +4,12 @@
     <div class="column left">
       <!-- Empty here -->
     </div>
-    <div class="column center">
+    <div id='mcontent' class="column center">
       <!-- Get post by ID Request on backend -->
       <div *ngFor="let post of posts;">
         <ng-template [ngIf]="post.id === id">
-          <strong id="stronger">{{ post.header }}</strong>
-          <hr>
+          <div id="stronger">{{ post.header }}</div>
+          
           <div>
             {{ post.abstract }}
           </div>
@@ -29,12 +29,12 @@
     </div>
     <div class="column right">
       <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || this.role == 'admin'">
-        <button type="button" id="difficultWords" class="btn btn-secondary btn-sm shadow mb-5 rounded" data-toggle="modal" data-target="#exampleModal" data-backdrop="static" data-keyboard="false">
+        <button type="button" id="difficultWords" class="btn btn-secondary btn-sm  mb-5 rounded" (click)="openAnnotationBox('exampleModal')">
           Difficult Words
           <i class="fas fa-search"></i>
         </button>
         <div>
-          <a class="btn btn-warning btn-sm shadow mb-5 rounded" id="btnHighLight" (click)="highlightSelection()">
+          <a id='' class="btn btn-warning btn-sm  mb-5 rounded" title='Shortkey - Alt' id="btnHighLight" (click)="highlightSelection()"> <!-- ; openAnnotationBox()" data-toggle="modal" data-target="#annotationModal"--> 
             Selected Text
             <i class="fas fa-highlighter"></i>
           </a>
@@ -42,41 +42,43 @@
       </ng-template>
       <ng-template [ngIf]='word'>
         <form [formGroup]='form'>
-          <div class="alert alert-warning alert-dismissible fade show shadow rounded" id="annotation" role="alert">
+          <div class="alert alert-warning alert-dismissible fade show rounded" id="annotation" role="alert">
             <strong>{{ word }}</strong>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)='resetAlertBox(false)'>
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
+		  
           <ng-template [ngIf]="userIsAuthenticated && (this.role == 'teacher' || this.role == 'admin')">
             <div class="form-group">
               <ng-template [ngIf]="userIsAuthenticated && showingAnnotation && !editing">
-                <div class="alert alert-info shadow rounded" role="alert">
+                <div class="alert alert-info rounded" role="alert">
                   {{ showingAnnotation }}
                 </div>
               </ng-template>
               <ng-template [ngIf]="userIsAuthenticated && showingAnnotation && editing && !docTrue">
                 <div class="alert alert-info" role="alert">
-                  <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="{{ showingAnnotation }}" rows="3" formControlName="annotation"
+                  <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="{{ showingAnnotation }}" rows="8" formControlName="annotation"
                     value="{{ showingAnnotation }}"></textarea>
                 </div>
                 <button class="btn btn-success btn-sm" id="saveDocEditBtn" type="button" (click)='onDocEditSub()' [disabled]="!form.valid">Save Edited Annotation</button>
               </ng-template>
               <ng-template [ngIf]="userIsAuthenticated && !showingAnnotation">
-                <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Describe Word" rows="3" formControlName="annotation"></textarea>
+                <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Describe Word" rows="8" formControlName="annotation" value=""></textarea>
               </ng-template>
             </div>
           </ng-template>
+		 
           <ng-template [ngIf]="userIsAuthenticated && form.valid && !editing && (this.role == 'teacher' ||  this.role == 'admin')">
             <button class="btn btn-success btn-sm" id="postDocbtn" type="button" (click)='addToDoc()' [disabled]="!form.valid">Save To This Document</button>
           </ng-template>
           <ng-template [ngIf]="userIsAuthenticated && !editing && showingAnnotation && !docTrue && (this.role == 'teacher' ||  this.role == 'admin')">
             <div>
-              <button class="btn btn-secondary btn-sm margin-top shadow rounded" id="editAnnotation" type="button" (click)='onDocEditWord()'>Edit Annotation
+              <button class="btn btn-secondary btn-sm margin-top  rounded" id="editAnnotation" type="button" (click)='onDocEditWord()'>Edit Annotation
                 <i class="fas fa-pencil-alt margin-left"></i>
               </button>
             </div>
-            <button class="btn btn-danger btn-sm margin-top shadow rounded" type="button" (click)='onDocDelete()'>Delete Annotation
+            <button class="btn btn-danger btn-sm margin-top  rounded" type="button" (click)='onDocDelete()'>Delete Annotation
               <i class="far fa-trash-alt margin-left"></i>
             </button>
           </ng-template>
@@ -90,7 +92,7 @@
     </div>
   </ng-container>
 </div>
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="false">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -100,21 +102,21 @@
         </button>
       </div>
       <form [formGroup]='secondForm'>
-        <div class="modal-body textCenter">
+        <div class="modal-body textCenter" style="background-color:#fafeff;">
           <h6 class="card-subtitle mb-2 text-muted textCenter">Text Scanner Difficulty Scale</h6>
           <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="difficulty" id="inlineRadio1" value="beginner" formControlName="difficulty">
             <label class="form-check-label" for="inlineRadio1">Beginner</label>
           </div>
           <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="difficulty" id="inlineRadio2" value="intermediate" formControlName="difficulty">
-            <label class="form-check-label" for="inlineRadio2">Intermediate</label>
+            <input class="form-check-input" type="radio" name="difficulty" id="2inlineRadio2" value="intermediate" formControlName="difficulty">
+            <label class="form-check-label" for="2inlineRadio2">Intermediate</label>
           </div>
           <div class="form-check form-check-inline difScale">
-            <input class="form-check-input" type="radio" name="difficulty" id="inlineRadio3" value="advanced" formControlName="difficulty">
-            <label class="form-check-label" for="inlineRadio3">Advanced</label>
+            <input class="form-check-input" type="radio" name="difficulty" id="2inlineRadio3" value="advanced" formControlName="difficulty">
+            <label class="form-check-label" for="2inlineRadio3">Advanced</label>
           </div>
-          <hr>
+          <br>
           <ng-template [ngIf]="!secondForm.value.difficulty">
             Please pick one of these options!
           </ng-template>
@@ -124,10 +126,52 @@
         </div>
       </form>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modalClosed()">Close</button>
+        <button type="button" class="btn btn-secondary"  data-dismiss="modal" (click)="modalClosed()">Close</button>
         <ng-template [ngIf]="secondForm.value.difficulty">
           <button type="button" class="btn btn-primary" (click)="possibleWords()" data-dismiss="modal">Continue</button>
         </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="annotationModal" tabindex="-1" role="dialog" aria-labelledby="annotationModalLabel" aria-hidden="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="annotationModalLabel">Add Annotation</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modalClosed()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form [formGroup]='annotationForm'>
+        <div class="modal-body textLeft flex-modal">
+		  
+          <h6 class="card-subtitle mb-2 text-muted textCenter">Retrieved Definitions</h6>
+          <div class="form-check form-check-inline">
+
+            <label class="form-check-label defs" (click)='setAnnotationInput(description[0])'>1. {{ description[0] }}</label>
+          </div>
+		  
+          <div class="form-check form-check-inline">
+            <label class="form-check-label defs" (click)='setAnnotationInput(description[1])'>2. {{ description[1] }}</label>
+          </div>
+		  
+          <div class="form-check form-check-inline difScale">
+            <label class="form-check-label defs" (click)='setAnnotationInput(description[2])'>3. {{ description[2] }}</label>
+          </div>
+		  <div>
+			<textarea form='secondForm' id='annotationBox' placeholder="Enter an annotation, or select a definition." formControlName="annotationInput" ></textarea>
+		  </div>
+		  <div [innerHTML]="contextTarget"></div> 
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modalClosed()">Close</button>  
+		<ng-template [ngIf]="userIsAuthenticated && annotationForm.valid && !editing && (this.role == 'teacher' ||  this.role == 'admin')">
+		<button type="button" class="btn btn-primary" (click)="addToDoc2();" data-dismiss="modal">Submit</button>
+		</ng-template>
+       
       </div>
     </div>
   </div>

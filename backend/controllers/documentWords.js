@@ -8,6 +8,9 @@ const infrequentWords20 = [];
 const infrequentWords10 = [];
 const infrequentWords5 = [];
 
+const request = require('request');
+
+
 /**
  * This is the documentWords backend manager, this will take care of adding new words, finding words
  * updating words, deleting words and also specially reading the big file which identifies which words are
@@ -106,6 +109,24 @@ exports.deleteWord = (req, res, next) => {
         message: 'Document Word was not deleted!'
       })
     });
+}
+
+exports.getDefinition = (req, res, next) => {
+	request(`http://localhost:5000/DDR?q=${encodeURI(req.body.string)}&k=${encodeURI(req.body.query)}`, (e, body, response)=>{
+		if(body){
+			res.status(200).json({
+				message: 'Definition Retrieved!',
+				definition: body.body
+			});
+		}
+		else{
+			res.status(500).json({
+				message: 'Defintion not retrieved.'
+			});
+		}
+		//console.log(body.body)
+	});
+	
 }
 
 /**

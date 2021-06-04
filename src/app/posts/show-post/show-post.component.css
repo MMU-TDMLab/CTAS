@@ -19,6 +19,11 @@
 mat-spinner {
   margin: auto;
 }
+
+.card{
+	margin-bottom:5px;
+}
+
 /* #btn {
   max-height: 3px;
 } */

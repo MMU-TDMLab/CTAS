@@ -87,6 +87,23 @@ export class DocService {
         }
       );
   }
+  
+  lookupDef(ct: Object){
+    return new Promise((res,rej)=>{
+		this.http
+		  .post(BACKEND_URL_Document + '/get-definition', ct)
+		  .subscribe(
+			(response:any) => {
+				res(JSON.parse(response.definition).topk)
+				//console.log(JSON.parse(response.definition).topk);
+			},
+			error => {
+			  rej(error);
+			}
+		  );
+	});
+	  
+  }
 
   /**
    * This is the Put query, this will update the annotation on the given word.

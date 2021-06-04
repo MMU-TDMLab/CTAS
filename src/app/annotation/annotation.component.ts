@@ -11,6 +11,9 @@ import { DocService } from './document.service';
 import { highlightManager } from '../highlighter/txt2JSON';
 import { highlightWords } from '../highlighter/jsFunctionManager';
 
+
+declare var $: any;
+
 @Component({
   selector: 'app-annotation',
   templateUrl: './annotation.component.html',
@@ -30,6 +33,7 @@ export class AnnotationComponent
   public DifficultWords;
   public form: FormGroup;
   public secondForm: FormGroup;
+  public annotationForm: FormGroup;
   public posts: Post[] = [];
   public docWord: DocWord[] = [];
   public isLoading = true;
@@ -39,8 +43,15 @@ export class AnnotationComponent
   public selectedPost: string;
   public annotation: string;
   public editAnnotation: string;
+  
+  //public showAnnotationBox: true;
+  
   public word;
   public showingAnnotation: string;
+  public description: [string, string, string] = ['','',''];
+  public contextTarget: string;
+  public CTpair: {'query':'','string':''}
+  
   public docWords = [];
   public theHardWords = [];
   public wordWithAnnotation = [];
@@ -59,6 +70,8 @@ export class AnnotationComponent
   private authStatus: Subscription;
   private docSub: Subscription;
   private readTextSub: Subscription;
+  
+
 
   constructor(
     public postsService: PostsService,
@@ -83,6 +96,7 @@ export class AnnotationComponent
     this.editAnnotation = '';
     this.form = this.createForm();
     this.secondForm = this.createSecondForm();
+	this.annotationForm = this.createFormAnnotation();
 
     this.postsService.getPosts();
     this.postsSub = this.postsService
@@ -96,7 +110,7 @@ export class AnnotationComponent
         });
       });
 
-    this.docService.getWords();  //Gets previously annotated complex words
+    this.docService.getWords();  //Gets previously annotated words
     this.docSub = this.docService
       .getWordUpdateListenerTwo()
       .subscribe((docWord: DocWord[]) => {
@@ -117,7 +131,14 @@ export class AnnotationComponent
         this.role = this.authService.getUserRole();
       });
     this.isLoading = false;
+	
+	document.addEventListener ("keydown", e => {
+		if(e.key == 'Alt'){ 
+			this.highlightSelection();
+		}			
+	});
   }
+  
 
   /**
    * Validation for the form when creating the annotations using FormGroup/FormControl.
@@ -127,7 +148,19 @@ export class AnnotationComponent
       annotation: new FormControl(null, {
         validators: [
           Validators.required,
-          Validators.minLength(8),
+          Validators.minLength(5),
+          Validators.maxLength(450)
+        ]
+      })
+    });
+  }
+  
+  createFormAnnotation(): FormGroup {
+    return new FormGroup({
+      annotationInput: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.minLength(5),
           Validators.maxLength(450)
         ]
       })
@@ -190,6 +223,12 @@ export class AnnotationComponent
    * @param e Contains the word of which you have clicked on.
    */
   viewAnnotation(e) {
+	/*
+	if(this.role !== 'student'){
+		console.log()
+	}
+	const userSelection = window.getSelection();
+	*/
     this.resetAlertBox(false);
     const word = e.target.textContent;
     if (this.role === 'student') {
@@ -227,18 +266,66 @@ export class AnnotationComponent
    * return. Else it will get the range count from the text begining of text being 0 end of text being possibibly 5000. It then
    * get the range of which the user has highlighted. Then follows by calling the highlightRange and passing the range over.
    */
+	
+	
+	/*
+	Taken from Tim Down:
+	https://stackoverflow.com/questions/4811822/get-a-ranges-start-and-end-offsets-relative-to-its-parent-container
+	*/
+	getCaretCharacterOffsetWithin(element) {
+		var caretOffset = 0;
+		var doc = element.ownerDocument || element.document;
+		var win = doc.defaultView || doc.parentWindow;
+		var sel;
+		if (typeof win.getSelection != "undefined") {
+			sel = win.getSelection();
+			if (sel.rangeCount > 0) {
+				var range = win.getSelection().getRangeAt(0);
+				var preCaretRange = range.cloneRange();
+				preCaretRange.selectNodeContents(element);
+				preCaretRange.setEnd(range.endContainer, range.endOffset);
+				caretOffset = preCaretRange.toString().length;
+			}
+		} else if ( (sel = doc.selection) && sel.type != "Control") {
+			var textRange = sel.createRange();
+			var preCaretTextRange = doc.body.createTextRange();
+			preCaretTextRange.moveToElementText(element);
+			preCaretTextRange.setEndPoint("EndToEnd", textRange);
+			caretOffset = preCaretTextRange.text.length;
+		}
+		return caretOffset;
+	}
+  
+  
   highlightSelection() {
-    this.showingAnnotation = '';
-    const userSelection = window.getSelection();
-    if (userSelection.toString() === null) {
+	this.annotationForm.get('annotationInput').setValue(null);
+	const userSelection = window.getSelection();
+    if (userSelection.toString() === null || userSelection.toString().trim() == "") {
       return;
-    } else {
+    } 
+	else {
+	  this.showingAnnotation = '';
+	 
+	  let startOffset = this.getCaretCharacterOffsetWithin(this.docManager.element) - userSelection.toString().length; ///CHANGE, string length may not be selection size sometimes causes error, look into this
+	  console.log(startOffset) //also don't rely on spaces for sentence as MR.e.t.c will cause issues
+	  
+	  this.CTpair = this.docManager.getItemIndex(startOffset,userSelection.toString().trim())
+	  this.contextTarget = `<q>${this.CTpair.string.replace(this.CTpair.query, `<u><b>${this.CTpair.query}</b></u>`).trim()}</q>`; //Need to sanitize this in HTML maybe?
+	  console.log(this.CTpair);
+	  
+	  this.docService.lookupDef(this.CTpair).then((rslt: [string, string, string])=>{
+		  console.log(rslt);
+		
+		  this.description = rslt;
+		  this.openAnnotationBox('annotationModal');
+	  });
+	  
       for (let i = 0; i < userSelection.rangeCount; i++) {
-        this.highlightRange(userSelection.getRangeAt(i));
+        //this.highlightRange(userSelection.getRangeAt(i));
         this.word = userSelection.toString();
         let theWord: string;
         let theAnnotation: string;
-
+		//this.highlightDocumentSpecificWords([this.word.trim()]);
         this.docWords.map(word => {
           if (word.word === this.word) {
             theWord = this.word;
@@ -358,6 +445,32 @@ export class AnnotationComponent
     }
   }
 
+  addToDoc2() {
+    if (!this.annotationForm.valid) {
+      return;
+    }
+    if (
+      confirm(
+        'Are you sure you want to save ' + this.word + ' to this document?'
+      )
+    ) {
+      this.annotation = this.annotationForm.value.annotationInput;
+      //this.word = this.word.replace(/[.,\/#!$%?\^&\*;:{}=\-_—–`'‘’~()\n\t]/g, '');
+      this.word = this.word.trim().toLowerCase(); //removes whitespace surrounding word and sets word to lower case
+   
+      this.docService.addWord(this.word, this.annotation, this.id);
+      this.form.reset();
+      this.word = '';
+	  
+	  
+      setTimeout(() => {
+        this.reInit();
+      }, 400);
+	  
+    } else {
+      alert(this.word + ' has not been saved.');
+    }
+  }
   /**
    * onDocEditWord method gets called when the edit button has been clicked, this then sets editing to true, hides the edit
    * button & delete button. Editing boolean hides button on the HTML page.
@@ -380,7 +493,7 @@ export class AnnotationComponent
   onDocEditSub() {
     if (
       confirm(
-        'Are you sure you want to edit ' + this.word + ' on this document?'
+        'Are you sure you want to edit "' + this.word + '" on this document?'
       )
     ) {
       this.editing = false;
@@ -391,7 +504,7 @@ export class AnnotationComponent
       this.docService.editWord(wordID, theAnnotation);
       this.resetAlertBox(true);
     } else {
-      alert(this.word + ' has not been edited.');
+      alert('"'+this.word + '" has not been edited.');
     }
   }
 
@@ -455,6 +568,11 @@ export class AnnotationComponent
       this.highlightPossibleWords(this.fileText, this.secondForm.value.difficulty);
     });
   }
+  
+  setAnnotationInput(a_input: string){
+	  this.annotationForm.get('annotationInput').setValue(a_input);
+	  this.annotationForm.get('annotationInput').markAsTouched();
+  }
  
   highlightPossibleWords(words: string[], diff: string) { //don't want to refresh everytime neccecerily
     try {
@@ -494,97 +612,16 @@ export class AnnotationComponent
       }
     } catch (e){console.error(e);}
   }
- // DETECTING COMPLEX WORDS
- /*
-  highlightPossibleWords(words: string[], diff: string) {
-    try {
-      if (this.role === 'student') {
-        return;
-      } else {
-        const high = document.getElementById('scrollable');
-        //const paragraph = high.innerHTML.split(' '); //new lines aren't spaces
-        const paragraph = this.documentSplitter(high.innerHTML) //works better doesn't damage format
-        const res = [];
-        paragraph.map(word => {
-          let wordsInParagraph = word;
-          // const withoutPunct = wordsInParagraph.replace(/[.,\/#!$%?\^&\*;:{}=\_—`'‘’~()]/g, '');
-          //const withoutPunct = wordsInParagraph.replace(/[.,\/#!$%?\^&\*;:{}=\-_—–`'‘’~()\n\t]/g, '').toLowerCase();
-          const withoutPunct = wordsInParagraph.replace(/[.,\/#!$%?\^&\*;:{}=\_`'‘’~()\n\t]/g, '').toLowerCase(); //keep conjuntions atm (—–) //generalize the function for this to avoid multiple uses of different regex, could get confusing!
-          if (diff === 'beginner') {
-            if (words[0].indexOf(withoutPunct) > -1) {
-              wordsInParagraph =
-                '<a class="optional" style="background-color:#dcdfe5; text-decoration: underline;">' +
-                word +
-                '</a>';
-            }
-          } else if (diff === 'intermediate') {
-            if (words[1].indexOf(withoutPunct) > -1) {
-              wordsInParagraph =
-                '<a class="optional" style="background-color:#dcdfe5; text-decoration: underline;">' +
-                word +
-                '</a>';
-            }
-          } else if (diff === 'advanced') {
-            if (words[2].indexOf(withoutPunct) > -1) {
-              wordsInParagraph =
-                '<a class="optional" style="background-color:#dcdfe5; text-decoration: underline;">' +
-                word +
-                '</a>';
-            }
-          }
-          res.push(wordsInParagraph);
-        });
-        high.innerHTML = res.join(' ');
-        const elementsToMakeClickable = document.getElementsByClassName(
-          'clickable'
-        );
-        const elementsToMakeClickableArray = Array.from(
-          elementsToMakeClickable
-        );
-        elementsToMakeClickableArray.map(element => {
-          element.addEventListener('click', this.viewAnnotation.bind(this));
-        });
-        document.getElementById('btnHighLight').style.visibility = 'visible';
-      }
-    } catch (e) {}
-  }
 
-    highlightDocumentSpecificWords(words: string[]) {
-    try {
-      const high = document.getElementById('scrollable');
-      //const paragraph = high.innerHTML.split(' '); //new lines aren't spaces this causes issues
-      const paragraph = this.documentSplitter(high.innerHTML); // has to be done in both places to maintain formatting
-      const res = [];
-      paragraph.map(word => { //changes made to the paragh effect future changes this needs to be redone, will have to think carefully
-        let t = word;
-        const withoutPunct = t.replace(/[.,\/#!$%?\^&\*;:{}=\-_—–`'‘’~()\n\t]/g, '').toLowerCase();
-        // const withoutPunct = t.replace(/[.,\/#!$%\^&\*;:{}=\_`'~()]/g, '');
-        // const wordWithoutPunch = word.replace(/[.,\/#!$%\^&\*;:{}=\_~()]/g, '');
-        if (words.indexOf(withoutPunct) > -1) {
-          t =
-            '<a class="clickable" style="background-color: yellow; text-decoration: underline;">' +
-            word +
-            '</a>';
-        }
-        res.push(t);
-      });
-      high.innerHTML = res.join(' ');
-      const elementsToMakeClickable = document.getElementsByClassName(
-        'clickable'
-      );
-      const elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
-      elementsToMakeClickableArray.map(element => {
-        element.addEventListener('click', this.viewAnnotation.bind(this));
-      });
-      document.getElementById('btnHighLight').style.visibility = 'visible';
-    } catch (e) {} //better solution than try catch here surely
-  }
-  */
 
   modalClosed() {
     this.secondForm.reset();
   }
-
+  openAnnotationBox(box:string){
+	  //this.showAnnotationBox = true;
+	  $("#"+box).modal('show');
+	  //console.log('OPEN');
+  }
   /**
    * When the user closes the page or navigates away from the page, all the subscriptions get unsubscribed so we do not have issues
    * or any unnessasary waste of memory.
