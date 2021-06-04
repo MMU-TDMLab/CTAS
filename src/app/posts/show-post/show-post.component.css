@@ -23,6 +23,10 @@ mat-spinner {
 .card{
 	margin-bottom:5px;
 }
+.btn{
+	white-space:inherit;
+	
+}
 
 /* #btn {
   max-height: 3px;
