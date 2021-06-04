@@ -7,7 +7,7 @@ export class highlightManager{
         this.obj = [];
         this.buildObj();
         this.occurs;
-        this.optional = '<a class="optional" style=text-decoration:none; color:blue">'
+        this.optional = '<a class="optional" style="text-decoration:none; color:blue">'
         this.clickable = '<a class="clickable" style="background-color: yellow; text-decoration: none; cursor:pointer;">'
     } //we should store highlighted words;
     buildObj(){
