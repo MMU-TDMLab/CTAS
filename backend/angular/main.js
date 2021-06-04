@@ -429,7 +429,7 @@ var AnnotationComponent = /** @class */ (function () {
                 }
             });
         });
-        this.docService.getWords();
+        this.docService.getWords(); //Gets previously annotated complex words
         this.docSub = this.docService
             .getWordUpdateListenerTwo()
             .subscribe(function (docWord) {
@@ -473,6 +473,24 @@ var AnnotationComponent = /** @class */ (function () {
             })
         });
     };
+    AnnotationComponent.prototype.reInit = function () {
+        var _this = this;
+        this.docService.getWords();
+        this.docSub = this.docService
+            .getWordUpdateListenerTwo()
+            .subscribe(function (docWord) {
+            _this.docWords = docWord;
+            _this.docWords.map(function (doc) {
+                if (doc.document_id === _this.id) {
+                    _this.docWords.push(doc.word);
+                }
+            });
+            _this.docManager.reset();
+            _this.highlightDocumentSpecificWords(_this.docWords);
+            if (_this.DifficultWords)
+                _this.DifficultWords.apply();
+        });
+    };
     /**
      * documentSpecificWords method gets the (Per document words) from the database, passing them through this method which gets
      * the #id of the element of the HTML which shows the post. The same pretty much as the Highlight method. Runs the text from
@@ -493,7 +511,7 @@ var AnnotationComponent = /** @class */ (function () {
             });
             document.getElementById('btnHighLight').style.visibility = 'visible';
         }
-        catch (e) { } //better solution than try catch here surely
+        catch (e) { }
     };
     /**
      * ViewAnnotation Method gets called when you click on an annotation (yellow highlighted word in the text). When it has been
@@ -639,18 +657,11 @@ var AnnotationComponent = /** @class */ (function () {
             this.annotation = this.form.value.annotation;
             this.word = this.word.replace(/[.,\/#!$%?\^&\*;:{}=\-_—–`'‘’~()\n\t]/g, '');
             this.word = this.word.trim().toLowerCase(); //removes whitespace surrounding word and sets word to lower case
-            //   .split('.')
-            //   .join('')
-            //   .split(',')
-            //   .join('')
-            //   .split('\'')
-            //   .join('')
-            //   .split(' ');
             this.docService.addWord(this.word, this.annotation, this.id);
             this.form.reset();
             this.word = '';
             setTimeout(function () {
-                _this.ngOnInit();
+                _this.reInit();
             }, 400);
         }
         else {
@@ -702,7 +713,7 @@ var AnnotationComponent = /** @class */ (function () {
         this.form.reset();
         this.editing = false;
         if (callNgOnInit) {
-            this.ngOnInit();
+            this.reInit();
         }
     };
     /**
@@ -723,7 +734,7 @@ var AnnotationComponent = /** @class */ (function () {
             // this.docWords.splice(index);
             this.word = '';
             setTimeout(function () {
-                _this.ngOnInit(); //don't need to do this
+                _this.reInit();
             }, 400);
         }
         else {
@@ -745,11 +756,6 @@ var AnnotationComponent = /** @class */ (function () {
             _this.fileText = data;
             _this.highlightPossibleWords(_this.fileText, _this.secondForm.value.difficulty);
         });
-    };
-    AnnotationComponent.prototype.documentSplitter = function (doc) {
-        //use case: we don't want to effect formatting but we don't want new lines joining words or spaces
-        var document = doc.replace(/\r?\n|\r/g, function (ss) { return " " + ss + " "; }).split(" ").filter(function (ss) { return ss != ""; });
-        return document;
     };
     AnnotationComponent.prototype.highlightPossibleWords = function (words, diff) {
         var _this = this;
@@ -776,7 +782,8 @@ var AnnotationComponent = /** @class */ (function () {
                     default:
                         throw new Error("Difficulty level not received");
                 }
-                new _highlighter_jsFunctionManager__WEBPACK_IMPORTED_MODULE_7__["highlightWords"](this.docManager, difficultWords).apply();
+                this.DifficultWords = new _highlighter_jsFunctionManager__WEBPACK_IMPORTED_MODULE_7__["highlightWords"](this.docManager, difficultWords);
+                this.DifficultWords.apply();
                 var elementsToMakeClickable = document.getElementsByClassName('clickable');
                 var elementsToMakeClickableArray = Array.from(elementsToMakeClickable);
                 elementsToMakeClickableArray.map(function (element) {
@@ -2067,10 +2074,12 @@ class highlightManager{
                 highlightClass = this.clickable;
         }
         for(let index of this.occurs){
-            let i1 = index[0]; let i2 = index[1]; 
-            if(i1!=0 && this.obj[i1-1].char.match(/['’a-z—–-]/ig) || i2!=this.obj.length && this.obj[i2].char.match(/['’a-z—–-]/ig)){
-                continue; //don't want to match subwords i.e because shoudn't have cause highlighted
-            }
+            let i1 = index[0]; let i2 = index[1];
+			if(type == 'optional'){ //allow subwords that have been manually annotated
+				if(i1!=0 && this.obj[i1-1].char.match(/['’a-z—–-]/ig) || i2!=this.obj.length && this.obj[i2].char.match(/['’a-z—–-]/ig)){
+					continue; //don't want to match subwords i.e because shoudn't have cause highlighted
+				}
+			}
             let toHighlight = this.obj.slice(...index);
             for(let el of toHighlight){
                 el.tagged = false;
@@ -2100,8 +2109,8 @@ class highlightManager{
         this.obj = this.obj.map(el=>{
             let pre = "";
             let post = "";
-            if(el.pre == this.clickable) pre = this.clickable;
-            if(el.post == '</endClickable>')post = '</endClickable>';
+            if(el.pre == this.clickable) pre = ''//this.clickable;
+            if(el.post == '</endClickable>')post = ''//</endClickable>';
             return {
                 "tagged":false,
                 "formatting":el.formatting,
@@ -2112,6 +2121,34 @@ class highlightManager{
         });   
         this.buildDoc();
     }
+	
+	
+	getItemIndex(start_,word){  //for grabbing word in context for definition selection
+		let at = 0
+		let strings = []
+		let start = null
+		let end = null
+		let periods = [null,null]
+		
+		for(let key in this.obj){
+			let cur = this.obj[key]
+			if(start==null && cur.char == '.'){
+				periods[0] = parseInt(key)+1;
+			}
+			if(start!=null && cur.char == '.'){
+				periods[1] = parseInt(key)+1;
+				break;
+			}
+			for(let i=0; i<cur.formatting.length+1;i++){
+				if(start == null && at == start_){
+					start = parseInt(key);
+				}
+				at += 1
+			}
+		}
+		return {'query':this.document.substr(start,word.length),'string':this.document.substr(periods[0],periods[1]-periods[0])}
+		
+	}
 }
 
 
