@@ -34,7 +34,6 @@ def getdefs(q,k):
             predictions = dataset.get_nearest_examples('embeddings', out, 3)
             dataobj = []
             for i, (item, score) in enumerate(zip(predictions[1]['text'], predictions[0])):
-                #return item
                 dataobj.append(item)
             return dataobj
     
@@ -44,7 +43,7 @@ def DDR():
         query = str(request.args['q'])
         keyword = str(request.args['k'])
         out = getdefs(query, keyword)
-        return jsonify({'topk':out})#out
+        return jsonify({'topk':out})
     else:
         return 'Error: Please specify query and keyword'
     
