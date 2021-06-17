@@ -5,8 +5,8 @@
       <div class="card" *ngIf="post.moduleName === this.moduleNameWithoutPunc">
         <div id="accordion">
           <div class="card-body">
-            <h5 class="mb-0">
-              <button class="btn btn-link" data-toggle="collapse" [attr.data-target]="'#demo' + $index" aria-expanded="true"
+            <h5 class="mb-0"> <!-- Multiple ids causing toggle flicker, correct this -->
+              <button class="btn btn-link" id="{{'demo'+$index}}" data-toggle="collapse" [attr.data-target]="'#demo' + $index" aria-expanded="true"
                 aria-controls="collapseOne">
                 {{ post.header }}
               </button>
