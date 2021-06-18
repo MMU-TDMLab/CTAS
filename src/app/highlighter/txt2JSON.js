@@ -116,6 +116,7 @@ export class highlightManager{
 		
 		for(let key in this.obj){
 			let cur = this.obj[key]
+
 			if(start==null && cur.char == '.'){
 				periods[0] = parseInt(key)+1;
 			}
@@ -128,6 +129,9 @@ export class highlightManager{
 					start = parseInt(key);
 				}
 				at += 1
+			}
+			if(cur.char == '&'){ //Implement for other characters that render differently i.e & = &amp;
+				start_+=4;
 			}
 		}
 		console.log(start);

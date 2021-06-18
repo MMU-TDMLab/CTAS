@@ -306,7 +306,7 @@ export class AnnotationComponent
 	else {
 	  this.showingAnnotation = '';
 	 
-	  let startOffset = this.getCaretCharacterOffsetWithin(this.docManager.element) - userSelection.toString().length; ///CHANGE, string length may not be selection size sometimes causes error, look into this
+	  let startOffset = this.getCaretCharacterOffsetWithin(this.docManager.element) - (userSelection.focusOffset - userSelection.anchorOffset)//userSelection.toString().length; ///CHANGE, string length may not be selection size sometimes causes error, look into this
 	  console.log(startOffset) //also don't rely on spaces for sentence as MR.e.t.c will cause issues
 	  
 	  this.CTpair = this.docManager.getItemIndex(startOffset,userSelection.toString().trim())
