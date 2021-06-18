@@ -305,12 +305,11 @@ export class AnnotationComponent
     } 
 	else {
 	  this.showingAnnotation = '';
-	 
-	  let startOffset = this.getCaretCharacterOffsetWithin(this.docManager.element) - userSelection.toString().length; ///CHANGE, string length may not be selection size sometimes causes error, this (but doesn't work with highlighted words) -> (userSelection.focusOffset - userSelection.anchorOffset)//
-	  console.log(startOffset) //also don't rely on spaces for sentence as MR.e.t.c will cause issues
+	  console.log(userSelection.toString())
+	  let startOffset = this.getCaretCharacterOffsetWithin(this.docManager.element) - userSelection.toString().length; 
 	  
-	  this.CTpair = this.docManager.getItemIndex(startOffset,userSelection.toString().trim())
-	  this.contextTarget = `<q>${this.CTpair.string.replace(this.CTpair.query, `<u><b>${this.CTpair.query}</b></u>`).trim()}</q>`; //Need to sanitize this in HTML maybe?
+	  this.CTpair = this.docManager.getItemIndex(startOffset,userSelection.toString())
+	  this.contextTarget = `<q>${this.CTpair.string.replace(this.CTpair.query.trim(), `<u><b>${this.CTpair.query.trim()}</b></u>`).trim()}</q>`; //Need to sanitize this in HTML maybe?
 	  console.log(this.CTpair);
 	  
 	  this.docService.lookupDef(this.CTpair).then((rslt: [string, string, string])=>{
