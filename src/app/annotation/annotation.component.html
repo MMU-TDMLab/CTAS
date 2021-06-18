@@ -52,7 +52,7 @@
           <ng-template [ngIf]="userIsAuthenticated && (this.role == 'teacher' || this.role == 'admin')">
             <div class="form-group">
               <ng-template [ngIf]="userIsAuthenticated && showingAnnotation && !editing">
-                <div class="alert alert-info rounded" role="alert">
+                <div class="alert alert-info annotation" role="alert">
                   {{ showingAnnotation }}
                 </div>
               </ng-template>
@@ -84,7 +84,7 @@
           </ng-template>
         </form>
         <ng-template [ngIf]="userIsAuthenticated && this.role == 'student'">
-          <div class="alert alert-info" role="alert">
+          <div class="alert alert-info annotation" role="alert">
             {{ showingAnnotation }}
           </div>
         </ng-template>
