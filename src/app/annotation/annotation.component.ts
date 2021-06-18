@@ -340,26 +340,20 @@ export class AnnotationComponent
                 ' would you like to use this annotation?'
             )
           ) {
+			this.setAnnotationInput(theAnnotation);
+			/*
             this.docService.addWord(theWord, theAnnotation, this.id);
             this.word = '';
             setTimeout(() => {
-              this.ngOnInit();
+              this.reInit();
             }, 400);
+			*/
           } else {
             alert('You can create you\'re own annotation for this word.');
           }
         }
-
-        const node = this.highlightRange(
-          userSelection.getRangeAt(i) /*.toString()*/
-        );
-        // Make the range into a variable so we can replace it
-        const range = userSelection.getRangeAt(i);
-        // Delete the current selection
-        range.deleteContents();
-        // Insert the copy
-        range.insertNode(node);
       }
+	  
     }
   }
 

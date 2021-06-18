@@ -190,3 +190,30 @@ textarea:focus {
     box-shadow: 0 0 2px #719ECE;
 }
 
+.annotation{
+	background-color:white;
+	box-shadow: inset 1px 2px lightgrey;
+	color:black;
+	max-height:185px; 
+	overflow-y:auto;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
