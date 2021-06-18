@@ -563,10 +563,15 @@ export class AnnotationComponent
   }
 
   possibleWords() {
-    this.readTextSub = this.docService.readText(this.id).subscribe(data => {
-      this.fileText = data;
-      this.highlightPossibleWords(this.fileText, this.secondForm.value.difficulty);
-    });
+	if(this.fileText){
+		this.highlightPossibleWords(this.fileText, this.secondForm.value.difficulty);
+	}
+	else{
+		this.readTextSub = this.docService.readText(this.id).subscribe(data => {
+		  this.fileText = data;
+		  this.highlightPossibleWords(this.fileText, this.secondForm.value.difficulty);
+		});
+	}
   }
   
   setAnnotationInput(a_input: string){
