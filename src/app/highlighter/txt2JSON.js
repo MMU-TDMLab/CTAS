@@ -129,13 +129,14 @@ export class highlightManager{
 					start = parseInt(key);
 				}
 				at += 1
-			}
+			} //newlines may be extra chars??
 			if(cur.char == '&'){ //Implement for other characters that render differently i.e & = &amp;
 				start_+=4;
 			}
 		}
-		console.log(start);
+		//console.log(start);
 		return {'query':this.document.substr(start,word.length),'string':this.document.substr(periods[0],periods[1]-periods[0])}
+		//return {'query':word,'string':this.document.substr(periods[0],periods[1]-periods[0])} <-- this best but strip new line chars
 		
 	}
 }

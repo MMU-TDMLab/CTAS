@@ -62,6 +62,11 @@ class sentenceMagager{
     }
     loadTensors(model, mwModel){
         for(let word of this.words){
+			if(!word.mwe && word.freq > 0.75){
+				word.complexity = 0;
+				continue; //Save Compute by skipping words with high frequencies.
+			}
+			
             let index = word.index
             let left = this.words.slice(0,index)
             let right = this.words.slice((index + 1));
@@ -81,10 +86,10 @@ class sentenceMagager{
             else rightEmbs = tf.zeros([107]);
             //
             if(!word.mwe){
-                let emb = tf.tensor(word.embedding);
-                let tensor = tf.stack([leftEmbs,emb,rightEmbs]).expandDims(0);
-                word.tensor = tensor;
-                word.complexity = model.predict(word.tensor).dataSync(0)[0];
+				let emb = tf.tensor(word.embedding);
+				let tensor = tf.stack([leftEmbs,emb,rightEmbs]).expandDims(0);
+				word.tensor = tensor;
+				word.complexity = model.predict(word.tensor).dataSync(0)[0];
             }
             else{
                 let emb1 = tf.tensor(word.subWords[0].embedding).expandDims(0).expandDims(0);

@@ -340,7 +340,7 @@ export class AnnotationComponent
                 ' would you like to use this annotation?'
             )
           ) {
-			this.setAnnotationInput(theAnnotation);
+			this.setAnnotationInput(theAnnotation); //put annotation in box rather than auto update
 			/*
             this.docService.addWord(theWord, theAnnotation, this.id);
             this.word = '';
