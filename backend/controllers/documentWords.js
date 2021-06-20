@@ -243,6 +243,6 @@ async function checkIfWordsMatch(body) {
     return [key,avg];
   }));
 
-  console.log(arrayOfArrays);
+  //console.log(arrayOfArrays);
   return arrayOfArrays;
 }

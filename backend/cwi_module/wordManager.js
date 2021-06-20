@@ -11,6 +11,7 @@ class wordManager{
         this.tensor;
         this.complexity;
         this.tokens;
+		this.freq;
         this.mwe = false;
         this.subWords = [];
         if(word.length==1){
@@ -50,8 +51,8 @@ class wordManager{
             let c2 = await c2v.vectorize(this.token).catch(e=>{throw new Error(`Unable to vectorize characters: ${e}`)})
             emb.push(...c2);
             //
-            if(this.token in dataset[2])emb.push(dataset[2][this.token]);
-            else emb.push(0.33);
+            if(this.token in dataset[2]){ emb.push(dataset[2][this.token]); this.freq = dataset[2][this.token]; }
+            else{ emb.push(0.33); this.freq = 0.33; }
             //
             if(this.token in dataset[1])emb.push(dataset[1][this.token]);
             else emb.push(1);
