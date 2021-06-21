@@ -31,9 +31,12 @@ export class AnnotationComponent
   implements OnInit, OnDestroy, AfterViewChecked {
   public docManager;
   public DifficultWords;
+  
   public form: FormGroup;
   public secondForm: FormGroup;
   public annotationForm: FormGroup;
+  public referenceForm: FormGroup;
+  
   public posts: Post[] = [];
   public docWord: DocWord[] = [];
   public isLoading = true;
@@ -97,6 +100,7 @@ export class AnnotationComponent
     this.form = this.createForm();
     this.secondForm = this.createSecondForm();
 	this.annotationForm = this.createFormAnnotation();
+	this.referenceForm = this.createFormReferences();
 
     this.postsService.getPosts();
     this.postsSub = this.postsService
@@ -163,6 +167,18 @@ export class AnnotationComponent
           Validators.minLength(5),
           Validators.maxLength(450)
         ]
+      })
+    });
+  }
+  
+  createFormReferences(): FormGroup {
+    return new FormGroup({
+      referencesInput: new FormControl(null, {
+        validators: [
+			Validators.required,
+			Validators.minLength(5),
+			Validators.maxLength(450)
+		]
       })
     });
   }
@@ -316,7 +332,7 @@ export class AnnotationComponent
 		  console.log(rslt);
 		
 		  this.description = rslt;
-		  this.openAnnotationBox('annotationModal');
+		  this.openModalBox('annotationModal');
 	  });
 	  
       for (let i = 0; i < userSelection.rangeCount; i++) {
@@ -463,6 +479,16 @@ export class AnnotationComponent
     } else {
       alert(this.word + ' has not been saved.');
     }
+  }
+  searchRefURL(){
+	  if(!this.referenceForm.valid) return;
+	  else{
+		  console.log(this.referenceForm.value.referencesInput);
+		  this.postsService.fetchReferences(this.referenceForm.value.referencesInput).then( (ref: any) =>{
+			 console.log(ref); 
+		  });
+	  }
+	
   }
   /**
    * onDocEditWord method gets called when the edit button has been clicked, this then sets editing to true, hides the edit
@@ -615,7 +641,7 @@ export class AnnotationComponent
   modalClosed() {
     this.secondForm.reset();
   }
-  openAnnotationBox(box:string){
+  openModalBox(box:string){
 	  //this.showAnnotationBox = true;
 	  $("#"+box).modal('show');
 	  //console.log('OPEN');

@@ -198,6 +198,46 @@ textarea:focus {
 	overflow-y:auto;
 }
 
+.textInput {
+	border:0px solid black;
+	box-shadow:inset 1px 1px gray;
+	box-shadow:1px 1px 3px lightgrey;
+	border-bottom: 1px solid lightgrey;
+	border-radius: 3px 0px 0px 3px;
+}
+.textInput:focus {
+	outline:none;
+}
+
+.labelButton {
+	user-select:none;
+	width:80px;
+	cursor:pointer;
+	background-color:#699bd2;
+	text-align:center;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	border:1px lightgrey;
+	color:white;
+	box-shadow:inset 1px 1px gray;
+	
+	box-shadow:1px 1px 3px lightgrey;
+	border-radius: 0px 3px 3px 0px;
+	transition:0.2s;
+}
+.labelButton:hover{
+	background-color:#9dc7f5;
+	transition:0.2s
+}
+
+
+.centeredFlex {
+	justify-content: center;
+	width:100%;
+	display:flex;
+}
+
 ::-webkit-scrollbar {
   width: 5px;
 }

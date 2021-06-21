@@ -2,6 +2,8 @@ const Post = require('../models/post');
 const User = require('../models/user');
 const mongoose = require('mongoose');
 
+const request = require('request');
+
 exports.createPost = (req, res, next) => {
   const post = new Post({
     header: req.body.header,
@@ -94,6 +96,28 @@ exports.getPosts = (req, res, next) => {
         message: "Fetching posts failed!"
       });
     });
+}
+//`https://ref.scholarcy.com/api/references/download?url=${encodeURI(req.body)}`
+exports.fetchReferences = (req, res, next) =>{	
+	let options = {
+		url: `https://ref.scholarcy.com/api/references/extract?url=${encodeURI(req.body.url)}&document_type=full_paper&resolve_references=true&reference_style=ensemble&engine=v1`,
+		headers: {
+			'accept':'application/json',
+			'Authorization': 'Bearer'
+		}
+	}
+	//console.log(options.url);
+	request(options, (e, body, response)=>{
+		if(body){
+			res.status(200).json(JSON.parse(body.body).reference_links);
+		}
+		else{
+			res.status(500).json({
+				message: 'Error Fetching Document: '+e
+			})
+		}
+	});
+	
 }
 
 exports.getPostById = (req, res, next) => {

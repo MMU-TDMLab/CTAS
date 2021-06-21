@@ -11,6 +11,7 @@ const infrequentWords5 = [];
 const request = require('request');
 
 
+
 /**
  * This is the documentWords backend manager, this will take care of adding new words, finding words
  * updating words, deleting words and also specially reading the big file which identifies which words are

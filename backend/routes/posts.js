@@ -10,6 +10,8 @@ router.put("/:id", authCheck, PostController.updatePost);
 
 router.get("", PostController.getPosts);
 
+router.post('/references', PostController.fetchReferences)
+
 router.get('/:id', PostController.getPostById);
 
 router.delete("/:id", authCheck, PostController.deletePost);
