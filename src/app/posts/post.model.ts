@@ -13,3 +13,10 @@ export interface Post {
   moduleName?: string;
   abstract: string;
 }
+
+export interface References {
+	entry: string;
+	id: string;
+	oa_query: string;
+	scholar_url: string;
+}

@@ -4,6 +4,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { Post } from '../posts/post.model';
+import { References } from '../posts/post.model';
 import { DocWord } from './document-word.model';
 import { PostsService } from '../posts/posts.service';
 import { AuthService } from '../auth/auth.service';
@@ -36,6 +37,8 @@ export class AnnotationComponent
   public secondForm: FormGroup;
   public annotationForm: FormGroup;
   public referenceForm: FormGroup;
+  
+  public references: References[] = [];
   
   public posts: Post[] = [];
   public docWord: DocWord[] = [];
@@ -484,8 +487,9 @@ export class AnnotationComponent
 	  if(!this.referenceForm.valid) return;
 	  else{
 		  console.log(this.referenceForm.value.referencesInput);
-		  this.postsService.fetchReferences(this.referenceForm.value.referencesInput).then( (ref: any) =>{
-			 console.log(ref); 
+		  this.postsService.fetchReferences(this.referenceForm.value.referencesInput).then( (ref: References[]) =>{
+			 this.references = ref;
+			 console.log(this.references);
 		  });
 	  }
 	
@@ -636,10 +640,9 @@ export class AnnotationComponent
       }
     } catch (e){console.error(e);}
   }
-
-
+  
   modalClosed() {
-    this.secondForm.reset();
+    
   }
   openModalBox(box:string){
 	  //this.showAnnotationBox = true;
