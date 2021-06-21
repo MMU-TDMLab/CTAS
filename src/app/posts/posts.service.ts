@@ -74,7 +74,23 @@ export class PostsService {
       BACKEND_URL + id
     );
   }
-
+ 
+  
+  fetchReferences(url: string) {
+	return new Promise((res, rej)=>{
+		this.http
+			.post(BACKEND_URL + '/references', {'url':url})
+			.subscribe(
+			(response:any) => {
+				res(response);
+			},
+			error => {
+				rej(error);
+			}
+			);
+	});
+  }
+  
   /**
    * This is a Post method, you are passing the header, message, body, references and poster.
    * The ID of the post gets done automatically by Mongoose.

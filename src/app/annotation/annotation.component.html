@@ -2,7 +2,13 @@
   <mat-spinner *ngIf="isLoading"></mat-spinner>
   <ng-container *ngIf="!isLoading">
     <div class="column left">
-      <!-- Empty here -->
+      <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || this.role == 'admin'">
+        <button type="button" id="refSearch" class="btn btn-secondary btn-sm  mb-5" (click)="openModalBox('referenceModal')">
+          Search References
+          <i class="fas fa-search"></i>
+        </button>
+      
+      </ng-template>
     </div>
     <div id='mcontent' class="column center">
       <!-- Get post by ID Request on backend -->
@@ -29,7 +35,7 @@
     </div>
     <div class="column right">
       <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || this.role == 'admin'">
-        <button type="button" id="difficultWords" class="btn btn-secondary btn-sm  mb-5 rounded" (click)="openAnnotationBox('exampleModal')">
+        <button type="button" id="difficultWords" class="btn btn-secondary btn-sm  mb-5 rounded" (click)="openModalBox('exampleModal')">
           Difficult Words
           <i class="fas fa-search"></i>
         </button>
@@ -161,7 +167,7 @@
             <label class="form-check-label defs" (click)='setAnnotationInput(description[2])'>3. {{ description[2] }}</label>
           </div>
 		  <div>
-			<textarea form='secondForm' id='annotationBox' placeholder="Enter an annotation, or select a definition." formControlName="annotationInput" ></textarea>
+			<textarea form='annotationForm' id='annotationBox' placeholder="Enter an annotation, or select a definition." formControlName="annotationInput" ></textarea>
 		  </div>
 		  <div [innerHTML]="contextTarget"></div> 
         </div>
@@ -176,3 +182,40 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="referenceModal" tabindex="-1" role="dialog" aria-labelledby="referenceModalLabel" aria-hidden="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="referenceModalLabel">Add References</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modalClosed()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form [formGroup]='referenceForm'>
+        <div class="modal-body textLeft flex-modal">
+		  
+          <h6 class="card-subtitle mb-2 text-muted textCenter">Enter Paper URL:</h6>
+		  <div class="form-check form-check-inline">
+			  <div class='centeredFlex'>
+				<input type='text' id='paperUrl' class='textInput' form='referenceForm' placeholder='URL' formControlName='referencesInput'>
+				<div class='labelButton' (click)="searchRefURL()" >Search</div>
+			  </div>
+		  </div>
+		
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button>  
+		<ng-template [ngIf]="userIsAuthenticated && (this.role == 'teacher' ||  this.role == 'admin')">
+		<button type="button" class="btn btn-primary"  data-dismiss="modal">Submit</button>
+		</ng-template>
+       
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
