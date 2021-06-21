@@ -204,9 +204,11 @@ textarea:focus {
 	box-shadow:1px 1px 3px lightgrey;
 	border-bottom: 1px solid lightgrey;
 	border-radius: 3px 0px 0px 3px;
+	background-color:#e7f0ff;
 }
 .textInput:focus {
 	outline:none;
+	background-color:white;
 }
 
 .labelButton {
@@ -229,6 +231,66 @@ textarea:focus {
 .labelButton:hover{
 	background-color:#9dc7f5;
 	transition:0.2s
+}
+
+.refsBox {
+	display:flex;
+	flex-direction:column;
+	background-color:#ffdf23;
+	box-shadow: 1px 1px 1px lightgrey;
+	border-radius: 1px 1px 10px 10px;
+	overflow: hidden;
+}
+.refsBox a:link{
+	color:black;
+}
+.refsBox a:visited{
+	color:black;
+}
+
+.refMargin{
+	margin-left:2px;
+	margin-right:2px;
+}
+.topRefBox{
+	padding:1em;
+	padding-bottom:2em;
+	display:flex;
+	flex-direction:column;
+	background-color:white;
+	position:sticky;
+	top:0px;
+	border-radius:10px;
+	z-index:1;
+	border-bottom:1px solid lightgrey;
+}
+
+.boxTitle {
+	width:100%;
+	text-align:center;
+	letter-spacing: 1px;
+	font-weight:500;
+	padding-bottom:3px;
+	display:grid;
+	grid-template-columns: 40px 40px auto 40px 40px;
+}
+
+.boxTitle.close.active{
+	color:red;
+}
+
+.paperHeader {
+	justify-self:center;
+	grid-column-start: 3;
+	padding-top:3px;
+}
+
+.refTitle {
+	box-shadow: inset 0px 0px 1px lightgrey;
+	background-color: white;
+	font-style: italic;
+	padding:8px;
+	border-top:1px solid lightgray;
 }
 
 

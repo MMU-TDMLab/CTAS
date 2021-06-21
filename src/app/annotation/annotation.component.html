@@ -193,8 +193,8 @@
         </button>
       </div>
       <form [formGroup]='referenceForm'>
-        <div class="modal-body textLeft flex-modal">
-		  
+        <div class=" textLeft flex-modal refMargin">
+		  <div class="topRefBox">
           <h6 class="card-subtitle mb-2 text-muted textCenter">Enter Paper URL:</h6>
 		  <div class="form-check form-check-inline">
 			  <div class='centeredFlex'>
@@ -202,16 +202,28 @@
 				<div class='labelButton' (click)="searchRefURL()" >Search</div>
 			  </div>
 		  </div>
+		 </div>
+		<ng-template [ngIf]='references.length > 0'>
+			<ng-template ngFor let-references [ngForOf]='references' let-$index=index>
+				<!-- add carosal! https://stackoverflow.com/questions/59703346/angular-ngfor-carousel-from-variable-->
+				<p>
+				<div id='ref{{$index}}_{{references.id}}' class='refsBox'>
+					<div class='boxTitle'>
+						<div class='paperHeader'>Paper Title</div>
+						<button type='button' class='close' style='grid-column-start:5;' aria-label="Close">
+							<div>&times;</div>
+						</button>
+					</div>
+					<span class='refTitle'><a href='{{references.oa_query}}'>{{ references.entry }}</a></span>
+				</div>
+				
+			</ng-template>
+		
+		  </ng-template>
 		
         </div>
       </form>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button>  
-		<ng-template [ngIf]="userIsAuthenticated && (this.role == 'teacher' ||  this.role == 'admin')">
-		<button type="button" class="btn btn-primary"  data-dismiss="modal">Submit</button>
-		</ng-template>
-       
-      </div>
+   
     </div>
   </div>
 </div>
