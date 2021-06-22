@@ -209,8 +209,8 @@
 				<p>
 				<div id='ref{{$index}}_{{references.id}}' class='refsBox'>
 					<div class='boxTitle'>
-						<div class='paperHeader'>Paper Title</div>
-						<button type='button' class='close' style='grid-column-start:5;' aria-label="Close">
+						<div class='paperHeader'>Reference: {{$index + 1}}</div>
+						<button type='button' class='close' style='grid-column-start:5;' aria-label="Close" (click)='deleteRef($index)'>
 							<div>&times;</div>
 						</button>
 					</div>

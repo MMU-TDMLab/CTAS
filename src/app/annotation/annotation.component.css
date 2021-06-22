@@ -240,6 +240,7 @@ textarea:focus {
 	box-shadow: 1px 1px 1px lightgrey;
 	border-radius: 1px 1px 10px 10px;
 	overflow: hidden;
+	transition:0.5s;
 }
 .refsBox a:link{
 	color:black;

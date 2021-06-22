@@ -139,11 +139,6 @@ export class AnnotationComponent
       });
     this.isLoading = false;
 	
-	document.addEventListener ("keydown", e => {
-		if(e.key == 'Alt'){ 
-			this.highlightSelection();
-		}			
-	});
   }
   
 
@@ -492,8 +487,11 @@ export class AnnotationComponent
 			 console.log(this.references);
 		  });
 	  }
-	
   }
+  deleteRef(index: number){
+	this.references.splice(index, 1);
+  }
+  
   /**
    * onDocEditWord method gets called when the edit button has been clicked, this then sets editing to true, hides the edit
    * button & delete button. Editing boolean hides button on the HTML page.
