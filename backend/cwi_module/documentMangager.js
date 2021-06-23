@@ -4,7 +4,7 @@ class documentManager{
     constructor(document){
         this.document = document
         this.sentenceList = document.replace(/\r?\n|\r/g, " ").split(".").filter(s=>s!=" ").map(s=>s.trim().replace(/[,"/!?]/g,"").trim()).filter(s=>s!="");
-        this.sentences = [];
+		this.sentences = [];
         this.constructSentences();
         this.CWImodel; 
     }

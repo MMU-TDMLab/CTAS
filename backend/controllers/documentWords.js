@@ -222,7 +222,7 @@ async function checkIfWordsMatch(body) {
       else wordObj[w.word] = [w.complexity];
     }
   }
-  console.log(wordObj);
+  //console.log(wordObj);
   wordObjAvg = Object.fromEntries(Object.entries(wordObj).map(([key,value])=>{
     let len = value.length;
     let total = value.reduce((a,b)=>a+b,0);

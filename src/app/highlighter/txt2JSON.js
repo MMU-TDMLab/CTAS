@@ -5,11 +5,13 @@ export class highlightManager{
         this.docUncased;
         this.docChars = this.document.split("");
         this.obj = [];
-        this.buildObj();
+		this.sentences = [];
         this.occurs;
         this.optional = '<a class="optional" style="text-decoration:none; color:blue">'
         this.clickable = '<a class="clickable" style="background-color: yellow; text-decoration: none; cursor:pointer;">'
-    } //we should store highlighted words;
+		
+		this.buildObj();
+    } 
     buildObj(){
         for(let i in this.docChars){
             let cur = {
@@ -39,7 +41,11 @@ export class highlightManager{
         this.obj = tempObj;
         this.document = this.obj.map(el=>el.char).join('');
         this.docUncased = this.document.toLowerCase();
+	
     }
+	
+
+	
     findTokens(_word){
 		
         let word = _word.toLowerCase().replace(/[)(]/g,""); //remove brackets, issues with brackets;
@@ -92,8 +98,8 @@ export class highlightManager{
         this.obj = this.obj.map(el=>{
             let pre = "";
             let post = "";
-            if(el.pre == this.clickable) pre = ''//this.clickable;
-            if(el.post == '</endClickable>')post = ''//</endClickable>';
+            if(el.pre == this.clickable) pre = ''
+            if(el.post == '</endClickable>')post = '' //only want to reset complex words not annotations
             return {
                 "tagged":false,
                 "formatting":el.formatting,

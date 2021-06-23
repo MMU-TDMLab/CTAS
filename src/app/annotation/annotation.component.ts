@@ -622,6 +622,7 @@ export class AnnotationComponent
           default:
             throw new Error("Difficulty level not received");
         }
+		//console.log(difficultWords);
 		this.DifficultWords = new highlightWords(this.docManager, difficultWords)
         this.DifficultWords.apply();
         
