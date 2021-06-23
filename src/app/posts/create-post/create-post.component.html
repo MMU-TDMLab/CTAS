@@ -15,7 +15,7 @@
         <textarea class="form-control" rows="3" name="body" placeholder="Body (Content)" formControlName="body"></textarea>
       </div>
       <div class="input-group">
-        <textarea class="form-control" rows="3" name="references" placeholder="References (Links to external web pages/books)" formControlName="references"></textarea>
+        <textarea class="form-control" rows="3" name="references" placeholder="References" formControlName="references"></textarea>
       </div>
       <button class="btn btn-success btn-sm" id="postbtn" type="button" [disabled]="!form.valid" (click)="onSavePost()">{{ btnText }}</button>
     </form>

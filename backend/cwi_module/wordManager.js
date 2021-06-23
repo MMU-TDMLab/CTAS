@@ -2,6 +2,8 @@
 // embedding stucture = glove, c2v, freq, AoA, syllables, number of letters, [0,0,0] (corpus type need to remove for this model as N/A)
 const nlp = require('compromise');
 
+const ignoreList = ['et', 'al'];
+
 class wordManager{
     constructor(word, i){
         this.word;
@@ -33,7 +35,10 @@ class wordManager{
                 for(let subword of this.tokens) this.subWords.push(new wordManager([subword], this.index));
             }
             if(!this.tokens) this.token = this.token.replace(/[^a-z0-9]/g, '');
-            if(!this.token.length) this.ignore = true;
+            if(this.token.length <= 1) this.ignore = true;
+			else if(ignoreList.includes(this.token)) this.ignore = true;
+			else if(!isNaN(parseInt(this.token))) this.ignore = true; //parse out numbers
+				
         }
         else{ //collocations bigrams
             this.word = word.join(" ");

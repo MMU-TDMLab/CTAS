@@ -8,7 +8,7 @@ class sentenceMagager{
     constructor(sentence){
         this.sentence = sentence;
         this.wordList = sentence.split(" ").filter(s=>s!=''); //.map(el=>el.replace(/[)(]/g,""))//remove brackets, issues with brackets;
-        this.POS = new Tag(this.wordList).initial().smooth().tags    //remove smooth for slightly faster (not much)
+		this.POS = new Tag(this.wordList).initial().smooth().tags    //remove smooth for slightly faster (not much)
         this.words = [];
         if(this.wordList.length>1) this.findCollocations(); //  detect references or full stops inside brackets, causing problems
         else this.wordList[0] = [this.wordList[0]];
@@ -86,6 +86,7 @@ class sentenceMagager{
             else rightEmbs = tf.zeros([107]);
             //
             if(!word.mwe){
+				console.log(word.token);
 				let emb = tf.tensor(word.embedding);
 				let tensor = tf.stack([leftEmbs,emb,rightEmbs]).expandDims(0);
 				word.tensor = tensor;
