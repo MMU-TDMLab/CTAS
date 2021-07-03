@@ -6,6 +6,12 @@
   font-weight: bold;
 }
 
+.card-menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 #editBtn {
   margin-left: 1em;
 }

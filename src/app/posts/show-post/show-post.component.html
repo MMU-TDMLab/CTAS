@@ -15,9 +15,16 @@
               <div class="card-body">
                 {{ post.message }}
                 <hr>
-                <a class="btn btn-dark btn-sm" id="btnPro" (click)="onAnnotation(post.id)"> View Document
-                  <i class="far fa-file-alt"></i>
-                </a>
+                <div class="card-menu">
+                  <span class="btn btn-dark btn-sm" id="btnPro" (click)="onAnnotation(post.id)">View Document
+                    <i class="far fa-file-alt"></i>
+                  </span>
+                  <ng-template [ngIf]='this.role == "student"'>
+                    <span class="btn btn-dark btn-sm" id="btnPro" (click)="onPreTest(post.id)">Begin Test
+                      <i class="fas fa-chalkboard-teacher"></i>
+                    </span>
+                  </ng-template>
+                </div>  
               </div>
             </div>
             <ng-template [ngIf]="userIsAuthenticated && userId == post.poster || userIsAuthenticated && this.role == 'admin'">

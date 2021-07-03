@@ -86,7 +86,9 @@ class sentenceMagager{
             else rightEmbs = tf.zeros([107]);
             //
             if(!word.mwe){
-				console.log(word.token);
+
+				//console.log(word.token);
+
 				let emb = tf.tensor(word.embedding);
 				let tensor = tf.stack([leftEmbs,emb,rightEmbs]).expandDims(0);
 				word.tensor = tensor;

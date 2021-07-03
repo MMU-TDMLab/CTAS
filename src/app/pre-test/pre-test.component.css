@@ -1,0 +1,88 @@
+#loadingText {
+    margin: auto;
+    text-align: center;
+    font-style: italic;
+}
+
+#submit {
+    border-radius: 5px;
+    background-color: #d4e1f5;
+    border:none;
+    box-shadow: 1px 1px 3px lightgray;
+    padding: 5px 20px 5px 20px;
+    position: sticky;
+    top:1px;
+    cursor: pointer;
+    transition: 0.5s;
+    outline: none;
+}
+#submit:hover{
+    background-color: rgb(218, 247, 217) ;
+}
+#submit:focus{
+    box-shadow: inset 0px 0px 3px rgb(155, 155, 155);
+}
+
+.container {
+    padding-top: 2em;
+    padding-left: 3em;
+    display: flex;
+    max-width: 1200px;
+}
+
+.column.left {
+    flex: 0 0 230px; /* change this to something that scales based on page width */
+}
+
+.column.center {
+    flex: 0 0 450px;
+    max-width: 450px;
+}
+
+.column.right {
+    position: sticky;
+    left: 55em;
+    max-width: 200px;
+}
+
+#stronger {
+    color:black;
+    text-shadow: 1px 1px 1px lightgrey;
+    font-size: large;
+   
+    font-family:  Helvetica, Arial, sans-serif;	
+}
+
+#testBox {
+    background-color: white;
+    border-radius: 2px;
+    box-shadow: inset 1px 1px 3px lightgrey;
+    font-family: Tahoma, 'Helvetica', 'Arial', sans-serif;
+    padding:10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top:15px;
+}
+.candidateWord {
+    background-color:rgb(187 249 185);
+    padding: 5px;
+    margin: 5px;
+    border-radius: 5px;
+    box-shadow: 1px 1px 2px grey;
+    user-select: none;
+    transition: 0.2s;
+}
+
+.candidateWord:hover {
+    background-color:rgb(218, 247, 217) ;
+    cursor: pointer;
+}
+
+.selected {
+    background-color: #ffc9d3;
+    box-shadow: inset 1px 1px 2px grey;
+}
+.selected:hover {
+    background-color: #f7e4e7;
+}

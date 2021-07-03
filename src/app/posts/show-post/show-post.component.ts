@@ -100,6 +100,17 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Activated when Begin test is clicked from student view
+   * Redirects you to /pre-test and passes the postId
+   * @param postId The ID of the post that testing is based on
+   */
+  onPreTest(postId: string){
+    if(this.role === 'student'){
+      this.router.navigate(['/pre-test', postId]);
+    }
+  }
+
+  /**
    * When onDelete method will delete the Post ID you have passed through by clicking the
    * delete on the post.
    * @param postId The ID of the post you wish to delete.
