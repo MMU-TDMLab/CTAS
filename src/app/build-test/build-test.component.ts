@@ -15,6 +15,10 @@ import { highlightWords } from '../highlighter/jsFunctionManager';
 
 declare var $: any;
 
+/**
+ *  To-Do: Remove redundent code features i.e showingannotation among others.
+ */
+
 @Component({
   selector: 'app-build-test',
   templateUrl: './build-test.component.html',
@@ -116,8 +120,9 @@ export class BuildTestComponent implements OnInit, OnDestroy {
 
   addToTest() {
     if(!this.form.valid) return;
-    this.word = this.word.trim();
+    this.word = this.word
     this.annotation = this.form.value.annotation;
+    
     let found = false;
     this.annotations = this.annotations.map((el, i) => {
       if(el.word == this.word){
@@ -134,12 +139,15 @@ export class BuildTestComponent implements OnInit, OnDestroy {
       }
       this.annotations.push(entry);
     }
+    console.log(this.annotations);
     this.highlightDocumentSpecificWords([this.word]);
   }
 
   viewAnnotation(e) {
-    const word = e.target.textContent;
-    this.word = word.toLowerCase();
+    const word = e.target.textContent.toLowerCase().trim();
+    let entry = this.annotations.find(el =>el.word == word);   
+    if(entry) this.form.patchValue({annotation:entry.annotation});
+    this.word = word
   }
 
 	getCaretCharacterOffsetWithin(element) {
@@ -174,9 +182,8 @@ export class BuildTestComponent implements OnInit, OnDestroy {
     } 
     else {
       this.showingAnnotation = '';
-      console.log(userSelection.toString());
-      for (let i = 0; i < userSelection.rangeCount; i++) {
-        this.word = userSelection.toString();
+      for (let i = 0; i < userSelection.rangeCount; i++) { //eh??
+        this.word = userSelection.toString().trim().toLowerCase();
       }
       
     }
