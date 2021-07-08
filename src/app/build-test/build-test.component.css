@@ -1,0 +1,182 @@
+
+.container {
+    padding-top: 2em;
+    padding-left: 3em;
+    
+  }
+  
+  
+  
+  #stronger {
+    color:black;
+    text-shadow: 1px 1px 1px lightgrey;
+    font-size: large;
+   
+    font-family:  Helvetica, Arial, sans-serif;	
+  }
+  
+  /*
+  hr{
+      border:1px solid lightgrey;
+      background-color:lightgrey;
+  }
+  */
+  
+  .myStyle {
+    font-family: Tahoma, 'Helvetica', 'Arial', sans-serif;
+    line-height: 1.5;
+    font-size: 16px;
+    font-weight: 550;
+  }
+  
+  #scrollable {
+    background-color:white;
+    margin-top: 1em;
+    margin-bottom: 2em;
+   
+    box-shadow: inset 1px 1px 3px lightgrey;
+    border-radius:1px;
+    padding:15px;
+    font-family: Tahoma, 'Helvetica', 'Arial', sans-serif;
+    line-height: 2;
+    font-size: 15px;
+    white-space: pre-wrap;
+  }
+  
+  #reference{
+    white-space: pre-wrap;
+  }
+  
+  #btnHighLight {
+    cursor:help;
+    margin-top: 0.75em;
+    min-width: 11.25em;
+  }
+  
+  #btnShow {
+    margin-top: 3em;
+  }
+  
+  #postbtn {
+    margin-top: 0.25em;
+  }
+  
+  #postDocbtn {
+    margin-top: 1.0em;
+  }
+  
+  #annotation {
+    margin-top: 0.5em;
+  }
+  
+  .highlighted {
+    background-color: yellow;
+    display: inline;
+  }
+  
+  .high {
+    background-color: yellow;
+    display: inline;
+  }
+  
+  .margin-top {
+    margin-top: 0.75em;
+    min-width: 11.25em;
+  }
+  
+  #editBtn {
+    margin-top: 0.5em;
+  }
+  
+  #deleteBtn {
+    margin-top: 1.25em;
+  }
+  
+  #editDocBtn {
+    margin-top: 0.5em;
+  }
+  
+  #deleteDocBtn {
+    margin-top: 1.25em;
+  }
+  
+  .container {
+    display: flex;
+    max-width: 1200px;
+  }
+  
+  /**
+  * The loading spinner which is set to the middle.
+  */
+  mat-spinner {
+    margin: auto;
+  }
+  
+  .column.left {
+    flex: 0 0 230px;
+  }
+  
+  .column.center {
+    flex: 0 0 450px;
+    max-width: 450px;
+  }
+  
+  .column.right {
+    position: fixed;
+    left: 55em;
+    max-width: 200px;
+  }
+  
+  #wordRef {
+    margin-top: 3em;
+  }
+  
+  .margin-left {
+    margin-left: 0.5em;
+  }
+  
+  #difficultWords {
+    min-width: 11.25em;
+    background-color: #5c85d6;
+    border-color: #5c85d6;
+  }
+  
+  #editAnnotation {
+    background-color: #2eb8b8;
+    border-color: #2eb8b8;
+  }
+  
+  .difScale {
+    margin-bottom: 1em;
+  }
+  
+  .textCenter {
+    text-align: center;
+  }
+  .textLeft {
+    text-align: left;
+    width:max-width;
+  }
+  
+  
+ 
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }
+  
+  

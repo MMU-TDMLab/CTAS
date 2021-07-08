@@ -1,9 +1,9 @@
 <div class="container">
   <div class="column left"></div>
   <div class="column center">  
-    <div id='stronger'>Pre-Test Description: </div><p>Select any words or phrases below that you do not understant
+    <div id='stronger'>Pre-Test Description: </div><p>Select any words or phrases below that you do not understand
     <div id='testBox'>
-      <mat-progress-bar mode="buffer" *ngIf='isLoading'></mat-progress-bar>
+      <mat-progress-bar mode="indeterminate" *ngIf='isLoading'></mat-progress-bar>
     
       <div class="candidateWord" [ngClass]="{'selected':selectedWords.includes(word)}" *ngFor='let word of hardWords' id='{{word.replace(" ", "-")}}' (click)='wordSelect(word)'>
         {{word}}

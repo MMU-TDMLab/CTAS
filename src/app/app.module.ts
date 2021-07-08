@@ -21,6 +21,7 @@ import { AuthService } from './auth/auth.service';
 import { DocService } from './annotation/document.service';
 import { AnalyticsService } from './analytics/analyitics.service';
 import { PreTestComponent } from './pre-test/pre-test.component';
+import { BuildTestComponent } from './build-test/build-test.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { PreTestComponent } from './pre-test/pre-test.component';
     ErrorComponent,
     AnalyticsComponent,
     PreTestComponent,
+    BuildTestComponent,
   ],
   imports: [
     BrowserModule,

@@ -8,18 +8,18 @@ class sentenceMagager{
     constructor(sentence){
         this.sentence = sentence;
         this.wordList = sentence.split(" ").filter(s=>s!=''); //.map(el=>el.replace(/[)(]/g,""))//remove brackets, issues with brackets;
-		this.POS = new Tag(this.wordList).initial().smooth().tags    //remove smooth for slightly faster (not much)
+        this.POS = new Tag(this.wordList).initial().smooth().tags    //remove smooth for slightly faster (not much)
         this.words = [];
-        if(this.wordList.length>1) this.findCollocations(); //  detect references or full stops inside brackets, causing problems
+        if(this.wordList.length>1) this.findCollocations(); 
         else this.wordList[0] = [this.wordList[0]];
         this.constructWords();
     }
-    findCollocations(){ //bigrams only // misses stuff like ['embedding:']// makes words that are in a row be counted twice when contexts are added up   
+    findCollocations(){ //bigrams only   
         let adj = ["JJ","JJR","JJS"];
         let noun = ["NN","NNS","NNP","NNPS"];
         let newWordList = [];
+        //console.log(this.wordList)
         for(let i=0; i<this.wordList.length; i++){ 
-
             if(i == this.wordList.length-1){
                 if(newWordList[newWordList.length-1].length == 1 || newWordList[newWordList.length-1][1] != this.wordList[i]){
                     newWordList.push([this.wordList[i]]); 
@@ -86,9 +86,7 @@ class sentenceMagager{
             else rightEmbs = tf.zeros([107]);
             //
             if(!word.mwe){
-
 				//console.log(word.token);
-
 				let emb = tf.tensor(word.embedding);
 				let tensor = tf.stack([leftEmbs,emb,rightEmbs]).expandDims(0);
 				word.tensor = tensor;

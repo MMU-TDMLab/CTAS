@@ -312,33 +312,32 @@ export class AnnotationComponent
   
   
   highlightSelection() {
-	this.annotationForm.get('annotationInput').setValue(null);
-	const userSelection = window.getSelection();
-    if (userSelection.toString() === null || userSelection.toString().trim() == "") {
-      return;
-    } 
-	else {
-	  this.showingAnnotation = '';
-	  console.log(userSelection.toString())
-	  let startOffset = this.getCaretCharacterOffsetWithin(this.docManager.element) - userSelection.toString().length; 
-	  
-	  this.CTpair = this.docManager.getItemIndex(startOffset,userSelection.toString())
-	  this.contextTarget = `<q>${this.CTpair.string.replace(this.CTpair.query.trim(), `<u><b>${this.CTpair.query.trim()}</b></u>`).trim()}</q>`; //Need to sanitize this in HTML maybe?
-	  console.log(this.CTpair);
-	  
-	  this.docService.lookupDef(this.CTpair).then((rslt: [string, string, string])=>{
-		  console.log(rslt);
-		
-		  this.description = rslt;
-		  this.openModalBox('annotationModal');
-	  });
-	  
+    this.annotationForm.get('annotationInput').setValue(null);
+    const userSelection = window.getSelection();
+      if (userSelection.toString() === null || userSelection.toString().trim() == "") {
+        return;
+      } 
+    else {
+      this.showingAnnotation = '';
+      console.log(userSelection.toString())
+      let startOffset = this.getCaretCharacterOffsetWithin(this.docManager.element) - userSelection.toString().length; 
+      
+      this.CTpair = this.docManager.getItemIndex(startOffset,userSelection.toString())
+      this.contextTarget = `<q>${this.CTpair.string.replace(this.CTpair.query.trim(), `<u><b>${this.CTpair.query.trim()}</b></u>`).trim()}</q>`; //Need to sanitize this in HTML maybe?
+      console.log(this.CTpair);
+      
+      this.docService.lookupDef(this.CTpair).then((rslt: [string, string, string])=>{
+        console.log(rslt);
+      
+        this.description = rslt;
+        this.openModalBox('annotationModal');
+      });
+      
       for (let i = 0; i < userSelection.rangeCount; i++) {
-        //this.highlightRange(userSelection.getRangeAt(i));
         this.word = userSelection.toString();
         let theWord: string;
         let theAnnotation: string;
-		//this.highlightDocumentSpecificWords([this.word.trim()]);
+  
         this.docWords.map(word => {
           if (word.word === this.word) {
             theWord = this.word;
@@ -354,20 +353,13 @@ export class AnnotationComponent
                 ' would you like to use this annotation?'
             )
           ) {
-			this.setAnnotationInput(theAnnotation); //put annotation in box rather than auto update
-			/*
-            this.docService.addWord(theWord, theAnnotation, this.id);
-            this.word = '';
-            setTimeout(() => {
-              this.reInit();
-            }, 400);
-			*/
+            this.setAnnotationInput(theAnnotation); 
           } else {
             alert('You can create you\'re own annotation for this word.');
           }
         }
       }
-	  
+      
     }
   }
 

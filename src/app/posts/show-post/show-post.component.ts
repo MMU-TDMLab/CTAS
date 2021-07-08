@@ -110,6 +110,10 @@ export class ShowPostComponent implements OnInit, OnDestroy {
     }
   }
 
+  onBuildTest(postId: string){ 
+    if(this.role == 'teacher' || this.role == 'admin') this.router.navigate( ['/build-test', postId] ); 
+  }
+
   /**
    * When onDelete method will delete the Post ID you have passed through by clicking the
    * delete on the post.

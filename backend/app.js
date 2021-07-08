@@ -7,6 +7,7 @@ const postsRoutes = require('./routes/posts');
 const userRoutes = require('./routes/user');
 const documentsWordsRoutes = require('./routes/documentWords');
 const analyticsRoutes = require('./routes/analytics');
+const testRoutes = require('./routes/tests')
 
 const app = express();
 console.log(process.env.MONGO_ATLAS_NAME);
@@ -40,5 +41,6 @@ app.use('/api/posts', postsRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/documentWords', documentsWordsRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/tests', testRoutes);
 
 module.exports = app;

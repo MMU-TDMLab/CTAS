@@ -24,6 +24,13 @@
                       <i class="fas fa-chalkboard-teacher"></i>
                     </span>
                   </ng-template>
+
+                  <ng-template [ngIf]='this.role == "teacher" || this.role == "admin"'> <!--add authenticated-->
+                    <span class="btn btn-dark btn-sm" id="btnPro" (click)='onBuildTest(post.id)'>Add Test
+                      <i class="fas fa-chalkboard-teacher"></i>
+                    </span>
+                  </ng-template>
+
                 </div>  
               </div>
             </div>

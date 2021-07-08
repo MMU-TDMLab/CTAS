@@ -7,6 +7,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { AnnotationComponent } from './annotation/annotation.component';
 import { AnalyticsComponent } from './analytics/analytics.component';
 import { PreTestComponent } from './pre-test/pre-test.component';
+import { BuildTestComponent } from './build-test/build-test.component';
 
 /**
  * This takes care of the routes. The 'canActivate: [AuthGuard]' checks if the
@@ -22,7 +23,9 @@ const appRoutes: Routes = [
   { path: 'annotation/:postId', component: AnnotationComponent, canActivate: [AuthGuard] },
   { path: 'auth', loadChildren: './auth/auth.module#AuthModule'},
   { path: 'pre-test', component: PreTestComponent}, //AuthGuard?
-  { path: 'pre-test/:postId', component: PreTestComponent}
+  { path: 'pre-test/:postId', component: PreTestComponent},
+  { path: 'build-test', component: BuildTestComponent, canActivate: [AuthGuard]}, //AuthGuard?
+  { path: 'build-test/:postId', component: BuildTestComponent, canActivate: [AuthGuard] }
   // { path: 'module', component: ModuleComponent, canActivate: [AuthGuard]  },
   // { path: 'edit/:postId', component: ModuleComponent, canActivate: [AuthGuard] },›
 ];
