@@ -20,7 +20,11 @@
     <div class="column right">
       <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || this.role == 'admin'">
         <div>
-          <a id='' class="btn btn-warning btn-sm  mb-5 rounded"  id="btnHighLight" (click)="highlightSelection()"> 
+          <a id='' class="btn btn-sm rounded"  id="btnSubmit" (click)="submitTest()"> 
+            Submit Test
+            <i class="fas fa-check"></i>
+          </a>
+          <a id='' class="btn btn-warning btn-sm rounded"  id="btnHighLight" (click)="highlightSelection()"> 
             Selected Text
             <i class="fas fa-highlighter"></i>
           </a>

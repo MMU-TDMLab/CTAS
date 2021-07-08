@@ -139,8 +139,13 @@ export class BuildTestComponent implements OnInit, OnDestroy {
       }
       this.annotations.push(entry);
     }
-    console.log(this.annotations);
     this.highlightDocumentSpecificWords([this.word]);
+  }
+
+  submitTest(){
+    if(confirm('Are you sure?')){
+      console.log(this.annotations);
+    }
   }
 
   viewAnnotation(e) {
