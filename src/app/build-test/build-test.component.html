@@ -1,86 +1,67 @@
 <div class="container">
-  <mat-spinner *ngIf="isLoading"></mat-spinner>
-  <ng-container *ngIf="!isLoading">
-    <div class="column left">
-    
-    </div>
-    <div id='mcontent' class="column center">
-      <!-- Get post by ID Request on backend -->
-      <div *ngFor="let post of posts;">
-        <ng-template [ngIf]="post.id === id">
-          <div id="stronger">{{ post.header }}</div>
-          <div>Highlight and annotate any words or phrases that may be difficult to understand for the average reader</div>
-          <div id="scrollable">
-            {{ selectedPost }}
-          </div>
-          
-        </ng-template>
-      </div>
-    </div>
-    <div class="column right">
-      <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' || this.role == 'admin'">
-        <div>
-          <a id='' class="btn btn-sm rounded"  id="btnSubmit" (click)="submitTest()"> 
-            Submit Test
-            <i class="fas fa-check"></i>
-          </a>
-          <a id='' class="btn btn-warning btn-sm rounded"  id="btnHighLight" (click)="highlightSelection()"> 
-            Selected Text
-            <i class="fas fa-highlighter"></i>
-          </a>
+  <div class="column left">
+  
+  </div>
+  <div id='mcontent' class="column center">
+    <!-- Get post by ID Request on backend -->
+    <div *ngFor="let post of posts;">
+      <ng-template [ngIf]="post.id === id">
+        <div id="stronger">{{ post.header }}</div>
+        <div id='infoBox'>Highlight and annotate any words or phrases that may be difficult to understand for the average reader</div>
+        <div *ngIf='isLoading' id="scrollable">
+          <mat-progress-bar mode="indeterminate" *ngIf='isLoading && !hardWords'></mat-progress-bar>
+          <mat-progress-bar mode="determinate" [value]='hardWordProgress' *ngIf='isLoading && hardWords'></mat-progress-bar>
+        </div>
+        <div *ngIf='!isLoading' id="scrollable">
+          {{ selectedPost }}
         </div>
       </ng-template>
-      <ng-template [ngIf]='word'>
-        <form [formGroup]='form'>
-          <div class="alert alert-warning alert-dismissible fade show rounded" id="annotation" role="alert">
-            <strong>{{ word }}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)='resetAlertBox(false)'>
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-		  
-          <ng-template [ngIf]="userIsAuthenticated && (this.role == 'teacher' || this.role == 'admin')">
-            <div class="form-group">
-              <ng-template [ngIf]="userIsAuthenticated && showingAnnotation && !editing">
-                <div class="alert alert-info annotation" role="alert">
-                  {{ showingAnnotation }}
-                </div>
-              </ng-template>
-              <ng-template [ngIf]="userIsAuthenticated && showingAnnotation && editing && !docTrue">
-                <div class="alert alert-info" role="alert">
-                  <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="{{ showingAnnotation }}" rows="8" formControlName="annotation"
-                    value="{{ showingAnnotation }}"></textarea>
-                </div>
-                <button class="btn btn-success btn-sm" id="saveDocEditBtn" type="button" (click)='onDocEditSub()' [disabled]="!form.valid">Save Edited Annotation</button>
-              </ng-template>
-              <ng-template [ngIf]="userIsAuthenticated && !showingAnnotation">
-                <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Describe Word" rows="8" formControlName="annotation" value=""></textarea>
-              </ng-template>
-            </div>
-          </ng-template>
-		 
-          <ng-template [ngIf]="userIsAuthenticated && form.valid && !editing && (this.role == 'teacher' ||  this.role == 'admin')">
-            <button class="btn btn-success btn-sm" id="postDocbtn" type="button" (click)='addToTest()' [disabled]="!form.valid">Add to document</button>
-          </ng-template>
-          <ng-template [ngIf]="userIsAuthenticated && !editing && showingAnnotation && (this.role == 'teacher' ||  this.role == 'admin')">
-            <div>
-              <button class="btn btn-secondary btn-sm margin-top  rounded" id="editAnnotation" type="button" (click)='onDocEditWord()'>Edit Annotation
-                <i class="fas fa-pencil-alt margin-left"></i>
-              </button>
-            </div>
-            <button class="btn btn-danger btn-sm margin-top  rounded" type="button" (click)='onDocDelete()'>Delete Annotation
-              <i class="far fa-trash-alt margin-left"></i>
-            </button>
-          </ng-template>
-        </form>
-        <ng-template [ngIf]="userIsAuthenticated && this.role == 'student'">
-          <div class="alert alert-info annotation" role="alert">
-            {{ showingAnnotation }}
+    </div>
+  </div>
+  <div class="column right">
+    <ng-template [ngIf]="userIsAuthenticated && this.role == 'teacher' && !isLoading || this.role == 'admin' && !isLoading">
+      <div>
+        <a class="btn btn-sm rounded"  id="btnSubmit" (click)="submitTest()"> 
+          Submit Test
+          <i class="fas fa-check"></i>
+        </a>
+        <a class="btn btn-warning btn-sm rounded"  id="btnHighLight" (click)="highlightSelection()"> 
+          Selected Text
+          <i class="fas fa-highlighter"></i>
+        </a>
+        <a *ngIf="showDelete && word" class="btn btn-sm rounded"  id="btnDelete" (click)="deleteAnnotation()"> 
+          Delete annotation
+          <i class="fas fa-times"></i>
+        </a>
+
+      </div>
+    </ng-template>
+    <ng-template [ngIf]='word'>
+      <form [formGroup]='form'>
+        <div class="alert alert-warning alert-dismissible fade show rounded" id="annotation" role="alert">
+          <strong>{{ word }}</strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)='resetAlertBox(false)'>
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+    
+        <ng-template [ngIf]="userIsAuthenticated && (this.role == 'teacher' || this.role == 'admin')">
+          <div class="form-group">
+            <ng-template [ngIf]="userIsAuthenticated && !showingAnnotation">
+              <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Describe Word" rows="8" formControlName="annotation" value=""></textarea>
+            </ng-template>
           </div>
         </ng-template>
-      </ng-template>
-    </div>
-  </ng-container>
+    
+        <ng-template [ngIf]="userIsAuthenticated && form.valid && !editing && (this.role == 'teacher' ||  this.role == 'admin')">
+          <button class="btn btn-success btn-sm" id="postDocbtn" type="button" (click)='addToTest()' [disabled]="!form.valid">Add to document</button>
+        </ng-template>
+        
+      </form>
+      
+    </ng-template>
+  </div>
+ 
 </div>
 
 

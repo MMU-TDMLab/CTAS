@@ -1,3 +1,5 @@
+import { cosh } from "core-js/core/number";
+
 export class highlightManager{
     constructor(element){
         this.element = element;
@@ -41,7 +43,6 @@ export class highlightManager{
         this.obj = tempObj;
         this.document = this.obj.map(el=>el.char).join('');
         this.docUncased = this.document.toLowerCase();
-	
     }
 	
 

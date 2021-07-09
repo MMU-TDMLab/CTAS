@@ -68,6 +68,20 @@ hr{
   background-color: #75c775;
 }
 
+#btnDelete {
+  background-color: #eb8e8e;
+  cursor:pointer;
+  margin-bottom: 1em;
+  margin-top: 0.75em;
+  min-width: 11em;
+}
+#btnDelete:hover {
+  background-color: #d67878;
+}
+#btnDelete:active:hover {
+  background-color: rgb(148, 56, 56);
+}
+
 
 #btnShow {
   margin-top: 3em;

@@ -17,7 +17,7 @@ export class PreTestComponent implements OnInit, OnDestroy {
   public id: string;
   public posts: Post[] = [];
   public selectedPost: Post;
-  public hardWords = [];
+  public hardWords: string[]; // = [];
   public selectedWords = [];
   private postsSub: Subscription;
   private readTextSub: Subscription;

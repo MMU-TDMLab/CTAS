@@ -56,7 +56,7 @@ export class AnnotationComponent
   public showingAnnotation: string;
   public description: [string, string, string] = ['','',''];
   public contextTarget: string;
-  public CTpair: {'query':'','string':''}
+  public CTpair: {'query':'','string':''};
   
   public docWords = [];
   public theHardWords = [];

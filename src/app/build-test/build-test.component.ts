@@ -29,6 +29,12 @@ export class BuildTestComponent implements OnInit, OnDestroy {
   public form: FormGroup;
 
   public annotations: testEntry[] = []; 
+  public autoAnnotations: testEntry[] = [];
+  public CTpairs: {'query': string, 'string': string}[] = [];
+
+  public showDelete: Boolean = false;
+  public hardWords: string[];
+  public hardWordProgress: number = 0;
 
   public posts: Post[] = [];
   public docWord: DocWord[] = [];
@@ -49,7 +55,7 @@ export class BuildTestComponent implements OnInit, OnDestroy {
   private modifiedTime;
   private postsSub: Subscription;
   private authStatus: Subscription;
- 
+  private readTextSub: Subscription;
 
   constructor(
     public route: ActivatedRoute,
@@ -106,7 +112,7 @@ export class BuildTestComponent implements OnInit, OnDestroy {
       const high = document.getElementById('scrollable');
       if(!this.docManager)this.docManager = new highlightManager(high); //add in post //also or check if element is the same as high....
 	    new highlightWords(this.docManager, words).apply('clickable');
-
+      
       const elementsToMakeClickable = document.getElementsByClassName(
         'clickable'
       );
@@ -139,20 +145,50 @@ export class BuildTestComponent implements OnInit, OnDestroy {
       }
       this.annotations.push(entry);
     }
+    this.showDelete = true;
     this.highlightDocumentSpecificWords([this.word]);
+  }
+
+  processHardWords(){
+    let theDoc = this.docManager.docUncased;
+    let sentences = theDoc.split(/[.;!?]/); //add more comprehensive parsing
+    sentences.forEach((el:string) => {
+      if(el.trim().split(' ').length > 3){
+        let unique = Array.from(new Set(el.split(' ')));
+        unique.forEach((word:string) =>{
+          if(this.hardWords.includes(word)){
+            this.CTpairs.push({'query':el, 'string':word}); //parse brackets and other punctiation from word?
+          }
+        });
+      }
+    });
+    console.log(this.CTpairs);
   }
 
   submitTest(){
     if(confirm('Are you sure?')){
-      console.log(this.annotations);
+      if(!this.docManager)this.docManager = new highlightManager(document.getElementById('scrollable'));
+      document.getElementById('infoBox').innerHTML = 'Processing and saving test, please wait this may take a while!';
+      this.isLoading = true;
+      this.readTextSub = this.docService.readText(this.id).subscribe(data=>{
+        this.hardWords = data[1] //0:beginner 1:intermediate 2:hard //Maybe add option to set this??
+        this.processHardWords();
+      });
+      
     }
   }
 
   viewAnnotation(e) {
+    this.showDelete = true;
     const word = e.target.textContent.toLowerCase().trim();
     let entry = this.annotations.find(el =>el.word == word);   
     if(entry) this.form.patchValue({annotation:entry.annotation});
     this.word = word
+  }
+
+  deleteAnnotation() {
+    this.annotations = this.annotations.filter(entry => entry.word != this.word);
+    this.resetAlertBox(true);
   }
 
 	getCaretCharacterOffsetWithin(element) {
@@ -181,6 +217,7 @@ export class BuildTestComponent implements OnInit, OnDestroy {
 
   highlightSelection() {
     this.form.reset();
+    this.resetAlertBox(false);
     const userSelection = window.getSelection();
     if (userSelection.toString() === null || userSelection.toString().trim() == "") {
       return;
@@ -197,19 +234,24 @@ export class BuildTestComponent implements OnInit, OnDestroy {
   resetAlertBox(callNgOnInit: boolean) {
     this.word = '';
     this.form.reset();
+    this.showDelete = false;
     this.editing = false;
     if (callNgOnInit) {
       this.reInit();
     }
   }
 
-  reInit(){ // Needed??
-    console.log('Not Implemented')
+  reInit(){ 
+    if(this.docManager){
+      this.docManager.reset();
+      this.highlightDocumentSpecificWords(this.annotations.map(el=> el.word));
+    }
   }
 
   ngOnDestroy(){
     this.postsSub.unsubscribe();
     this.authStatus.unsubscribe();
+    if(this.hardWords) this.readTextSub.unsubscribe();
   }
 
 }
