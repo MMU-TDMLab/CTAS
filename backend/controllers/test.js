@@ -1,6 +1,17 @@
 const Tests = require('../models/test');
+const request = require('request');
+let progress = 0;
 
 exports.addWord = (req, res, next) => {
+    progress += 1;
+    if(req.body){
+        res.status(200).json({
+            message:'woop'+progress,
+            result: req.body.length
+        });
+        
+    }
+    /*
     const word = new Tests({
         word: req.body.word,
         annotation: req.body.annotation,
@@ -18,6 +29,7 @@ exports.addWord = (req, res, next) => {
         });
         console.log(e);
     });
+    */
 }
 
 exports.deleteWord = (req, res, next) => {

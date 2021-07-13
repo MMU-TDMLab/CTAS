@@ -6,5 +6,6 @@ router.get('', testController.findWords);
 router.post('/add-word', testController.addWord);
 router.put('/update-word:id', testController.updateWord);
 router.delete('/delete-word:id', testController.deleteWord);
+router.post('/CT-pairs', testController.addWord);
 
 module.exports = router;

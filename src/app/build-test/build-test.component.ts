@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { testEntry } from './test-edit.model';
 
+import { TestService } from './test.service';
 import { Post } from '../posts/post.model';
 import { DocWord } from '../annotation/document-word.model';
 import { PostsService } from '../posts/posts.service';
@@ -30,7 +31,7 @@ export class BuildTestComponent implements OnInit, OnDestroy {
 
   public annotations: testEntry[] = []; 
   public autoAnnotations: testEntry[] = [];
-  public CTpairs: {'query': string, 'string': string}[] = [];
+  public CTpairs: {'query': string[], 'string': string}[] = [];
 
   public showDelete: Boolean = false;
   public hardWords: string[];
@@ -56,10 +57,12 @@ export class BuildTestComponent implements OnInit, OnDestroy {
   private postsSub: Subscription;
   private authStatus: Subscription;
   private readTextSub: Subscription;
+  private testSub: Subscription;
 
   constructor(
     public route: ActivatedRoute,
     public postsService: PostsService,
+    public testService: TestService,
     private docService: DocService, //?
     private authService: AuthService
   ) {}
@@ -154,21 +157,39 @@ export class BuildTestComponent implements OnInit, OnDestroy {
     let sentences = theDoc.split(/[.;!?]/); //add more comprehensive parsing
     sentences.forEach((el:string) => {
       if(el.trim().split(' ').length > 3){
-        let unique = Array.from(new Set(el.split(' ')));
+        this.hardWords.forEach((CW:string)=>{
+          if(el.includes(CW)){ //also check CW is not a substring!!!!!
+            let item = this.CTpairs.find(pair=>pair.string==CW)
+            if(item) item.query.push(el);
+            else this.CTpairs.push({'query':[el], 'string':CW})
+           
+          }
+        });
+        /* -- this doesn't work for MWE's!
+        let unique = Array.from(new Set(el.split(' '))); 
         unique.forEach((word:string) =>{
+          console.log(this.hardWords);
           if(this.hardWords.includes(word)){
             this.CTpairs.push({'query':el, 'string':word}); //parse brackets and other punctiation from word?
           }
         });
+        */
       }
     });
     console.log(this.CTpairs);
+    this.hardWordProgress = this.hardWordProgress + 100/(this.CTpairs.length + 2);
+    
+    this.testService.postCTpairs(this.CTpairs);
+    this.testSub = this.testService.getProgressListener().subscribe((prog:number)=>{
+      console.log(prog+' WOO!!');
+    });
   }
 
   submitTest(){
     if(confirm('Are you sure?')){
       if(!this.docManager)this.docManager = new highlightManager(document.getElementById('scrollable'));
       document.getElementById('infoBox').innerHTML = 'Processing and saving test, please wait this may take a while!';
+      this.resetAlertBox(false);
       this.isLoading = true;
       this.readTextSub = this.docService.readText(this.id).subscribe(data=>{
         this.hardWords = data[1] //0:beginner 1:intermediate 2:hard //Maybe add option to set this??

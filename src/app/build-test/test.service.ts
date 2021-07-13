@@ -11,6 +11,8 @@ const BACKEND_URL_Document = environment.apiUrl + '/tests/'
 
 @Injectable({ providedIn: 'root' })
 export class TestService {
+  private progress:number = 0;
+  private progressUpdate = new Subject<number>();
 
   constructor(private http: HttpClient) { }
 
@@ -38,5 +40,32 @@ export class TestService {
         }
       );
   }
+
+  getProgressListener(){
+    return this.progressUpdate.asObservable();
+  }
+
+  postCTpairs(CTpairs: {'query': string[], 'string': string}[]){
+    this.progress = 0;
+    this.http.post(BACKEND_URL_Document + 'CT-pairs', CTpairs).subscribe(res => {
+      console.log(res);
+      this.progress += 1;
+      this.progressUpdate.next(this.progress);
+    },
+    error => {
+      console.error(error);
+    });
+    this.http.post(BACKEND_URL_Document + 'CT-pairs', CTpairs).subscribe(res => {
+      console.log(res);
+      this.progress += 1;
+      this.progressUpdate.next(this.progress);
+    },
+    error => {
+      console.error(error);
+    });
+
+  }
+
+ 
 
 }

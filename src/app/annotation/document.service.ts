@@ -89,7 +89,7 @@ export class DocService {
   }
   
   lookupDef(ct: Object){
-    return new Promise((res,rej)=>{
+    return new Promise((res,rej)=>{ //remove promise logic?
 		this.http
 		  .post(BACKEND_URL_Document + '/get-definition', ct)
 		  .subscribe(

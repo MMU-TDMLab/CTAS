@@ -216,7 +216,6 @@ async function checkIfWordsMatch(body) {
   await doc.process(CWI).catch(e=>{throw new Error(e)})
   let wordObj = {};
   for(s of doc.sentences){
-    //console.log(s.sentence)
     for(w of s.words){
       if(w.word in wordObj) wordObj[w.word].push(w.complexity) 
       else wordObj[w.word] = [w.complexity];
