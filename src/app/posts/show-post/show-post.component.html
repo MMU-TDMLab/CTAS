@@ -20,14 +20,17 @@
                     <i class="far fa-file-alt"></i>
                   </span>
                   <ng-template [ngIf]='this.role == "student"'>
-                    <span class="btn btn-dark btn-sm" id="btnPro" (click)="onPreTest(post.id)">Begin Test
+                    <span class="btn btn-dark btn-sm" id="btnPro" *ngIf='testIDs && testIDs.includes(post.id)' (click)="onPreTest(post.id)">Begin Test
                       <i class="fas fa-chalkboard-teacher"></i>
                     </span>
                   </ng-template>
 
                   <ng-template [ngIf]='this.role == "teacher" || this.role == "admin"'> <!--add authenticated-->
-                    <span class="btn btn-dark btn-sm" id="btnPro" (click)='onBuildTest(post.id)'>Add Test
+                    <span class="btn btn-dark btn-sm" id="btnPro" *ngIf="testIDs && !testIDs.includes(post.id)" (click)='onBuildTest(post.id)'>Add Test
                       <i class="fas fa-chalkboard-teacher"></i>
+                    </span>
+                    <span class="btn btn-dark btn-sm" id="btnPro" *ngIf="testIDs && testIDs.includes(post.id)" (click)='deleteTest(post.id)'>Delete Test
+                      <i class="fas fa-times"></i>
                     </span>
                   </ng-template>
 

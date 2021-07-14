@@ -20,7 +20,7 @@ import { TestService } from '../../build-test/test.service';
  */
 export class ShowPostComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
-  testIDs: string[];
+  public testIDs: string[];
   isLoading: boolean;
   userId: string;
   role: string;
@@ -45,7 +45,8 @@ export class ShowPostComponent implements OnInit, OnDestroy {
     this.theModuleName = this.route.snapshot.paramMap.get('text');
     const withoutPunct = this.theModuleName.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g, ' ');
     this.moduleNameWithoutPunc = withoutPunct;
-    this.isLoading = true;
+
+    this.isLoading = true; 
 
     this.postsService.getPosts();
     this.testService.getTestIDs();
@@ -64,6 +65,7 @@ export class ShowPostComponent implements OnInit, OnDestroy {
         });
         this.posts.reverse();
       });
+
     this.testIDsub = this.testService.getTestIDlistener().subscribe((ids:string[])=>{
       this.testIDs = Array.from(new Set(ids)); //unique ids
     });
@@ -121,13 +123,18 @@ export class ShowPostComponent implements OnInit, OnDestroy {
     }
   }
 
-  onBuildTest(postId: string){ 
+  deleteTest(postId: string){
     if(this.role == 'teacher' || this.role == 'admin'){
-      console.log(postId);
-      console.log(this.testIDs);
+      this.testService.deleteTest(postId);
+    }
+  }
+
+  onBuildTest(postId: string){ 
+    console.log(postId);
+    if(this.role == 'teacher' || this.role == 'admin'){
       if(this.testIDs.includes(postId)){
-        if(confirm('A test already exists for this posts, would you like to overwrite it?')){
-          //add delete logic
+        if(confirm('A test already exists for this posts, would you like to overwrite it?')){ //unreachable
+          this.testService.deleteTest(postId);
           this.router.navigate( ['/build-test', postId] ); 
         }
       }
@@ -150,6 +157,7 @@ export class ShowPostComponent implements OnInit, OnDestroy {
    * memory leakage.
    */
   ngOnDestroy() {
+    this.testIDsub.unsubscribe();
     this.postsSub.unsubscribe();
     this.authStatus.unsubscribe();
   }

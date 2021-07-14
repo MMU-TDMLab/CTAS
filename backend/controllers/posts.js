@@ -107,7 +107,7 @@ exports.fetchReferences = (req, res, next) =>{
 		}
 	}
 	//console.log(options.url);
-	request(options, (e, body, response)=>{
+	request(options, (e, body, response)=>{  ///change request to axios as deprecated
 		if(body){
 			res.status(200).json(JSON.parse(body.body).reference_links);
 		}

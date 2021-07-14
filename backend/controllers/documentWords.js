@@ -227,11 +227,11 @@ async function checkIfWordsMatch(body) {
     let len = value.length;
     let total = value.reduce((a,b)=>a+b,0);
     let avg = parseFloat((total/len).toFixed(2));
-    if(avg>0.29){
-      if(avg<0.4){
+    if(avg>0.25){
+      if(avg<0.35){
         let = hardWords20.push(key);
       }
-      else if(avg<0.5){
+      else if(avg<0.49){
         let = hardWords10.push(key);
         let = hardWords20.push(key);
       }

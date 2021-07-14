@@ -28,25 +28,6 @@ exports.CTpairs = (req, res, next) => {
             }
         );
     }
-    /*
-    const word = new Tests({
-        word: req.body.word,
-        annotation: req.body.annotation,
-        teacher: true,
-        document_id: req.body.document_id
-    });
-    word.save().then(result => {
-        res.status(200).json({
-            message: 'Test word saved successfully!',
-            result: result
-        });
-    }).catch(e=>{
-        res.status(500).json({
-            message: 'Test word not saved!'
-        });
-        console.log(e);
-    });
-    */
 }
 
 exports.saveTest = (req, res, next) =>{
@@ -55,6 +36,25 @@ exports.saveTest = (req, res, next) =>{
         res.status(200).json({sucess:true});
     }).catch(err=>{
         res.status(400).json({sucess:false});
+    });
+    
+}
+
+exports.deleteTest = (req, res, next) =>{
+    let id = req.params.id
+    
+    Tests.deleteMany({
+        document_id:id
+    }).then(rslt=>{
+        res.status(200).json({
+            sucess:true,
+            message:'Deleted Test'
+        });
+    }).catch(err=>{
+        res.status(500).json({
+            sucess:false,
+            message:err
+        });
     });
     
 }

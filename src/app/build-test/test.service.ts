@@ -67,7 +67,6 @@ export class TestService {
   }
 
   saveTest(doc_id:string, t_annotations:testEntry[]){
-    console.log('GOOOOOOOOOOOOO')
     function createEntries(def:Definition){
       let entry:testEntry = {
         teacher:false,
@@ -84,4 +83,13 @@ export class TestService {
     },
     (error:any) => {console.error(error)});
   }
+
+  deleteTest(doc_id:string){
+    this.http.delete(BACKEND_URL_Document + doc_id).subscribe(msg=>{
+      console.log(msg); //toRemove
+      this.testIds = this.testIds.filter((el:string)=>el!=doc_id);
+      this.testIDUpdate.next(this.testIds);
+    });
+  }
+
 }
