@@ -4,6 +4,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { testEntry } from './test-edit.model';
+import { CTpair } from './test-edit.model';
 
 import { TestService } from './test.service';
 import { Post } from '../posts/post.model';
@@ -15,6 +16,7 @@ import { highlightManager } from '../highlighter/txt2JSON';
 import { highlightWords } from '../highlighter/jsFunctionManager';
 
 declare var $: any;
+
 
 /**
  *  To-Do: Remove redundent code features i.e showingannotation among others.
@@ -31,7 +33,7 @@ export class BuildTestComponent implements OnInit, OnDestroy {
 
   public annotations: testEntry[] = []; 
   public autoAnnotations: testEntry[] = [];
-  public CTpairs: {'query': string[], 'string': string}[] = [];
+  private CTpairs: CTpair[] = [];
 
   public showDelete: Boolean = false;
   public hardWords: string[];
@@ -142,6 +144,7 @@ export class BuildTestComponent implements OnInit, OnDestroy {
     });
     if(!found){
       let entry: testEntry = {
+        teacher:true,
         word: this.word,
         annotation: this.annotation,
         document_id: this.id
@@ -159,36 +162,39 @@ export class BuildTestComponent implements OnInit, OnDestroy {
       if(el.trim().split(' ').length > 3){
         this.hardWords.forEach((CW:string)=>{
           if(el.includes(CW)){ //also check CW is not a substring!!!!!
-            let item = this.CTpairs.find(pair=>pair.string==CW)
+            let item = this.CTpairs.find(pair=>pair.string === CW)
             if(item) item.query.push(el);
             else this.CTpairs.push({'query':[el], 'string':CW})
            
           }
         });
-        /* -- this doesn't work for MWE's!
-        let unique = Array.from(new Set(el.split(' '))); 
-        unique.forEach((word:string) =>{
-          console.log(this.hardWords);
-          if(this.hardWords.includes(word)){
-            this.CTpairs.push({'query':el, 'string':word}); //parse brackets and other punctiation from word?
-          }
-        });
-        */
       }
     });
     console.log(this.CTpairs);
-    this.hardWordProgress = this.hardWordProgress + 100/(this.CTpairs.length + 2);
-    
+    this.hardWordProgress = 0;
+    document.getElementById('infoBox').innerHTML = `
+      Processing and saving test, please wait this may take a while! <br>
+      Loading Definitions...
+    `;
+
     this.testService.postCTpairs(this.CTpairs);
     this.testSub = this.testService.getProgressListener().subscribe((prog:number)=>{
-      console.log(prog+' WOO!!');
+      this.hardWordProgress = this.hardWordProgress + 100/(this.CTpairs.length)
+      if(prog === this.CTpairs.length){
+        document.getElementById('infoBox').innerHTML = `Saving Test!`;
+        this.testService.saveTest(this.id, this.annotations);
+      }
     });
   }
 
   submitTest(){
     if(confirm('Are you sure?')){
+      console.log(this.annotations)
       if(!this.docManager)this.docManager = new highlightManager(document.getElementById('scrollable'));
-      document.getElementById('infoBox').innerHTML = 'Processing and saving test, please wait this may take a while!';
+      document.getElementById('infoBox').innerHTML = `
+        Processing and saving test, please wait this may take a while! <br>
+        Loading Complex Words...
+      `;
       this.resetAlertBox(false);
       this.isLoading = true;
       this.readTextSub = this.docService.readText(this.id).subscribe(data=>{
@@ -273,6 +279,7 @@ export class BuildTestComponent implements OnInit, OnDestroy {
     this.postsSub.unsubscribe();
     this.authStatus.unsubscribe();
     if(this.hardWords) this.readTextSub.unsubscribe();
+    if(this.testSub) this.testSub.unsubscribe();
   }
 
 }

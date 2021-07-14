@@ -5,6 +5,7 @@ import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
+import { TestService } from '../../build-test/test.service';
 
 @Component({
   selector: 'app-show-post',
@@ -19,10 +20,12 @@ import { AuthService } from '../../auth/auth.service';
  */
 export class ShowPostComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
+  testIDs: string[];
   isLoading: boolean;
   userId: string;
   role: string;
   private postsSub: Subscription;
+  private testIDsub: Subscription;
   private editClicked = false;
   private annoClicked = false;
   private authStatus: Subscription;
@@ -34,7 +37,8 @@ export class ShowPostComponent implements OnInit, OnDestroy {
     public postsService: PostsService,
     private router: Router,
     private authService: AuthService,
-    public route: ActivatedRoute
+    public route: ActivatedRoute,
+    public testService: TestService
   ) {}
 
   ngOnInit() {
@@ -42,7 +46,10 @@ export class ShowPostComponent implements OnInit, OnDestroy {
     const withoutPunct = this.theModuleName.replace(/[.,\/#!$%\^&\*;:{}=\-_`'~()]/g, ' ');
     this.moduleNameWithoutPunc = withoutPunct;
     this.isLoading = true;
+
     this.postsService.getPosts();
+    this.testService.getTestIDs();
+
     this.role = this.authService.getUserRole();
     this.userId = this.authService.getUserId();
     this.postsSub = this.postsService
@@ -57,6 +64,10 @@ export class ShowPostComponent implements OnInit, OnDestroy {
         });
         this.posts.reverse();
       });
+    this.testIDsub = this.testService.getTestIDlistener().subscribe((ids:string[])=>{
+      this.testIDs = Array.from(new Set(ids)); //unique ids
+    });
+
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authStatus = this.authService
       .getAuthStatus()
@@ -111,7 +122,17 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   }
 
   onBuildTest(postId: string){ 
-    if(this.role == 'teacher' || this.role == 'admin') this.router.navigate( ['/build-test', postId] ); 
+    if(this.role == 'teacher' || this.role == 'admin'){
+      console.log(postId);
+      console.log(this.testIDs);
+      if(this.testIDs.includes(postId)){
+        if(confirm('A test already exists for this posts, would you like to overwrite it?')){
+          //add delete logic
+          this.router.navigate( ['/build-test', postId] ); 
+        }
+      }
+      else this.router.navigate( ['/build-test', postId] ); 
+    }
   }
 
   /**

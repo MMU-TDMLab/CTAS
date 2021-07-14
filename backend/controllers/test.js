@@ -1,15 +1,32 @@
 const Tests = require('../models/test');
-const request = require('request');
-let progress = 0;
+const axios = require('axios');
 
-exports.addWord = (req, res, next) => {
-    progress += 1;
-    if(req.body){
+exports.getTests = (req, res, next) => {
+    Tests.find().then(docs => {
         res.status(200).json({
-            message:'woop'+progress,
-            result: req.body.length
+            sucess:true,
+            testList: docs
         });
-        
+    }).catch(err => res.status(400).json({sucess:false, message:err}));
+}
+
+exports.CTpairs = (req, res, next) => {
+    if(req.body){
+        axios.post('http://localhost:5000/MC-DDR', {'CT':req.body})
+            .then(result =>{
+                console.log(result.data)
+                res.status(200).json({
+                    message: 'success',
+                    data: result.data
+                });
+            })
+            .catch(e =>{
+                console.error(e)
+                res.status(400).json({
+                    message: e
+                });
+            }
+        );
     }
     /*
     const word = new Tests({
@@ -32,42 +49,12 @@ exports.addWord = (req, res, next) => {
     */
 }
 
-exports.deleteWord = (req, res, next) => {
-    Tests.findByIdAndRemove({
-        _id: req.params.id
-    }).then(result => {
-        res.status(200).json({
-            message: "Test Word has been deleted successfully!",
-            result: result
-        });
-    }).catch(err => {
-        res.status(500).json({
-            message: 'Test Word was not deleted!'
-        })
+exports.saveTest = (req, res, next) =>{
+    let testList = req.body.map(el=> new Tests(el));
+    Tests.insertMany(testList).then(rslt=>{
+        res.status(200).json({sucess:true});
+    }).catch(err=>{
+        res.status(400).json({sucess:false});
     });
-}
-
-exports.updateWord = (req, res, next) => {
-    Tests.findByIdAndUpdate({ _id: req.params.id }, 
-        { $set: { annotation: req.body.annotation }}, 
-        { upsert: false}, 
-        (err) => {
-            if (err) {
-                console.log('Error Occured');
-            } 
-            else {
-                res.status(200).json({
-                    message: "Update successful!"
-                });
-            }
-        });
-}
-
-exports.findWords = (req, res, next) => {
-    Tests.find().then(documents => {
-        res.status(200).json({
-          message: 'Document Words fetched succesfully!',
-          words: documents
-        });
-    });
+    
 }

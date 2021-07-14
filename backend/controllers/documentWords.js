@@ -113,6 +113,7 @@ exports.deleteWord = (req, res, next) => {
 }
 
 exports.getDefinition = (req, res, next) => {
+  //use axios rather than request?
 	request(`http://localhost:5000/DDR?q=${encodeURI(req.body.string)}&k=${encodeURI(req.body.query)}`, (e, body, response)=>{
 		if(body){
 			res.status(200).json({
@@ -242,6 +243,8 @@ async function checkIfWordsMatch(body) {
     }
     return [key,avg];
   }));
+
+  console.log(wordObjAvg)
 
   //console.log(arrayOfArrays);
   return arrayOfArrays;

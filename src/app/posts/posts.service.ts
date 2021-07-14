@@ -76,7 +76,7 @@ export class PostsService {
   }
  
   
-  fetchReferences(url: string) {
+  fetchReferences(url: string) {  //change promise logic to be more angular!
 	return new Promise((res, rej)=>{
 		this.http
 			.post(BACKEND_URL + '/references', {'url':url})
