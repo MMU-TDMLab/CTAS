@@ -5,7 +5,8 @@ import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
-import { TestService } from '../../build-test/test.service';
+import { TestService } from '../../test/test.service';
+import { testIdEntry } from '../../test/test.model'
 
 @Component({
   selector: 'app-show-post',
@@ -21,6 +22,7 @@ import { TestService } from '../../build-test/test.service';
 export class ShowPostComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
   public testIDs: string[];
+  public noAnswerIDs: string[];
   isLoading: boolean;
   userId: string;
   role: string;
@@ -49,7 +51,7 @@ export class ShowPostComponent implements OnInit, OnDestroy {
     this.isLoading = true; 
 
     this.postsService.getPosts();
-    this.testService.getTestIDs();
+    this.testService.getTests();
 
     this.role = this.authService.getUserRole();
     this.userId = this.authService.getUserId();
@@ -66,8 +68,11 @@ export class ShowPostComponent implements OnInit, OnDestroy {
         this.posts.reverse();
       });
 
-    this.testIDsub = this.testService.getTestIDlistener().subscribe((ids:string[])=>{
-      this.testIDs = Array.from(new Set(ids)); //unique ids
+    this.testIDsub = this.testService.getTestIDlistener().subscribe((ids:testIdEntry[])=>{
+      this.noAnswerIDs = Array.from(new Set( //gets unique ids from tests entries that don't have an answer
+        ids.filter((el:testIdEntry)=>el.answered === false).map((el:testIdEntry)=>el.doc_id)
+      ));
+      this.testIDs = Array.from(new Set(ids.map((el:testIdEntry)=>el.doc_id))); //unique ids
     });
 
     this.userIsAuthenticated = this.authService.getIsAuth();
@@ -124,14 +129,14 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   }
 
   deleteTest(postId: string){
-    if(this.role == 'teacher' || this.role == 'admin'){
+    if(this.role === 'teacher' || this.role === 'admin'){
       this.testService.deleteTest(postId);
     }
   }
 
   onBuildTest(postId: string){ 
     console.log(postId);
-    if(this.role == 'teacher' || this.role == 'admin'){
+    if(this.role === 'teacher' || this.role === 'admin'){
       if(this.testIDs.includes(postId)){
         if(confirm('A test already exists for this posts, would you like to overwrite it?')){ //unreachable
           this.testService.deleteTest(postId);

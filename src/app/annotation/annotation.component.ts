@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, AfterViewChecked } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Post } from '../posts/post.model';
 import { References } from '../posts/post.model';
@@ -11,7 +11,9 @@ import { AuthService } from '../auth/auth.service';
 import { DocService } from './document.service';
 import { highlightManager } from '../highlighter/txt2JSON';
 import { highlightWords } from '../highlighter/jsFunctionManager';
+import { TestService } from '../test/test.service';
 
+import { testEntry } from '../test/test.model'
 
 declare var $: any;
 
@@ -58,6 +60,7 @@ export class AnnotationComponent
   public contextTarget: string;
   public CTpair: {'query':'','string':''};
   
+
   public docWords = [];
   public theHardWords = [];
   public wordWithAnnotation = [];
@@ -76,14 +79,19 @@ export class AnnotationComponent
   private authStatus: Subscription;
   private docSub: Subscription;
   private readTextSub: Subscription;
-  
+  private readTestSub: Subscription;
+  private testWords: testEntry[];
+
+  public isTesting:boolean = false;
 
 
   constructor(
     public postsService: PostsService,
     private authService: AuthService,
     public route: ActivatedRoute,
-    private docService: DocService
+    public testService: TestService,
+    private docService: DocService,
+    private router: Router
   ) {}
 
   /**
@@ -102,8 +110,14 @@ export class AnnotationComponent
     this.editAnnotation = '';
     this.form = this.createForm();
     this.secondForm = this.createSecondForm();
-	this.annotationForm = this.createFormAnnotation();
-	this.referenceForm = this.createFormReferences();
+    this.annotationForm = this.createFormAnnotation();
+    this.referenceForm = this.createFormReferences();
+
+    
+    if(this.route.snapshot.url.length > 2 && this.route.snapshot.url[2].path == 'test'){
+      if(this.testService.getStuTestDetails())this.isTesting = true;
+      else this.router.navigate(['/pre-test', this.id]);
+    }
 
     this.postsService.getPosts();
     this.postsSub = this.postsService
@@ -117,17 +131,30 @@ export class AnnotationComponent
         });
       });
 
-    this.docService.getWords();  //Gets previously annotated words
-    this.docSub = this.docService
-      .getWordUpdateListenerTwo()
-      .subscribe((docWord: DocWord[]) => {
-        this.docWords = docWord;
-        this.docWords.map(doc => {
-          if (doc.document_id === this.id) {
-            this.docWords.push(doc.word);
-          }
-        });
+    if(!this.isTesting){
+      this.docService.getWords();  //Gets previously annotated words
+      this.docSub = this.docService
+        .getWordUpdateListenerTwo()
+        .subscribe((docWord: DocWord[]) => {
+          this.docWords = docWord;
+          this.docWords.map(doc => {
+            if (doc.document_id === this.id) {
+              this.docWords.push(doc.word);
+            }
+          });
       });
+   }else{
+     let stuTest = this.testService.getStuTestDetails();
+     if(stuTest.testGroup != 'control'){
+      if(stuTest.testGroup == 'teacher')this.testService.getTests(false, this.id, true);
+      if(stuTest.testGroup == 'auto')this.testService.getTests(false, this.id, false);
+      this.readTestSub = this.testService.getTestsListener().subscribe((tests:testEntry[])=>{
+        this.docWords = tests.map(el=>el.word);
+        this.testWords = tests;
+        console.log(tests);
+      });
+     }
+   }
 
     this.role = this.authService.getUserRole();
     this.userIsAuthenticated = this.authService.getIsAuth();
@@ -244,6 +271,7 @@ export class AnnotationComponent
 	const userSelection = window.getSelection();
 	*/
     this.resetAlertBox(false);
+    
     const word = e.target.textContent;
     if (this.role === 'student') {
       const currentDate = new Date();
@@ -262,16 +290,26 @@ export class AnnotationComponent
   findAnnotation(e) {
     // this.setWord = e;
     this.word = e.toLowerCase();
-    this.docService.getWords();
 
-    this.docWords.map(word => {
-      if (word.word === this.word && word.document_id === this.id) {
-        this.docTrue = false;
-        this.wordId = word.document_id;
-        this.showingAnnotation = word.annotation;
-        this.theWordId = word._id;
-      }
-    });
+    if(!this.isTesting){
+      this.docService.getWords();
+      this.docWords.map(word => {
+        if (word.word === this.word && word.document_id === this.id) {
+          this.docTrue = false; //eh?
+          this.wordId = word.document_id;
+          this.showingAnnotation = word.annotation;
+          this.theWordId = word._id;
+        }
+      });
+    }else if(this.testWords){
+      this.testWords.map((wordEntry:testEntry)=>{
+        if(this.word === wordEntry.word && wordEntry.document_id === this.id){
+          this.docTrue == false;
+          this.wordId = wordEntry.document_id;
+          this.showingAnnotation = wordEntry.annotation;
+        }
+      });
+    }
   }
 
   /**
@@ -481,7 +519,7 @@ export class AnnotationComponent
 	  }
   }
   deleteRef(index: number){
-	this.references.splice(index, 1);
+  	this.references.splice(index, 1);
   }
   
   /**
@@ -530,6 +568,7 @@ export class AnnotationComponent
   resetAlertBox(callNgOnInit: boolean) {
     this.word = '';
     this.annotation = '';
+    this.showingAnnotation = '';
     this.form.reset();
     this.editing = false;
     if (callNgOnInit) {
@@ -647,10 +686,9 @@ export class AnnotationComponent
   ngOnDestroy() {
     this.postsSub.unsubscribe();
     this.authStatus.unsubscribe();
-    this.docSub.unsubscribe();
-    if (this.fileText) {
-      this.readTextSub.unsubscribe();
-    }
+    if(this.docSub) this.docSub.unsubscribe();
+    if (this.fileText) this.readTextSub.unsubscribe();
+    
     if (this.role === 'student') {
       const currentDate = new Date();
       this.date = currentDate;

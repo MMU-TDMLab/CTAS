@@ -20,8 +20,9 @@ import { PostsService } from './posts/posts.service';
 import { AuthService } from './auth/auth.service';
 import { DocService } from './annotation/document.service';
 import { AnalyticsService } from './analytics/analyitics.service';
-import { PreTestComponent } from './pre-test/pre-test.component';
-import { BuildTestComponent } from './build-test/build-test.component';
+import { PreTestComponent } from './test/pre-test/pre-test.component';
+import { BuildTestComponent } from './test/build-test/build-test.component';
+import { TestAnswersComponent } from './test/test-answers/test-answers.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { BuildTestComponent } from './build-test/build-test.component';
     AnalyticsComponent,
     PreTestComponent,
     BuildTestComponent,
+    TestAnswersComponent,
   ],
   imports: [
     BrowserModule,

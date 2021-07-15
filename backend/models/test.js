@@ -7,11 +7,15 @@ const testSchema = mongoose.Schema({
     },
     annotation: {
         type: String,
-        required: false
+        required: true
     },
     teacher: {
         type: Boolean,
         required: true
+    },
+    answer: {
+        type: String,
+        required: false
     },
     document_id: {
         type: mongoose.Schema.Types.ObjectId,

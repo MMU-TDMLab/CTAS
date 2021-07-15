@@ -16,8 +16,11 @@
         <ng-template [ngIf]="post.id === id">
           <div id="stronger">{{ post.header }}</div>
           
-          <div>
+          <div *ngIf='!isTesting'>
             {{ post.abstract }}
+          </div>
+          <div *ngIf='isTesting'>
+            Read the text and click on any highlighted text you do not understand to view its annotation. 
           </div>
           <div id="scrollable">
             {{ selectedPost }}

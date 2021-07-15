@@ -3,17 +3,17 @@ import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { testEntry } from './test-edit.model';
-import { CTpair } from './test-edit.model';
+import { testEntry } from '../test.model';
+import { CTpair } from '../test.model';
 
-import { TestService } from './test.service';
-import { Post } from '../posts/post.model';
-import { DocWord } from '../annotation/document-word.model';
-import { PostsService } from '../posts/posts.service';
-import { AuthService } from '../auth/auth.service';
-import { DocService } from '../annotation/document.service';
-import { highlightManager } from '../highlighter/txt2JSON';
-import { highlightWords } from '../highlighter/jsFunctionManager';
+import { TestService } from '../test.service';
+import { Post } from '../../posts/post.model';
+import { DocWord } from '../../annotation/document-word.model';
+import { PostsService } from '../../posts/posts.service';
+import { AuthService } from '../../auth/auth.service';
+import { DocService } from '../../annotation/document.service';
+import { highlightManager } from '../../highlighter/txt2JSON';
+import { highlightWords } from '../../highlighter/jsFunctionManager';
 
 declare var $: any;
 

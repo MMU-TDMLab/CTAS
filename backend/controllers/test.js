@@ -2,7 +2,7 @@ const Tests = require('../models/test');
 const axios = require('axios');
 
 exports.getTests = (req, res, next) => {
-    Tests.find().then(docs => {
+    Tests.find().then(docs => {  
         res.status(200).json({
             sucess:true,
             testList: docs
@@ -40,7 +40,7 @@ exports.saveTest = (req, res, next) =>{
     
 }
 
-exports.deleteTest = (req, res, next) =>{
+exports.deleteTest = (req, res, next) =>{  //need auth here!!!
     let id = req.params.id
     
     Tests.deleteMany({
@@ -57,4 +57,8 @@ exports.deleteTest = (req, res, next) =>{
         });
     });
     
+}
+
+exports.getAnswers = (req, res, next) =>{
+   
 }

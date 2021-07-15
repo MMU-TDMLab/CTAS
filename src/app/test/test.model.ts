@@ -2,16 +2,34 @@
     Used for annotations and selected complex words for the testing interface
 */
 export interface testEntry {
-    id?: string;
+    _id?: string;
     teacher: boolean,
     word: string;
+    answer?: string;
     annotation: string;
     document_id: string;
+}
+
+export interface testIdEntry {
+    doc_id:string;
+    answered:boolean;
 }
 
 export interface CTpair {'query': string[], 'string': string};
 
 export interface Definition {'text': string, 'definition':string};
+
+/**
+ *  Stores details of students test ##Look at using local storage aswell for this!
+ * @param testGroup stores which testing group the student is in 
+ * @param selectedWords stores words the student has selected in the pretest
+ * @param document_id id of test document
+ */
+export interface studentTestDetails {
+    testGroup:string;
+    selectedWords: string[];
+    document_id: string;
+}
 
 /**
  * Stores a prediction for a text in context
