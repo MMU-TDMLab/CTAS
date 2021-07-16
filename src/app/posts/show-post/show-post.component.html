@@ -20,7 +20,7 @@
                     <i class="far fa-file-alt"></i>
                   </span>
                   <ng-template [ngIf]='this.role == "student"'>
-                    <span class="btn btn-dark btn-sm" id="btnPro" *ngIf='testIDs && testIDs.includes(post.id)' (click)="onPreTest(post.id)">Begin Test
+                    <span class="btn btn-dark btn-sm" id="btnPro" *ngIf='testIDs && testIDs.includes(post.id) && !noAnswerIDs.includes(post.id)' (click)="onPreTest(post.id)">Begin Test
                       <i class="fas fa-chalkboard-teacher"></i>
                     </span>
                   </ng-template>
@@ -32,7 +32,7 @@
                     <span class="btn btn-dark btn-sm" id="btnPro" *ngIf="testIDs && testIDs.includes(post.id) && noAnswerIDs && !noAnswerIDs.includes(post.id)" (click)='deleteTest(post.id)'>Delete Test
                       <i class="fas fa-times"></i>
                     </span>
-                    <span class="btn btn-dark btn-sm" id="btnPro" *ngIf="noAnswerIDs && noAnswerIDs.includes(post.id)" >Finalize Test
+                    <span class="btn btn-dark btn-sm" id="btnPro" *ngIf="noAnswerIDs && noAnswerIDs.includes(post.id)" (click)="onFinalizeTest(post.id)">Finalize Test
                       <i class="far fa-edit"></i>
                     </span>
                   </ng-template>

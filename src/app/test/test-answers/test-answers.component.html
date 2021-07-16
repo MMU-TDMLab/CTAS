@@ -1,3 +1,20 @@
-<p>
-  test-answers works!
-</p>
+<div class="container">
+  <div class="column left"></div>
+  <div class="column center">  
+    <div id='stronger'>Description: </div><p>
+      Provide the correct definitions for the displayed items.<br>
+      Leave blank any items you wish not to be included in the text.<br>
+      For clarification on any items click the text to view examples given in context.
+    <div class='annotationBox' *ngFor='let test of testEntries'>
+      <div class='targetText'>{{ test.word }}</div>    
+      <input type="text" class="annoTextBox">
+    </div> 
+  </div>
+  <div class="column right">
+    <button type="button" id='submit' *ngIf='!isLoading' (click)='return;'>
+      Submit
+      <i class="fas fa-check" style="padding-left: 5px;"></i>
+    </button>
+
+  </div>
+</div>

@@ -1,0 +1,81 @@
+#loadingText {
+    margin: auto;
+    text-align: center;
+    font-style: italic;
+}
+
+#submit {
+    border-radius: 5px;
+    background-color: #d4e1f5;
+    border:none;
+    box-shadow: 1px 1px 3px lightgray;
+    padding: 5px 20px 5px 20px;
+    position: sticky;
+    top:1px;
+    cursor: pointer;
+    transition: 0.5s;
+    outline: none;
+}
+#submit:hover{
+    background-color: rgb(218, 247, 217) ;
+}
+#submit:focus{
+    box-shadow: inset 0px 0px 3px rgb(155, 155, 155);
+}
+
+.container {
+    padding-top: 2em;
+    padding-left: 3em;
+    display: flex;
+    max-width: 1200px;
+}
+
+.column.left {
+    flex: 0 0 230px; /* change this to something that scales based on page width */
+}
+
+.column.center {
+    flex: 0 0 450px;
+    max-width: 450px;
+}
+
+.column.right {
+    position: sticky;
+    left: 55em;
+    max-width: 200px;
+}
+
+#stronger {
+    color:black;
+    text-shadow: 1px 1px 1px lightgrey;
+    font-size: large;
+   
+    font-family:  Helvetica, Arial, sans-serif;	
+}
+.targetText {
+    text-transform: capitalize;
+    word-wrap: break-word;
+    max-width: 40%;
+    padding:5px;
+    border-radius: 5px;
+    user-select: none;
+}
+.targetText:hover {
+    transition: 0.3s;
+    background-color: aliceblue;
+    cursor: pointer;
+}
+.targetText:active {
+    background-color: grey;
+}
+.annotationBox {    
+    margin: 0px 0px 10px 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.annoTextBox {
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    width: 60%;
+}

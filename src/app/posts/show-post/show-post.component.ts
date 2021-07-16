@@ -128,14 +128,13 @@ export class ShowPostComponent implements OnInit, OnDestroy {
     }
   }
 
-  deleteTest(postId: string){
+  deleteTest(postId: string){ //Add Auth
     if(this.role === 'teacher' || this.role === 'admin'){
       this.testService.deleteTest(postId);
     }
   }
 
-  onBuildTest(postId: string){ 
-    console.log(postId);
+  onBuildTest(postId: string){  //Add Auth
     if(this.role === 'teacher' || this.role === 'admin'){
       if(this.testIDs.includes(postId)){
         if(confirm('A test already exists for this posts, would you like to overwrite it?')){ //unreachable
@@ -146,6 +145,14 @@ export class ShowPostComponent implements OnInit, OnDestroy {
       else this.router.navigate( ['/build-test', postId] ); 
     }
   }
+  onFinalizeTest(postId: string){
+    if(this.role === "teacher" || this.role === 'admin'){
+      if(this.noAnswerIDs.includes(postId)){
+        this.router.navigate( ['add-answers', postId] );
+      }
+    }
+  }
+
 
   /**
    * When onDelete method will delete the Post ID you have passed through by clicking the
