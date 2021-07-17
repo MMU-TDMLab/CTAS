@@ -6,15 +6,41 @@
       Leave blank any items you wish not to be included in the text.<br>
       For clarification on any items click the text to view examples given in context.
     <div class='annotationBox' *ngFor='let test of testEntries'>
-      <div class='targetText'>{{ test.word }}</div>    
-      <input type="text" class="annoTextBox">
+      <div class='targetText' id='word-{{test._id}}' (click)="openModalBox(test.word)">{{ test.word}}</div>    
+      <input type="text" id="input-{{test._id}}" class="annoTextBox">
     </div> 
   </div>
   <div class="column right">
-    <button type="button" id='submit' *ngIf='!isLoading' (click)='return;'>
+    <button type="button" id='submit' *ngIf='!isLoading' (click)='onSubmit()'>
       Submit
       <i class="fas fa-check" style="padding-left: 5px;"></i>
     </button>
 
+  </div>
+</div>
+
+<div class="modal fade" id="contextModal" tabindex="-1" role="dialog" aria-labelledby="contextModalLabel" aria-hidden="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="contextModalLabel">Retrieved Contexts for: {{ focusWord }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <ng-template [ngIf]="contextSentences && contextSentences.length > 0">
+        <div id="sentenceBox">
+          <div [innerHTML]="contextSentences[focusNumber]" id="cSentence"></div>
+          <div id='sentenceSelector'>
+            <div role='button' id='backSelect' class='arrowBtn' (click)="switchSentence(-1)"><i class="fas fa-angle-left"></i></div>
+            {{ (focusNumber + 1) }}/{{ contextSentences.length }}
+            <div role='button' id='forwardSelect' class='arrowBtn' (click)="switchSentence(1)"><i class="fas fa-angle-right"></i></div>
+          </div>
+        </div>
+      </ng-template>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button>    
+      </div>
+    </div>
   </div>
 </div>

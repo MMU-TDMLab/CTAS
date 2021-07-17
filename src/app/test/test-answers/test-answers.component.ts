@@ -5,7 +5,9 @@ import { testEntry } from '../test.model';
 import { PostsService } from 'src/app/posts/posts.service';
 import { Subscription } from 'rxjs';
 import { Post } from 'src/app/posts/post.model';
-import { post } from 'jquery';
+
+declare var $: any;
+
 
 @Component({
   selector: 'app-test-answers',
@@ -17,6 +19,10 @@ export class TestAnswersComponent implements OnInit, OnDestroy {
   public testEntries: testEntry[];
   public posts: Post[];
   public selectedPost: string;
+  public sentences: string[];
+  public focusWord: string = '';
+  public contextSentences: string[];
+  public focusNumber: number = 0;
 
   private postSub: Subscription;
   private readTestsSub: Subscription;
@@ -38,7 +44,41 @@ export class TestAnswersComponent implements OnInit, OnDestroy {
     this.postSub = this.postService.getPostUpdateListenerTwo().subscribe((posts:Post[])=>{
       this.posts = posts;
       this.selectedPost = this.posts.find((el:Post)=>el.id===this.id).body;
+      this.sentences = this.selectedPost.split(/[.;!?]/); //add more comprehensive parsing
     });
+  }
+
+  switchSentence(num:number){
+    if(this.contextSentences && ( num === -1 || num === 1 )){
+      if(this.focusNumber + num === this.contextSentences.length) this.focusNumber = 0;
+      else if(this.focusNumber + num === -1) this.focusNumber = this.contextSentences.length - 1;
+      else this.focusNumber += num;
+    }
+  }
+
+  openModalBox(text:string){
+    function escapeRegExp(string:string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+    }
+    this.focusNumber = 0;
+    this.focusWord = text;
+    this.contextSentences = this.sentences.filter((el:string)=>{
+      return el.toLocaleLowerCase().includes(this.focusWord);
+    }).map((el:string)=>{
+      let re = new RegExp(escapeRegExp(this.focusWord), 'ig')
+      return "<q>"+el.replace(re, `<b>${this.focusWord}</b>`).trim()+"</q>"; //sanitise ?
+    });
+  
+	  $("#contextModal").modal('show');
+  }
+
+  onSubmit(){
+    if(confirm('Are you sure?')){
+      this.testEntries.map((el:testEntry)=>{
+        let answerInput =  $(`#input-${el._id}`); //not very angular but oh well
+        if(answerInput) el.answer = answerInput.val();
+      });
+    }
   }
 
   ngOnDestroy(){
