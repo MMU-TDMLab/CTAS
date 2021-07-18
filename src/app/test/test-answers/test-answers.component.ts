@@ -37,7 +37,8 @@ export class TestAnswersComponent implements OnInit, OnDestroy {
     this.id = this.route.snapshot.paramMap.get('postId');
     this.testService.getTests(false, this.id);
     this.readTestsSub = this.testService.getTestsListener().subscribe((tests:testEntry[])=>{
-      this.testEntries = tests;
+      this.testEntries = tests //.map((el:testEntry)=>{el.word = el.word.replace(/[)(}{}]/g, ''); return el});
+      console.log(tests); ///////////////////get Unique
       //console.log(tests);
     });
     this.postService.getPosts();
@@ -63,6 +64,10 @@ export class TestAnswersComponent implements OnInit, OnDestroy {
     this.focusNumber = 0;
     this.focusWord = text;
     this.contextSentences = this.sentences.filter((el:string)=>{
+      /*  This is better 
+      let re = new RegExp('\\b'+escapeRegExp(this.focusWord)+'\\b', 'ig')
+      return re.test(el);
+      */
       return el.toLocaleLowerCase().includes(this.focusWord);
     }).map((el:string)=>{
       let re = new RegExp(escapeRegExp(this.focusWord), 'ig')
@@ -74,9 +79,17 @@ export class TestAnswersComponent implements OnInit, OnDestroy {
 
   onSubmit(){
     if(confirm('Are you sure?')){
-      this.testEntries.map((el:testEntry)=>{
-        let answerInput =  $(`#input-${el._id}`); //not very angular but oh well
-        if(answerInput) el.answer = answerInput.val();
+      this.testEntries.map((el:testEntry)=>{  /////////////////duplicate teacher auto issue CORRECT
+                                                ////////////// solution => map answers to words then map and use object to lookup answers forEach word, Also remove none unique text from user form 
+        let answerInput =  $(`#input-${el._id}`); 
+        if(answerInput) el.answer = answerInput.val().trim();
+      });
+      this.testService.saveAnswers(this.testEntries).then(rslt=>{
+        console.log(rslt);
+        this.router.navigate(['module', 'First Year Seminar']);
+      }).catch(error=>{
+        console.error(error);
+        alert('Failed to save answers...')
       });
     }
   }

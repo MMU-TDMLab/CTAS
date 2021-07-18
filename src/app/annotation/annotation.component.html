@@ -7,7 +7,12 @@
           Add References
           <i class="fas fa-search"></i>
         </button>
-      
+      </ng-template>
+      <ng-template [ngIf]='isTesting'>
+        <button type="button" id='continueTest' (click)='continueTest()'>
+          Continue
+          <i class="fas fa-check" style="padding-left: 5px;"></i>
+        </button>
       </ng-template>
     </div>
     <div id='mcontent' class="column center">

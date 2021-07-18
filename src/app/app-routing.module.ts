@@ -9,6 +9,7 @@ import { AnalyticsComponent } from './analytics/analytics.component';
 import { PreTestComponent } from './test/pre-test/pre-test.component';
 import { BuildTestComponent } from './test/build-test/build-test.component';
 import { TestAnswersComponent } from './test/test-answers/test-answers.component'
+import { PostTestComponent } from './test/post-test/post-test.component';
 /**
  * This takes care of the routes. The 'canActivate: [AuthGuard]' checks if the
  * user is authenticated before accessing that route.
@@ -23,12 +24,10 @@ const appRoutes: Routes = [
   { path: 'annotation/:postId', component: AnnotationComponent, canActivate: [AuthGuard] },
   { path: 'annotation/:postId/test', component: AnnotationComponent, canActivate: [AuthGuard] },
   { path: 'auth', loadChildren: './auth/auth.module#AuthModule'},
-  { path: 'pre-test', component: PreTestComponent}, //AuthGuard?
   { path: 'pre-test/:postId', component: PreTestComponent},
-  { path: 'build-test', component: BuildTestComponent, canActivate: [AuthGuard]},
   { path: 'build-test/:postId', component: BuildTestComponent, canActivate: [AuthGuard] },
-  { path: 'add-answers', component: TestAnswersComponent, canActivate: [AuthGuard]}, //AuthGuard?
-  { path: 'add-answers/:postId', component: TestAnswersComponent, canActivate: [AuthGuard] }
+  { path: 'add-answers/:postId', component: TestAnswersComponent, canActivate: [AuthGuard] },
+  { path: 'post-test/:postId', component: PostTestComponent, canActivate: [AuthGuard]}
   // { path: 'module', component: ModuleComponent, canActivate: [AuthGuard]  },
   // { path: 'edit/:postId', component: ModuleComponent, canActivate: [AuthGuard] },›
 ];

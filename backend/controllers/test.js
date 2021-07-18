@@ -1,5 +1,7 @@
 const Tests = require('../models/test');
 const axios = require('axios');
+const { updateOne } = require('../models/test');
+const { filter } = require('rxjs-compat/operator/filter');
 
 exports.getTests = (req, res, next) => {
     Tests.find().then(docs => {  
@@ -59,6 +61,36 @@ exports.deleteTest = (req, res, next) =>{  //need auth here!!!
     
 }
 
-exports.getAnswers = (req, res, next) =>{
+exports.saveAnswers = (req, res, next) =>{  //need auth
+    let testList = req.body.map(el=>new Tests(el));
+    let doc_id;
+    if(testList) doc_id = testList[0].document_id;
+    Tests.bulkWrite(testList.map(testEntry=>({
+        updateOne: {
+            filter: {_id: testEntry._id},
+            update: {'$set':{answer: testEntry.answer}},
+            upsert: true,
+        }
+    }))).then(rslt=>{
+        Tests.deleteMany({
+            document_id:doc_id,
+            answer:''
+        }).then(result=>{
+            res.status(200).json({
+                sucess:true,
+                message:'Updated Answers'
+            });
+        }).catch(error=>{
+            res.status(500).json({
+                sucess:false,
+                message:error
+            })
+        });
+    }).catch(error=>{
+        res.status(500).json({
+            sucess:false,
+            message:error
+        })
+    });
    
 }

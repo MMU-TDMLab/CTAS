@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, AfterViewChecked } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { testEntry } from '../test.model';
 import { CTpair } from '../test.model';
@@ -66,7 +66,8 @@ export class BuildTestComponent implements OnInit, OnDestroy {
     public postsService: PostsService,
     public testService: TestService,
     private docService: DocService, //?
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -164,8 +165,7 @@ export class BuildTestComponent implements OnInit, OnDestroy {
           if(el.includes(CW)){ //also check CW is not a substring!!!!!
             let item = this.CTpairs.find(pair=>pair.string === CW)
             if(item) item.query.push(el);
-            else this.CTpairs.push({'query':[el], 'string':CW})
-           
+            else this.CTpairs.push({'query':[el], 'string':CW});
           }
         });
       }
@@ -182,7 +182,13 @@ export class BuildTestComponent implements OnInit, OnDestroy {
       this.hardWordProgress = this.hardWordProgress + 100/(this.CTpairs.length)
       if(prog === this.CTpairs.length){
         document.getElementById('infoBox').innerHTML = `Saving Test!`;
-        this.testService.saveTest(this.id, this.annotations);
+        this.testService.saveTest(this.id, this.annotations).then(rslt=>{
+          console.log(rslt);
+          this.router.navigate(['add-answers', this.id]);
+        }).catch(error=>{
+          alert('Unable to save test...');
+          console.error(error);
+        });
       }
     });
   }

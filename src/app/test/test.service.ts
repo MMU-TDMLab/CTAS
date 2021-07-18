@@ -141,10 +141,8 @@ export class TestService {
     }
     let annotations:testEntry[] = this.definitions.map(el=>createEntries(el))
     annotations.push(...t_annotations);
-    this.http.post(BACKEND_URL_Document + '/save-test', annotations).subscribe((res:any) => {
-      console.log(res)
-    },
-    (error:any) => {console.error(error)});
+    
+    return this.http.post(BACKEND_URL_Document + '/save-test', annotations).toPromise();
   }
 
   deleteTest(doc_id:string){
@@ -155,4 +153,7 @@ export class TestService {
     });
   }
 
+  saveAnswers(entries:testEntry[]){ //add auth
+    return this.http.post(BACKEND_URL_Document + '/save-answers', entries).toPromise();
+  }
 }

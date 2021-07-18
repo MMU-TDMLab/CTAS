@@ -116,7 +116,7 @@ export class AnnotationComponent
     
     if(this.route.snapshot.url.length > 2 && this.route.snapshot.url[2].path == 'test'){
       if(this.testService.getStuTestDetails())this.isTesting = true;
-      else this.router.navigate(['/pre-test', this.id]);
+      else this.router.navigate(['/post-test', this.id]);
     }
 
     this.postsService.getPosts();
@@ -166,6 +166,12 @@ export class AnnotationComponent
       });
     this.isLoading = false;
 	
+  }
+
+  continueTest(){
+    if(this.isTesting==true && this.role === 'student'){
+      this.router.navigate(['/post-test', this.id]);
+    }
   }
   
 

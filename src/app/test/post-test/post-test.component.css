@@ -1,0 +1,29 @@
+.container {
+    padding-top: 2em;
+    padding-left: 3em;
+    display: flex;
+    max-width: 1200px;
+}
+
+.column.left {
+    flex: 0 0 230px; /* change this to something that scales based on page width */
+}
+
+.column.center {
+    flex: 0 0 450px;
+    max-width: 450px;
+}
+
+.column.right {
+    position: sticky;
+    left: 55em;
+    max-width: 200px;
+}
+
+#stronger {
+    color:black;
+    text-shadow: 1px 1px 1px lightgrey;
+    font-size: large;
+   
+    font-family:  Helvetica, Arial, sans-serif;	
+}

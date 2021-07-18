@@ -320,3 +320,21 @@ textarea:focus {
   background: #555; 
 }
 
+#continueTest {
+    border-radius: 5px;
+    background-color: #d4e1f5;
+    border:none;
+    box-shadow: 1px 1px 3px lightgray;
+    padding: 5px 20px 5px 20px;
+    position: sticky;
+    top:1px;
+    cursor: pointer;
+    transition: 0.5s;
+    outline: none;
+}
+#continueTest:hover{
+    background-color: rgb(218, 247, 217) ;
+}
+#continueTest:focus{
+    box-shadow: inset 0px 0px 3px rgb(155, 155, 155);
+}

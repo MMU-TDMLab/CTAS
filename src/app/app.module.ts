@@ -23,6 +23,7 @@ import { AnalyticsService } from './analytics/analyitics.service';
 import { PreTestComponent } from './test/pre-test/pre-test.component';
 import { BuildTestComponent } from './test/build-test/build-test.component';
 import { TestAnswersComponent } from './test/test-answers/test-answers.component';
+import { PostTestComponent } from './test/post-test/post-test.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { TestAnswersComponent } from './test/test-answers/test-answers.component
     PreTestComponent,
     BuildTestComponent,
     TestAnswersComponent,
+    PostTestComponent,
   ],
   imports: [
     BrowserModule,
