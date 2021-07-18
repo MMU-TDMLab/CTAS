@@ -94,3 +94,10 @@ exports.saveAnswers = (req, res, next) =>{  //need auth
     });
    
 }
+
+exports.stuTest = (req, res, next) =>{
+    console.log(req.body);
+    res.status(500).json({
+        sucess:false
+    });
+}

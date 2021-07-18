@@ -61,6 +61,7 @@ export class TestAnswersComponent implements OnInit, OnDestroy {
     function escapeRegExp(string:string) {
       return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
     }
+    
     this.focusNumber = 0;
     this.focusWord = text;
     this.contextSentences = this.sentences.filter((el:string)=>{
@@ -100,3 +101,4 @@ export class TestAnswersComponent implements OnInit, OnDestroy {
   }
 
 }
+

@@ -1,11 +1,49 @@
 <div class="container">
   <div class="column left"></div>
   <div class="column center">  
-    <div id='stronger'>Test Description: </div><p>
-      Match the text to definitions, click on the words or phrases for examples given in context. 
+    <div id='topText'>
+      <span id='stronger'>Test Description: </span><p>
+      Match the text to the definitions below, click on the words or phrases for examples given in context.</p>
       <mat-progress-bar mode="indeterminate" *ngIf='isLoading'></mat-progress-bar>
-   
-    
+    </div>
+    <ng-template [ngIf]='isFinished'>
+      <div role='button' class='bigButton submit' (click)="submitTest()">Submit</div>
+    </ng-template>
+    <ng-template [ngIf]="!isLoading && words && !isFinished">
+      <div role='button' class='bigButton' (click)="openModalBox(words[currentWord])">{{words[currentWord]}}</div>
+      <span style="text-align: center; display: block;">Question: {{currentWord+1}}/{{words.length}}</span>
+      <div id='answerArea'>
+        <div role='button' class='answer' *ngFor='let definition of answers' (click)="answerSelect(definition)">
+          <q><i>{{definition}}</i></q>
+        </div>
+      </div>
+    </ng-template>
   </div>
   <div class="column right"></div>
+</div>
+
+<div class="modal fade" id="contextModal" tabindex="-1" role="dialog" aria-labelledby="contextModalLabel" aria-hidden="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="contextModalLabel">Retrieved Contexts for: {{ focusWord }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <ng-template [ngIf]="contextSentences && contextSentences.length > 0">
+        <div id="sentenceBox">
+          <div [innerHTML]="contextSentences[focusNumber]" id="cSentence"></div>
+          <div id='sentenceSelector'>
+            <div role='button' id='backSelect' class='arrowBtn' (click)="switchSentence(-1)"><i class="fas fa-angle-left"></i></div>
+            {{ (focusNumber + 1) }}/{{ contextSentences.length }}
+            <div role='button' id='forwardSelect' class='arrowBtn' (click)="switchSentence(1)"><i class="fas fa-angle-right"></i></div>
+          </div>
+        </div>
+      </ng-template>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button>    
+      </div>
+    </div>
+  </div>
 </div>

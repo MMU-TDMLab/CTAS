@@ -19,6 +19,13 @@ export interface CTpair {'query': string[], 'string': string};
 
 export interface Definition {'text': string, 'definition':string};
 
+
+export interface Answer {
+    word:string;
+    selection:string;
+    isCorrect:boolean;
+    correctAnswer:string;
+}
 /**
  *  Stores details of students test ##Look at using local storage aswell for this!
  * @param testGroup stores which testing group the student is in 
@@ -28,6 +35,7 @@ export interface Definition {'text': string, 'definition':string};
 export interface studentTestDetails {
     testGroup:string;
     selectedWords: string[];
+    answers?: Answer[];
     document_id: string;
 }
 

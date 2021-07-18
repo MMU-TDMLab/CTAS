@@ -8,7 +8,7 @@ import { testEntry, testIdEntry } from './test.model';
 import { CTpair } from './test.model';
 import { Definition } from './test.model';
 import { Prediction } from './test.model';
-import { studentTestDetails } from './test.model';
+import { studentTestDetails, Answer } from './test.model';
 import { environment } from '../../environments/environment';
 
 
@@ -60,6 +60,10 @@ export class TestService {
     return true;
   }
 
+  addStuAnswers(answers:Answer[]){
+    this.stuTestDetails.answers = answers;
+    return this.http.post(BACKEND_URL_Document + '/stu-test', this.stuTestDetails).toPromise();
+  }
   getStuTestDetails(){
     return this.stuTestDetails;
   }
@@ -117,7 +121,7 @@ export class TestService {
         'definition':res.data.Prediction
       })
       if(this.CTs.length != 0) this.fetchDefinitions(progress);
-      else console.log('COMPLETE!')
+      else console.log('COMPLETE!');
     },
     (error:any) => {console.error(error)});
   }
