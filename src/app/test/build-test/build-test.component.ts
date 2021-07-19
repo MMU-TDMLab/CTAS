@@ -194,20 +194,22 @@ export class BuildTestComponent implements OnInit, OnDestroy {
   }
 
   submitTest(){
-    if(confirm('Are you sure?')){
-      console.log(this.annotations)
-      if(!this.docManager)this.docManager = new highlightManager(document.getElementById('scrollable'));
-      document.getElementById('infoBox').innerHTML = `
-        Processing and saving test, please wait this may take a while! <br>
-        Loading Complex Words...
-      `;
-      this.resetAlertBox(false);
-      this.isLoading = true;
-      this.readTextSub = this.docService.readText(this.id).subscribe(data=>{
-        this.hardWords = data[1] //0:beginner 1:intermediate 2:hard //Maybe add option to set this??
-        this.processHardWords();
-      });
-      
+    if(this.role === 'teacher' || this.role === 'admin'){
+      if(confirm('Are you sure?')){
+        console.log(this.annotations)
+        if(!this.docManager)this.docManager = new highlightManager(document.getElementById('scrollable'));
+        document.getElementById('infoBox').innerHTML = `
+          Processing and saving test, please wait this may take a while! <br>
+          Loading Complex Words...
+        `;
+        this.resetAlertBox(false);
+        this.isLoading = true;
+        this.readTextSub = this.docService.readText(this.id).subscribe(data=>{
+          this.hardWords = data[1] //0:beginner 1:intermediate 2:hard //Maybe add option to set this??
+          this.processHardWords();
+        });
+        
+      }
     }
   }
 

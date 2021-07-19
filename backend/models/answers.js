@@ -1,26 +1,30 @@
 const mongoose = require('mongoose');
 
 const answer = mongoose.Schema({
-    word = {
+    word: {
         type:String,
         require:true
     },
-    selection = {
+    selection: {
         type:String,
         require:true
     },
-    isCorrect = {
+    isCorrect: {
         type:Boolean,
         require:true
     },
-    correctAnswer = {
+    correctAnswer: {
         type:String,
         require:true
     }
 });
 
 const answerSchema = mongoose.Schema({
-    selected_words = {
+    user_id : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'User'
+    },
+    selected_words: {
         type: Array,
         require:true
     },

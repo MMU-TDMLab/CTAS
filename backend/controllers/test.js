@@ -1,7 +1,6 @@
 const Tests = require('../models/test');
 const axios = require('axios');
-const { updateOne } = require('../models/test');
-const { filter } = require('rxjs-compat/operator/filter');
+const Answers = require('../models/answers');
 
 exports.getTests = (req, res, next) => {
     Tests.find().then(docs => {  
@@ -96,8 +95,23 @@ exports.saveAnswers = (req, res, next) =>{  //need auth
 }
 
 exports.stuTest = (req, res, next) =>{
-    console.log(req.body);
-    res.status(500).json({
-        sucess:false
+    let stuAnswers = new Answers({
+       user_id: req.userData.userId,
+       selected_words: req.body.selectedWords,
+       document_id: req.body.document_id,
+       test_group: req.body.testGroup,     ///should check this
+       answers: req.body.answers
     });
+    Answers.create(stuAnswers).then(rslt=>{
+        res.status(200).json({
+            sucess:true,
+            message:rslt
+        });
+    }).catch(error=>{
+        res.status(500).json({
+            sucess:false,
+            message:error
+        });
+    });
+
 }

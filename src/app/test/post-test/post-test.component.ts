@@ -47,6 +47,7 @@ export class PostTestComponent implements OnInit, OnDestroy {
   public currentWord:number=0;
   public answerEntries: Answer[] = [];
   public isFinished:boolean = false;
+  public shuffleDefs:boolean = false;
 
   private readTestSub:Subscription;
   private readPostSub:Subscription;
@@ -127,11 +128,13 @@ export class PostTestComponent implements OnInit, OnDestroy {
   answerSelect(definition:string){
     if(!this.isFinished){
       this.addSelection(definition);
-      let randomSequence = shuffle(Array.from(Array(this.answers.length).keys()));
-      let answersCopy = Array.from(this.answers);
-      shuffle(Array.from(Array(this.answers.length).keys())).forEach((i:number)=>{
-        this.answers[i] = answersCopy[randomSequence[i]]; 
-      });
+      if(this.shuffleDefs){
+        let randomSequence = shuffle(Array.from(Array(this.answers.length).keys()));
+        let answersCopy = Array.from(this.answers);
+        shuffle(Array.from(Array(this.answers.length).keys())).forEach((i:number)=>{
+          this.answers[i] = answersCopy[randomSequence[i]]; 
+        });
+      }
     }
   }
 
