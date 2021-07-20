@@ -5,6 +5,7 @@ const authCheck = require('../middleware/check-auth');
 
 router.post('/save-test', testController.saveTest);
 router.post('/CT-pairs', testController.CTpairs);
+router.post('/CT-pairs2', authCheck, testController.CTpairs2);
 router.get('/', testController.getTests);
 router.post('/save-answers', testController.saveAnswers) //maybe not needed
 router.delete('/:id', testController.deleteTest);

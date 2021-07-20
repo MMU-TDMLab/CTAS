@@ -23,12 +23,65 @@ exports.CTpairs = (req, res, next) => {
             })
             .catch(e =>{
                 console.error(e)
-                res.status(400).json({
+                res.status(500).json({
+                    success: false,
                     message: e
                 });
             }
         );
-    }
+    }else res.status(400).json({success:false,message:'Bad Request'});
+}
+/**
+ * recursive loop to build array of batches as each word can have more than one context
+ * @param {*} maxBatch maximun batch size (unless number of contexts for a given word > 20)
+ * @param {*} batches 2D array of Batches [[CT0],[CT1]...[CT19]]
+ * @param {*} CTs 1D array of CT pairs
+ */
+function buildCTRequest(maxBatch, batches, CTs, callback){ 
+    if(CTs.length){
+        let total = 0;
+        let batch = [];
+        while(total < maxBatch){
+            if(CTs.length){
+                sLen = CTs[0].query.length;
+                total += sLen
+                for(let i=0;i<sLen;i++){
+                    batch.push({query:CTs[0].query[i], string:CTs[0].string, goTo:sLen-i});
+                }
+                CTs.shift();
+            }else total = maxBatch;
+        }
+        batches.push(batch);
+        buildCTRequest(maxBatch, batches, CTs, callback);
+    
+    }else callback(batches);
+
+}
+
+exports.CTpairs2 = (req, res, next) => {
+    if(req.body && req.body.CT){
+        const maxBatch = 15;
+        let batches = [];
+        buildCTRequest(maxBatch, batches, req.body.CT, batchList=>{
+            axios.post('http://localhost:5000/DDR-BATCH', {'batches':batchList}).then(rslt=>{
+                definitions = rslt.data.predictions.map((el, i)=>{
+                    return {
+                        text:rslt.data.batchLists[i],
+                        definition:el
+                    }
+                });
+                res.status(200).json({
+                    success:true,
+                    definitions:definitions
+                });
+            }).catch(error=>{
+                res.status(500).json({
+                    success:false,
+                    message:error
+                });
+            })
+        });
+    }else res.status(400).json({success:false,message:'Bad Request'});
 }
 
 exports.saveTest = (req, res, next) =>{

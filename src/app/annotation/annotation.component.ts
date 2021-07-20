@@ -363,12 +363,10 @@ export class AnnotationComponent
       } 
     else {
       this.showingAnnotation = '';
-      console.log(userSelection.toString())
       let startOffset = this.getCaretCharacterOffsetWithin(this.docManager.element) - userSelection.toString().length; 
-      
+      console.log(this.docManager.element);
       this.CTpair = this.docManager.getItemIndex(startOffset,userSelection.toString())
       this.contextTarget = `<q>${this.CTpair.string.replace(this.CTpair.query.trim(), `<u><b>${this.CTpair.query.trim()}</b></u>`).trim()}</q>`; //Need to sanitize this in HTML maybe?
-      console.log(this.CTpair);
       
       this.docService.lookupDef(this.CTpair).then((rslt: [string, string, string])=>{
         console.log(rslt);

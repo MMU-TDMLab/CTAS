@@ -15,6 +15,13 @@
   font-family:  Helvetica, Arial, sans-serif;	
 }
 
+#modeSelect {
+  padding:4px;
+  border-radius: 8px;
+  border:none;
+  box-shadow: 0px 0px 3px;
+}
+
 /*
 hr{
     border:1px solid lightgrey;
@@ -209,3 +216,51 @@ mat-spinner {
   background: #555; 
 }
 
+/*Assist Modal*/
+
+.textCenter {
+  text-align: center;
+}
+.textLeft {
+  text-align: left;
+  width:max-width;
+}
+.defs {
+	user-select:none;
+	cursor:pointer;
+	border: 1px solid white;
+	border-radius:3px;
+	padding:0.5em;
+	width: 100%;
+	transition:0.2s;
+	background-color:white;
+	text-align:left;
+	
+}
+.defs:hover {
+	border: 1px solid lightgrey;
+	background-color:#f8f8ff;
+	box-shadow: inset 2px 3px lightgrey;
+}
+.flex-modal {
+	display:flex;
+	flex-direction:column;
+}
+#annotationBox {
+	width:100%;
+	border: 1px solid lightgrey;
+	border-radius: 3px;
+}
+textarea:focus { 
+    outline: none !important;
+    border-color: #719ECE;
+    box-shadow: 0 0 2px #719ECE;
+}
+
+.annotation{
+	background-color:white;
+	box-shadow: inset 1px 2px lightgrey;
+	color:black;
+	max-height:185px; 
+	overflow-y:auto;
+}

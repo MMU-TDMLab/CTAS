@@ -1,6 +1,10 @@
 <div class="container">
   <div class="column left">
-  
+    <label for="modeSelect" style="font-weight: 500;"><u>Mode</u></label><br>
+    <select id='modeSelect' (change)='changeMode($event.target.value)'>
+      <option value='teacher'>Teacher</option>
+      <option value='assist'>Assist</option>
+    </select>
   </div>
   <div id='mcontent' class="column center">
     <!-- Get post by ID Request on backend -->
@@ -9,10 +13,9 @@
         <div id="stronger">{{ post.header }}</div>
         <div id='infoBox'>Highlight and annotate any words or phrases that may be difficult to understand for the average reader</div>
         <div *ngIf='isLoading' id="scrollable">
-          <mat-progress-bar mode="indeterminate" *ngIf='isLoading && !hardWords'></mat-progress-bar>
-          <mat-progress-bar mode="determinate" [value]='hardWordProgress' *ngIf='isLoading && hardWords'></mat-progress-bar>
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
         </div>
-        <div *ngIf='!isLoading' id="scrollable">
+        <div  id="scrollable">
           {{ selectedPost }}
         </div>
       </ng-template>
@@ -64,7 +67,47 @@
 </div>
 
 
+<div class="modal fade" id="annotationModal" tabindex="-1" role="dialog" aria-labelledby="annotationModalLabel" aria-hidden="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="annotationModalLabel">Add Annotation</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form [formGroup]='annotationForm'>
+        <div class="modal-body textLeft flex-modal">
+		  
+          <h6 class="card-subtitle mb-2 text-muted textCenter">Retrieved Definitions</h6>
+          <div class="form-check form-check-inline">
 
+            <label class="form-check-label defs" (click)='setAnnotationInput(description[0])'>1. {{ description[0] }}</label>
+          </div>
+		  
+          <div class="form-check form-check-inline">
+            <label class="form-check-label defs" (click)='setAnnotationInput(description[1])'>2. {{ description[1] }}</label>
+          </div>
+		  
+          <div class="form-check form-check-inline difScale">
+            <label class="form-check-label defs" (click)='setAnnotationInput(description[2])'>3. {{ description[2] }}</label>
+          </div>
+		  <div>
+			<textarea form='annotationForm' id='annotationBox' placeholder="Enter an annotation, or select a definition." formControlName="annotationInput" ></textarea>
+		  </div>
+		  <div [innerHTML]="contextTarget"></div> 
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button>  
+		<ng-template [ngIf]="userIsAuthenticated && annotationForm.valid && !editing && (this.role == 'teacher' ||  this.role == 'admin')">
+		<button type="button" class="btn btn-primary" (click)="addToDoc();" data-dismiss="modal">Submit</button>
+		</ng-template>
+       
+      </div>
+    </div>
+  </div>
+</div>
 
 
 

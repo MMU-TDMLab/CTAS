@@ -37,7 +37,12 @@ export class BuildTestComponent implements OnInit, OnDestroy {
 
   public showDelete: Boolean = false;
   public hardWords: string[];
-  public hardWordProgress: number = 0;
+  public mode: string; //teacher, teacher+assist
+  public annotationForm:FormGroup;
+
+  public description: [string, string, string] = ['','',''];
+  public contextTarget: string;
+  public CTpair: {'query':'','string':''};
 
   public posts: Post[] = [];
   public docWord: DocWord[] = [];
@@ -77,6 +82,9 @@ export class BuildTestComponent implements OnInit, OnDestroy {
     this.annotation = '';
     this.editAnnotation = '';
 
+    this.mode = 'teacher';
+    this.annotationForm = this.createFormAnnotation();
+
     this.form = this.createForm();
     this.postsService.getPosts();
     this.postsSub = this.postsService
@@ -113,6 +121,23 @@ export class BuildTestComponent implements OnInit, OnDestroy {
     });
   }
 
+  createFormAnnotation(): FormGroup {
+    return new FormGroup({
+      annotationInput: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(450)
+        ]
+      })
+    });
+  }
+
+  setAnnotationInput(a_input: string){
+	  this.annotationForm.get('annotationInput').setValue(a_input);
+	  this.annotationForm.get('annotationInput').markAsTouched();
+  }
+
   highlightDocumentSpecificWords(words: string[]) {
     try {
       const high = document.getElementById('scrollable');
@@ -128,6 +153,19 @@ export class BuildTestComponent implements OnInit, OnDestroy {
       });
       document.getElementById('btnHighLight').style.visibility = 'visible';
     } catch (e) {} 
+  }
+
+  changeMode(mode:string){
+    if(!this.docManager){
+      const high = document.getElementById('scrollable');
+      this.docManager = new highlightManager(high); 
+      this.docManager.buildDoc();
+    }
+    if(mode === 'assist'){
+      this.mode = 'assist';
+    }else if(mode === 'teacher'){
+      this.mode = 'teacher';
+    }else alert('Error changing mode');
   }
 
   addToTest() {
@@ -171,16 +209,14 @@ export class BuildTestComponent implements OnInit, OnDestroy {
       }
     });
     console.log(this.CTpairs);
-    this.hardWordProgress = 0;
     document.getElementById('infoBox').innerHTML = `
       Processing and saving test, please wait this may take a while! <br>
       Loading Definitions...
     `;
 
     this.testService.postCTpairs(this.CTpairs);
-    this.testSub = this.testService.getProgressListener().subscribe((prog:number)=>{
-      this.hardWordProgress = this.hardWordProgress + 100/(this.CTpairs.length)
-      if(prog === this.CTpairs.length){
+    this.testSub = this.testService.getProgressListener().subscribe((prog:boolean)=>{
+      if(prog === true){
         document.getElementById('infoBox').innerHTML = `Saving Test!`;
         this.testService.saveTest(this.id, this.annotations).then(rslt=>{
           console.log(rslt);
@@ -189,6 +225,8 @@ export class BuildTestComponent implements OnInit, OnDestroy {
           alert('Unable to save test...');
           console.error(error);
         });
+      }else{
+        alert('Issue Loading Definitions')
       }
     });
   }
@@ -197,7 +235,7 @@ export class BuildTestComponent implements OnInit, OnDestroy {
     if(this.role === 'teacher' || this.role === 'admin'){
       if(confirm('Are you sure?')){
         console.log(this.annotations)
-        if(!this.docManager)this.docManager = new highlightManager(document.getElementById('scrollable'));
+        if(!this.docManager)this.highlightDocumentSpecificWords([]);
         document.getElementById('infoBox').innerHTML = `
           Processing and saving test, please wait this may take a while! <br>
           Loading Complex Words...
@@ -219,6 +257,11 @@ export class BuildTestComponent implements OnInit, OnDestroy {
     let entry = this.annotations.find(el =>el.word == word);   
     if(entry) this.form.patchValue({annotation:entry.annotation});
     this.word = word
+  }
+
+  addToDoc(){
+    this.form.patchValue({annotation:this.annotationForm.value.annotationInput});
+    this.addToTest();
   }
 
   deleteAnnotation() {
@@ -250,7 +293,10 @@ export class BuildTestComponent implements OnInit, OnDestroy {
 		return caretOffset;
 	}
 
+  openModalBox(box:string){$("#"+box).modal('show');}
+
   highlightSelection() {
+    
     this.form.reset();
     this.resetAlertBox(false);
     const userSelection = window.getSelection();
@@ -261,6 +307,23 @@ export class BuildTestComponent implements OnInit, OnDestroy {
       this.showingAnnotation = '';
       for (let i = 0; i < userSelection.rangeCount; i++) { //eh??
         this.word = userSelection.toString().trim().toLowerCase();
+      }
+      if(this.mode === 'assist'){
+        console.log(userSelection.toString())
+        this.annotationForm.get('annotationInput').setValue(null);
+        
+        let startOffset = this.getCaretCharacterOffsetWithin(this.docManager.element) - userSelection.toString().length; 
+        console.log(this.docManager.element);
+        this.CTpair = this.docManager.getItemIndex(startOffset,userSelection.toString());
+        
+        this.contextTarget = `<q>${this.CTpair.string.replace(this.CTpair.query.trim(), `<u><b>${this.CTpair.query.trim()}</b></u>`).trim()}</q>`; //Need to sanitize this in HTML maybe?
+        console.log(this.CTpair);
+        this.docService.lookupDef(this.CTpair).then((rslt: [string, string, string])=>{
+          console.log(rslt);
+        
+          this.description = rslt;
+          this.openModalBox('annotationModal');
+        });
       }
       
     }

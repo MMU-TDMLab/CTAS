@@ -22,7 +22,7 @@ export class TestService {
   private stuTestDetails:studentTestDetails;
 
   public definitions:Definition[];
-  private progressUpdate = new Subject<number>();
+  private progressUpdate = new Subject<boolean>();
   private CTs:CTpair[];
 
   private testIds:testIdEntry[];
@@ -111,7 +111,7 @@ export class TestService {
   getProgressListener(){
     return this.progressUpdate.asObservable();
   }
-
+  /*
   private fetchDefinitions(progress:number) {
     this.http.post(BACKEND_URL_Document + 'CT-pairs', this.CTs.shift()).subscribe((res:Prediction) => {
       progress += 1;
@@ -125,12 +125,25 @@ export class TestService {
     },
     (error:any) => {console.error(error)});
   }
+  */
+
+  private fetchDefinitions2(){
+    this.http.post(BACKEND_URL_Document + 'CT-pairs2', {CT:this.CTs}).subscribe((res:any) => {
+      if(res.success){
+        this.definitions = res.definitions;
+        this.progressUpdate.next(true);
+      }else this.progressUpdate.next(false);
+    },
+    (error:any) =>{
+      this.progressUpdate.next(false);
+      console.error(error)
+    });
+  }
 
   postCTpairs(CTpairs: CTpair[]){
-    let progress:number = 0;
+    this.CTs = [...CTpairs]; 
     this.definitions = [];
-    this.CTs = [...CTpairs]; //Copy the array as to not change reference array
-    this.fetchDefinitions(progress);
+    this.fetchDefinitions2();
   }
 
   saveTest(doc_id:string, t_annotations:testEntry[]){
@@ -144,6 +157,7 @@ export class TestService {
       return entry
     }
     let annotations:testEntry[] = this.definitions.map(el=>createEntries(el))
+    console.log(annotations);
     annotations.push(...t_annotations);
     
     return this.http.post(BACKEND_URL_Document + '/save-test', annotations).toPromise();
