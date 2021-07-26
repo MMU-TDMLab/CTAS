@@ -30,6 +30,7 @@ declare var $: any;
 export class BuildTestComponent implements OnInit, OnDestroy {
   public docManager;
   public form: FormGroup;
+  public secondForm: FormGroup; //Difficult words box
 
   public annotations: testEntry[] = []; 
   public autoAnnotations: testEntry[] = [];
@@ -57,6 +58,10 @@ export class BuildTestComponent implements OnInit, OnDestroy {
   public showingAnnotation: string;
   public userIsAuthenticated = false;
   public editing: boolean;
+
+  private fileText; //complex words storage
+  public DifficultWords; //cache highlighter object for reInit()
+
   private startTime;
   private endTime;
   private date;
@@ -84,6 +89,7 @@ export class BuildTestComponent implements OnInit, OnDestroy {
 
     this.mode = 'teacher';
     this.annotationForm = this.createFormAnnotation();
+    this.secondForm = this.createSecondForm();
 
     this.form = this.createForm();
     this.postsService.getPosts();
@@ -133,6 +139,68 @@ export class BuildTestComponent implements OnInit, OnDestroy {
     });
   }
 
+  createSecondForm(): FormGroup {
+    return new FormGroup({
+      difficulty: new FormControl(null, {
+        validators: [
+          Validators.required
+        ]
+      })
+    });
+  }
+
+  possibleWords() {
+    if(this.fileText){
+      this.highlightPossibleWords(this.fileText, this.secondForm.value.difficulty);
+    }
+    else{
+      this.docService.readText(this.id).toPromise().then(data => {
+        this.fileText = data;
+        this.highlightPossibleWords(this.fileText, this.secondForm.value.difficulty);
+      }).catch((err:any)=>console.error(err));
+    }
+    }
+
+    highlightPossibleWords(words: string[], diff: string) { //don't want to refresh everytime neccecerily
+      try {
+        if (this.role === 'student') {
+          return;
+        } else {
+          const high = document.getElementById('scrollable');
+          if(!this.docManager)this.docManager = new highlightManager(high);
+          else this.docManager.reset();
+      
+          switch(diff){
+            case 'beginner':
+              var difficultWords = words[0];
+              break;
+            case 'intermediate':
+              var difficultWords = words[1];
+              break;
+            case 'advanced':
+              var difficultWords = words[2];
+              break;
+            default:
+              throw new Error("Difficulty level not received");
+          }
+      //console.log(difficultWords);
+      this.DifficultWords = new highlightWords(this.docManager, difficultWords)
+          this.DifficultWords.apply();
+          
+          const elementsToMakeClickable = document.getElementsByClassName(
+            'clickable'
+          );
+          const elementsToMakeClickableArray = Array.from(
+            elementsToMakeClickable
+          );
+          elementsToMakeClickableArray.map(element => {
+            element.addEventListener('click', this.viewAnnotation.bind(this));
+          });
+          document.getElementById('btnHighLight').style.visibility = 'visible';
+        }
+      } catch (e){console.error(e);}
+    }
+
   setAnnotationInput(a_input: string){
 	  this.annotationForm.get('annotationInput').setValue(a_input);
 	  this.annotationForm.get('annotationInput').markAsTouched();
@@ -166,6 +234,7 @@ export class BuildTestComponent implements OnInit, OnDestroy {
     }else if(mode === 'teacher'){
       this.mode = 'teacher';
     }else alert('Error changing mode');
+    this.reInit();
   }
 
   addToTest() {
@@ -344,6 +413,7 @@ export class BuildTestComponent implements OnInit, OnDestroy {
       this.docManager.reset();
       this.highlightDocumentSpecificWords(this.annotations.map(el=> el.word));
     }
+    if(this.DifficultWords && this.mode === 'assist')this.DifficultWords.apply();
   }
 
   ngOnDestroy(){
