@@ -14,7 +14,7 @@
       <span style="text-align: center; display: block;">Question: {{currentWord+1}}/{{words.length}}</span>
       <div id='answerArea'>
         <div role='button' class='answer' *ngFor='let definition of answers' (click)="answerSelect(definition)">
-          <q><i>{{definition}}</i></q>
+          <q>{{definition}}</q>
         </div>
       </div>
     </ng-template>
