@@ -24,6 +24,8 @@ export class TestAnswersComponent implements OnInit, OnDestroy {
   public contextSentences: string[];
   public focusNumber: number = 0;
 
+  public isLoading:boolean = false;
+
   private postSub: Subscription;
   private readTestsSub: Subscription;
   constructor(

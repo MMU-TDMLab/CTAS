@@ -49,6 +49,9 @@ export class PostTestComponent implements OnInit, OnDestroy {
   public isFinished:boolean = false;
   public shuffleDefs:boolean = false;
 
+  public focusWord: string = '';
+  public contextSentences: string[];
+
   private readTestSub:Subscription;
   private readPostSub:Subscription;
   constructor(
