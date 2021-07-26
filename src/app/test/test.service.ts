@@ -88,9 +88,9 @@ export class TestService {
     else{
       this.http.get<{sucess: boolean; testList: any}>(BACKEND_URL_Document).pipe(
         map(testData=>{
-          if(doc_id && !teacher) return testData.testList.filter((el:testEntry)=> el.document_id === doc_id);
-          else if(!doc_id && teacher) return testData.testList.filter((el:testEntry)=> el.teacher === teacher);
-          else if(doc_id && teacher) return testData.testList.filter((el:testEntry)=> el.document_id === doc_id && el.teacher === teacher);
+          if(doc_id && teacher === undefined)return testData.testList.filter((el:testEntry)=> el.document_id === doc_id);
+          else if(!doc_id && teacher !== undefined) return testData.testList.filter((el:testEntry)=> el.teacher === teacher);
+          else if(doc_id && teacher !== undefined) return testData.testList.filter((el:testEntry)=> el.document_id === doc_id && el.teacher === teacher);
           else return testData.testList
         })
       ).subscribe((testIds:testEntry[])=>{
