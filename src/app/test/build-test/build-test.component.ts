@@ -62,6 +62,8 @@ export class BuildTestComponent implements OnInit, OnDestroy {
   private fileText; //complex words storage
   public DifficultWords; //cache highlighter object for reInit()
 
+  public devmode:boolean = true;
+
   private startTime;
   private endTime;
   private date;
@@ -233,14 +235,17 @@ export class BuildTestComponent implements OnInit, OnDestroy {
       this.mode = 'assist';
     }else if(mode === 'teacher'){
       this.mode = 'teacher';
-    }else alert('Error changing mode');
-    this.reInit();
+    }else if(mode === 'highlight'){
+      this.mode = 'highlight'
+    }
+    else alert('Error changing mode');
+    this.resetAlertBox(true);
   }
 
   addToTest() {
-    if(!this.form.valid) return;
+    if(!this.form.valid && this.mode !== 'highlight') return;
     this.word = this.word
-    this.annotation = this.form.value.annotation;
+    this.annotation = this.mode !== 'highlight' ? this.form.value.annotation : '';
     
     let found = false;
     this.annotations = this.annotations.map((el, i) => {
@@ -304,18 +309,28 @@ export class BuildTestComponent implements OnInit, OnDestroy {
     if(this.role === 'teacher' || this.role === 'admin'){
       if(confirm('Are you sure?')){
         console.log(this.annotations)
-        if(!this.docManager)this.highlightDocumentSpecificWords([]);
-        document.getElementById('infoBox').innerHTML = `
-          Processing and saving test, please wait this may take a while! <br>
-          Loading Complex Words...
-        `;
-        this.resetAlertBox(false);
-        this.isLoading = true;
-        this.readTextSub = this.docService.readText(this.id).subscribe(data=>{
-          this.hardWords = data[1] //0:beginner 1:intermediate 2:hard //Maybe add option to set this??
-          this.processHardWords();
-        });
-        
+        if(this.devmode === false){
+          if(!this.docManager)this.highlightDocumentSpecificWords([]);
+          document.getElementById('infoBox').innerHTML = `
+            Processing and saving test, please wait this may take a while! <br>
+            Loading Complex Words...
+          `;
+          this.resetAlertBox(false);
+          this.isLoading = true;
+          this.readTextSub = this.docService.readText(this.id).subscribe(data=>{
+            this.hardWords = data[1] //0:beginner 1:intermediate 2:hard //Maybe add option to set this??
+            this.processHardWords();
+          });
+        }else{
+          this.testService.saveTest(this.id, this.annotations).then(rslt=>{
+            console.log(rslt);
+            this.router.navigate(['module', 'First Year Seminar']);
+          }).catch(err=>{
+            console.error(err);
+            alert('Error Saving Test!');
+          });
+        }
+
       }
     }
   }
@@ -326,6 +341,7 @@ export class BuildTestComponent implements OnInit, OnDestroy {
     let entry = this.annotations.find(el =>el.word == word);   
     if(entry) this.form.patchValue({annotation:entry.annotation});
     this.word = word
+    
   }
 
   addToDoc(){
@@ -373,27 +389,28 @@ export class BuildTestComponent implements OnInit, OnDestroy {
       return;
     } 
     else {
-      this.showingAnnotation = '';
-      for (let i = 0; i < userSelection.rangeCount; i++) { //eh??
-        this.word = userSelection.toString().trim().toLowerCase();
-      }
-      if(this.mode === 'assist'){
-        console.log(userSelection.toString())
-        this.annotationForm.get('annotationInput').setValue(null);
-        
-        let startOffset = this.getCaretCharacterOffsetWithin(this.docManager.element) - userSelection.toString().length; 
-        console.log(this.docManager.element);
-        this.CTpair = this.docManager.getItemIndex(startOffset,userSelection.toString());
-        
-        this.contextTarget = `<q>${this.CTpair.string.replace(this.CTpair.query.trim(), `<u><b>${this.CTpair.query.trim()}</b></u>`).trim()}</q>`; //Need to sanitize this in HTML maybe?
-        console.log(this.CTpair);
-        this.docService.lookupDef(this.CTpair).then((rslt: [string, string, string])=>{
-          console.log(rslt);
-        
-          this.description = rslt;
-          this.openModalBox('annotationModal');
-        });
-      }
+        this.showingAnnotation = '';
+        for (let i = 0; i < userSelection.rangeCount; i++) { //eh??
+          this.word = userSelection.toString().trim().toLowerCase();
+        }
+        if(this.mode === 'assist'){
+          console.log(userSelection.toString())
+          this.annotationForm.get('annotationInput').setValue(null);
+          
+          let startOffset = this.getCaretCharacterOffsetWithin(this.docManager.element) - userSelection.toString().length; 
+          console.log(this.docManager.element);
+          this.CTpair = this.docManager.getItemIndex(startOffset,userSelection.toString());
+          
+          this.contextTarget = `<q>${this.CTpair.string.replace(this.CTpair.query.trim(), `<u><b>${this.CTpair.query.trim()}</b></u>`).trim()}</q>`; //Need to sanitize this in HTML maybe?
+          console.log(this.CTpair);
+          this.docService.lookupDef(this.CTpair).then((rslt: [string, string, string])=>{
+            console.log(rslt);
+          
+            this.description = rslt;
+            this.openModalBox('annotationModal');
+          });
+        }
+      
       
     }
   }

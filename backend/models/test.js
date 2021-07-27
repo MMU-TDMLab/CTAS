@@ -7,7 +7,7 @@ const testSchema = mongoose.Schema({
     },
     annotation: {
         type: String,
-        required: true
+        required: false
     },
     teacher: {
         type: Boolean,

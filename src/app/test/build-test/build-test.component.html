@@ -9,6 +9,7 @@
     <select id='modeSelect' (change)='changeMode($event.target.value)'>
       <option value='teacher'>Teacher</option>
       <option value='assist'>Assist</option>
+      <option value="highlight">Highlight</option>
     </select>
   </div>
   <div id='mcontent' class="column center">
@@ -53,7 +54,7 @@
           </button>
         </div>
     
-        <ng-template [ngIf]="userIsAuthenticated && (this.role == 'teacher' || this.role == 'admin')">
+        <ng-template [ngIf]="userIsAuthenticated && (this.role == 'teacher' || this.role == 'admin') && this.mode !== 'highlight'">
           <div class="form-group">
             <ng-template [ngIf]="userIsAuthenticated && !showingAnnotation">
               <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Describe Word" rows="8" formControlName="annotation" value=""></textarea>
@@ -61,8 +62,8 @@
           </div>
         </ng-template>
     
-        <ng-template [ngIf]="userIsAuthenticated && form.valid && !editing && (this.role == 'teacher' ||  this.role == 'admin')">
-          <button class="btn btn-success btn-sm" id="postDocbtn" type="button" (click)='addToTest()' [disabled]="!form.valid">Add to document</button>
+        <ng-template [ngIf]="userIsAuthenticated && (form.valid && !editing || this.mode === 'highlight') && (this.role == 'teacher' ||  this.role == 'admin')">
+          <button class="btn btn-success btn-sm" id="postDocbtn" type="button" (click)='addToTest()' [disabled]="!form.valid && mode!=='highlight'">Add to document</button>
         </ng-template>
         
       </form>

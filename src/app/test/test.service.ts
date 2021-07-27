@@ -156,9 +156,9 @@ export class TestService {
       }
       return entry
     }
-    let annotations:testEntry[] = this.definitions.map(el=>createEntries(el))
-    console.log(annotations);
+    let annotations:testEntry[] = this.definitions !== undefined ? this.definitions.map(el=>createEntries(el)) : [];
     annotations.push(...t_annotations);
+    console.log(annotations);
     
     return this.http.post(BACKEND_URL_Document + '/save-test', annotations).toPromise();
   }
