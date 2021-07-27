@@ -89,7 +89,7 @@ exports.saveTest = (req, res, next) =>{
     Tests.insertMany(testList).then(rslt=>{
         res.status(200).json({sucess:true});
     }).catch(err=>{
-        res.status(400).json({sucess:false});
+        res.status(400).json({sucess:false, message:err});
     });
     
 }
