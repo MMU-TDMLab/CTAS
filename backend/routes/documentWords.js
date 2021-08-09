@@ -7,6 +7,8 @@ const authCheck = require('../middleware/check-auth');
 
 router.get('/:id', DocumentWordsController.readText);
 
+router.get('/cwi-values/:id', DocumentWordsController.complexityValues);
+
 router.post('/new-word', DocumentWordsController.newWord);
 
 router.post('/get-definition', DocumentWordsController.getDefinition)

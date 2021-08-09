@@ -5,7 +5,8 @@
     <div id='testBox'>
       <mat-progress-bar mode="indeterminate" *ngIf='isLoading'></mat-progress-bar>
     
-      <div class="candidateWord" [ngClass]="{'selected':selectedWords.includes(word)}" *ngFor='let word of hardWords' id='{{word.replace(" ", "-")}}' (click)='wordSelect(word)'>
+      <div class="candidateWord" [ngClass]="{'selected':selectedWords.includes(word)}" 
+      *ngFor='let word of hardWords' id='{{word.replace(" ", "-")}}' (click)='wordSelect(word)' (contextmenu)='openModalBox(word, $event)'>
         {{word}}
       </div>
     </div>
@@ -17,5 +18,31 @@
       <i class="fas fa-check" style="padding-left: 5px;"></i>
     </button>
 
+  </div>
+</div>
+
+<div class="modal fade" id="contextModal" tabindex="-1" role="dialog" aria-labelledby="contextModalLabel" aria-hidden="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="contextModalLabel">Retrieved Contexts for: {{ focusWord }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <ng-template [ngIf]="contextSentences && contextSentences.length > 0">
+        <div id="sentenceBox">
+          <div [innerHTML]="contextSentences[focusNumber]" id="cSentence"></div>
+          <div id='sentenceSelector'>
+            <div role='button' id='backSelect' class='arrowBtn' (click)="switchSentence(-1)"><i class="fas fa-angle-left"></i></div>
+            {{ (focusNumber + 1) }}/{{ contextSentences.length }}
+            <div role='button' id='forwardSelect' class='arrowBtn' (click)="switchSentence(1)"><i class="fas fa-angle-right"></i></div>
+          </div>
+        </div>
+      </ng-template>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button>    
+      </div>
+    </div>
   </div>
 </div>

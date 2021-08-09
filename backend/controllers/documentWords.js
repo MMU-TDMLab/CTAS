@@ -160,6 +160,28 @@ exports.readText = (req, res, next) => {
   }
 }
 
+exports.complexityValues = (req, res, next) => {
+  if (infrequentWords20.length > 0) {
+    Post.findOne({
+      _id: req.params.id
+    }).then(result => {
+      if (result) {
+        checkIfWordsMatch(result.body, true).then(hardWords=>{
+          res.status(200).json(hardWords);
+        }).catch(e=>console.error("Error finding complex words: \n"+e));
+      } else {
+        res.status(404).json({
+          message: 'Post not found!'
+        });
+      }
+    });
+  } else {
+    res.status(500).json({
+      message: 'Internal Error'
+    });
+  }
+}
+
 parseFileIntoMemory();
 
 function parseFileIntoMemory() {
@@ -206,8 +228,8 @@ function parseFileIntoMemory() {
     );
 }
 /*CWI here*/
-async function checkIfWordsMatch(body) {
-  const hardWords20 = [];
+async function checkIfWordsMatch(body, values=false) {
+  const hardWords20 = []; 
   const hardWords10 = [];
   const hardWords5 = [];
   const arrayOfArrays = [hardWords20, hardWords10, hardWords5];
@@ -247,5 +269,10 @@ async function checkIfWordsMatch(body) {
   console.log(wordObjAvg)
 
   //console.log(arrayOfArrays);
-  return arrayOfArrays;
+  if(values === false){
+    return arrayOfArrays;
+  }
+  else{
+    return wordObjAvg
+  }
 }

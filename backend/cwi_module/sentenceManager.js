@@ -12,6 +12,7 @@ class sentenceMagager{
         this.words = [];
         if(this.wordList.length>1) this.findCollocations(); 
         else this.wordList[0] = [this.wordList[0]];
+        //this.wordList = this.wordList.map(el=>[el])
         this.constructWords();
     }
     findCollocations(){ //bigrams only   
@@ -27,6 +28,8 @@ class sentenceMagager{
             } // avoid out-of index
 
             let cur = this.wordList[i]; let nxt = this.wordList[i+1]; let curPOS = this.POS[i]; let nxtPOS = this.POS[i+1];
+        
+            
             if(nxt.replace(regex,'').length != nxt.length){
                 newWordList.push([cur],[nxt]);
                 i++; continue;

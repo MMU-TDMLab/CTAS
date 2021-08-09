@@ -19,7 +19,13 @@
       </div>
     </ng-template>
   </div>
-  <div class="column right"></div>
+  <div class="column right">
+    <div role="button" id='shuffle' (click)='shuffleAnswers()'>
+      Shuffle
+      <i class="fas fa-random" style="padding-left: 5px;"></i>
+    </div>
+
+  </div>
 </div>
 
 <div class="modal fade" id="contextModal" tabindex="-1" role="dialog" aria-labelledby="contextModalLabel" aria-hidden="false">

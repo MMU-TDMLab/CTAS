@@ -128,3 +128,15 @@
 .answer:active:hover{
     box-shadow: inset 0px 0px 2px grey;
 }
+
+#shuffle{
+    background-color: #a4ffa4;
+    padding: 7px;
+    border-radius: 6px;
+    user-select: none;
+    cursor: pointer;
+    box-shadow: 0px 0px 2px #72cc72;
+}
+#shuffle:active:hover{
+    box-shadow: none;
+}

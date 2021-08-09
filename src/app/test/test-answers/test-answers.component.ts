@@ -17,6 +17,8 @@ declare var $: any;
 export class TestAnswersComponent implements OnInit, OnDestroy {
   public id:string;
   public testEntries: testEntry[];
+  public testWords: string[];
+
   public posts: Post[];
   public selectedPost: string;
   public sentences: string[];
@@ -39,15 +41,15 @@ export class TestAnswersComponent implements OnInit, OnDestroy {
     this.id = this.route.snapshot.paramMap.get('postId');
     this.testService.getTests(false, this.id);
     this.readTestsSub = this.testService.getTestsListener().subscribe((tests:testEntry[])=>{
-      this.testEntries = tests //.map((el:testEntry)=>{el.word = el.word.replace(/[)(}{}]/g, ''); return el});
-      console.log(tests); ///////////////////get Unique
-      //console.log(tests);
+      this.testEntries = tests 
+      this.testWords = Array.from(new Set(tests.map(el=>el.word)))
+    
     });
     this.postService.getPosts();
     this.postSub = this.postService.getPostUpdateListenerTwo().subscribe((posts:Post[])=>{
       this.posts = posts;
       this.selectedPost = this.posts.find((el:Post)=>el.id===this.id).body;
-      this.sentences = this.selectedPost.split(/[.;!?]/); //add more comprehensive parsing
+      this.sentences = this.selectedPost.split(/[.!?]/); //add more comprehensive parsing
     });
   }
 
@@ -59,6 +61,26 @@ export class TestAnswersComponent implements OnInit, OnDestroy {
     }
   }
 
+  findTestEntry(index:number, findAll:boolean = false){
+    let word:string = this.testWords[index];
+    if(findAll === false){
+      let entry:testEntry = this.testEntries.find(el=>el.word === word);
+      return entry;
+    }
+    if(findAll === true){
+      let entries:testEntry[] = this.testEntries.filter(el=>el.word === word);
+      return entries;
+    }
+  }
+  findTestIds(index:number){
+    let word:string = this.testWords[index];
+    let ids:number[] = this.testEntries.map((el,i)=>{
+      if(el.word === word) return i;
+    }).filter(el=>el !== undefined);
+
+    return ids;
+  }
+
   openModalBox(text:string){
     function escapeRegExp(string:string) {
       return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
@@ -66,15 +88,11 @@ export class TestAnswersComponent implements OnInit, OnDestroy {
     
     this.focusNumber = 0;
     this.focusWord = text;
-    this.contextSentences = this.sentences.filter((el:string)=>{
-      /*  This is better 
-      let re = new RegExp('\\b'+escapeRegExp(this.focusWord)+'\\b', 'ig')
-      return re.test(el);
-      */
-      return el.toLocaleLowerCase().includes(this.focusWord);
+    this.contextSentences = this.sentences.filter((el:string)=>{ //will match substrings but doesn't
+      return el.toLocaleLowerCase().includes(this.focusWord); //really matter here better than missing out certain edge cases
     }).map((el:string)=>{
       let re = new RegExp(escapeRegExp(this.focusWord), 'ig')
-      return "<q>"+el.replace(re, `<b>${this.focusWord}</b>`).trim()+"</q>"; //sanitise ?
+      return "<q>"+el.replace(re, `<b>${this.focusWord}</b>`).trim()+"</q>"; 
     });
   
 	  $("#contextModal").modal('show');
@@ -82,11 +100,21 @@ export class TestAnswersComponent implements OnInit, OnDestroy {
 
   onSubmit(){
     if(confirm('Are you sure?')){
-      this.testEntries.map((el:testEntry)=>{  /////////////////duplicate teacher auto issue CORRECT
-                                                ////////////// solution => map answers to words then map and use object to lookup answers forEach word, Also remove none unique text from user form 
-        let answerInput =  $(`#input-${el._id}`); 
-        if(answerInput) el.answer = answerInput.val().trim();
-      });
+      /**
+       * We want to find all occuring instances of a string in test entries
+       * and set the same answer for each of them
+       * there may be duplicate entries given by teacher and the system
+       */
+      for(let i=0;i<this.testWords.length;i++){
+        let ids:number[] = this.findTestIds(i);
+        console.log(ids)
+        for(let id of ids){
+          let answerInput = $(`#input-${i}`);
+          if(answerInput) this.testEntries[id].answer = answerInput.val().trim(); 
+        }
+      }
+      console.log(this.testEntries);
+      
       this.testService.saveAnswers(this.testEntries).then(rslt=>{
         console.log(rslt);
         this.router.navigate(['module', 'First Year Seminar']);
@@ -94,6 +122,7 @@ export class TestAnswersComponent implements OnInit, OnDestroy {
         console.error(error);
         alert('Failed to save answers...')
       });
+      
     }
   }
 

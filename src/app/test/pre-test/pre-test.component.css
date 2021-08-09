@@ -86,3 +86,66 @@
 .selected:hover {
     background-color: #f7e4e7;
 }
+
+#stronger {
+    color:black;
+    text-shadow: 1px 1px 1px lightgrey;
+    font-size: large;
+   
+    font-family:  Helvetica, Arial, sans-serif;	
+}
+.targetText {
+    text-transform: capitalize;
+    word-wrap: break-word;
+    max-width: 40%;
+    min-width: 40px;
+    padding:5px;
+    border-radius: 5px;
+    user-select: none;
+}
+.targetText:hover {
+    transition: 0.3s;
+    background-color: aliceblue;
+    cursor: pointer;
+}
+.targetText:active {
+    background-color: grey;
+}
+.annotationBox {    
+    margin: 0px 0px 10px 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.annoTextBox {
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    width: 60%;
+}
+
+#sentenceBox{
+    padding: 10px;
+}
+#sentenceSelector {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+#cSentence {
+    padding: 10px;
+    margin-top: 10px;
+    min-height: 200px;
+}
+.arrowBtn {
+    padding: 3px 15px 3px 15px;
+    background-color: #efefef;
+    border: none;
+    cursor: pointer;
+    margin: 5px 10px 5px 10px;
+    border-radius: 5px;
+    transition: 0.1s;
+}
+.arrowBtn:active {
+    box-shadow: inset 0px 0px 5px grey;
+}

@@ -304,6 +304,7 @@ export class AnnotationComponent
           this.docTrue = false; //eh?
           this.wordId = word.document_id;
           this.showingAnnotation = word.annotation;
+          console.log(this.showingAnnotation);
           this.theWordId = word._id;
         }
       });

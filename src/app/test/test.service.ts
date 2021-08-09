@@ -131,6 +131,7 @@ export class TestService {
     this.http.post(BACKEND_URL_Document + 'CT-pairs2', {CT:this.CTs}).subscribe((res:any) => {
       if(res.success){
         this.definitions = res.definitions;
+        console.log(this.definitions);
         this.progressUpdate.next(true);
       }else this.progressUpdate.next(false);
     },

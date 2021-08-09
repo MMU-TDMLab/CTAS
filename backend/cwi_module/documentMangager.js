@@ -2,9 +2,10 @@ const sentenceMagager = require('./sentenceManager');
 
 class documentManager{
     constructor(document){
-        this.document = document
-        this.sentenceList = document.replace(/\r?\n|\r/g, " ").split(".").filter(s=>s!=" ").map(s=>s.trim().replace(/[,"/!?]/g,"").trim()).filter(s=>s!="");
-		this.sentences = [];
+        this.document = document   //Regex below isn't great will cause some problems with matching bigrams on client side
+                                    //also probably not best to split on commas, quick fix to avoid words with commas between them being matched as a phrase....
+        this.sentenceList = document.replace(/\r?\n|\r/g, " ").split(/[!?:.,;()]/).filter(s=>s!=" ").map(s=>s.trim().replace(/[\/#$%\^&\*{}=\_`"‘’~]/g," ").trim()).filter(s=>s!="");
+		this.sentences = [];                                                                  
         this.constructSentences();
         this.CWImodel; 
     }

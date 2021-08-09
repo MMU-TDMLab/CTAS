@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { testEntry } from '../test.model';
+import { testEntry, testIdEntry } from '../test.model';
 import { CTpair } from '../test.model';
 
 import { TestService } from '../test.service';
@@ -62,7 +62,7 @@ export class BuildTestComponent implements OnInit, OnDestroy {
   private fileText; //complex words storage
   public DifficultWords; //cache highlighter object for reInit()
 
-  public devmode:boolean = true;
+  public devmode:boolean = false; //Stops cwi and auto definition fetching for test
 
   private startTime;
   private endTime;
@@ -72,7 +72,7 @@ export class BuildTestComponent implements OnInit, OnDestroy {
   private authStatus: Subscription;
   private readTextSub: Subscription;
   private testSub: Subscription;
-
+  private testIDsub: Subscription;
   constructor(
     public route: ActivatedRoute,
     public postsService: PostsService,
@@ -238,14 +238,27 @@ export class BuildTestComponent implements OnInit, OnDestroy {
     }else if(mode === 'highlight'){
       this.mode = 'highlight'
     }
+    else if(mode === 'control'){
+      this.mode = 'control'
+    }
     else alert('Error changing mode');
     this.resetAlertBox(true);
   }
 
+  teacherOrAdmin(){
+    if(this.userIsAuthenticated && this.role === 'teacher' || this.userIsAuthenticated && this.role == 'admin') return true;
+    else return false;
+  }
+
+  highlightOrControl(){
+    if(this.mode === 'highlight' || this.mode === 'control') return true;
+    else return false;
+  }
+
   addToTest() {
-    if(!this.form.valid && this.mode !== 'highlight') return;
+    if(!this.form.valid && !this.highlightOrControl()) return; //There is no form for highlight mode
     this.word = this.word
-    this.annotation = this.mode !== 'highlight' ? this.form.value.annotation : '';
+    this.annotation = !this.highlightOrControl() ? this.form.value.annotation : '';
     
     let found = false;
     this.annotations = this.annotations.map((el, i) => {
@@ -274,7 +287,7 @@ export class BuildTestComponent implements OnInit, OnDestroy {
     sentences.forEach((el:string) => {
       if(el.trim().split(' ').length > 3){
         this.hardWords.forEach((CW:string)=>{
-          if(el.includes(CW)){ //also check CW is not a substring!!!!!
+          if(new RegExp(`(?<![A-Za-z])${CW}(?![A-Za-z])`).test(el)){ // (?<![A-Za-z])(?![A-Za-z]) el.includes(CW)
             let item = this.CTpairs.find(pair=>pair.string === CW)
             if(item) item.query.push(el);
             else this.CTpairs.push({'query':[el], 'string':CW});
@@ -287,7 +300,8 @@ export class BuildTestComponent implements OnInit, OnDestroy {
       Processing and saving test, please wait this may take a while! <br>
       Loading Definitions...
     `;
-
+    
+    
     this.testService.postCTpairs(this.CTpairs);
     this.testSub = this.testService.getProgressListener().subscribe((prog:boolean)=>{
       if(prog === true){
@@ -299,10 +313,51 @@ export class BuildTestComponent implements OnInit, OnDestroy {
           alert('Unable to save test...');
           console.error(error);
         });
+        
       }else{
         alert('Issue Loading Definitions')
       }
     });
+    
+  }
+
+  selectComplexWords(CW:{}){
+    return new Promise(res=>{
+      this.testService.getTests(true);
+      this.testIDsub = this.testService.getTestIDlistener().subscribe((all_ids:testIdEntry[])=>{
+        let idNum = all_ids.filter(el=>el.doc_id === this.id).length;
+        idNum += this.annotations.length;
+        let CWsort = []
+        /*
+          CW are sorted in descending order and the top 1.5*the number of annotations
+          provided by the teacher that are higher than a complexity of 0.3
+          are given, 1.5 is used to account for proper nouns that have been selected
+        */
+        for(let word in CW){  if(CW[word]>=0.3) CWsort.push([word, CW[word]]) }
+
+        CWsort.sort((a,b)=>b[1]-a[1]);
+        CWsort = CWsort.slice(0,Math.floor(idNum*1.5)).map(el=>el[0]);
+        this.testIDsub.unsubscribe();
+        res(CWsort);
+      });
+
+    });
+  }
+
+  /*
+    Creates testEntry list for automatically created annotations and joins them with the teacher list
+  */
+  joinAnnotation(){
+    let autoAnnotations:testEntry[] = this.hardWords.map(el=>{
+      return {
+        teacher:false,
+        word:el,
+        annotation:'',
+        document_id:this.id
+      }
+    });
+    this.annotations.push(...autoAnnotations);
+    console.log(this.annotations);
   }
 
   submitTest(){
@@ -317,9 +372,24 @@ export class BuildTestComponent implements OnInit, OnDestroy {
           `;
           this.resetAlertBox(false);
           this.isLoading = true;
-          this.readTextSub = this.docService.readText(this.id).subscribe(data=>{
-            this.hardWords = data[1] //0:beginner 1:intermediate 2:hard //Maybe add option to set this??
-            this.processHardWords();
+          this.readTextSub = this.docService.complexityValues(this.id).subscribe(data=>{
+            console.log(this.annotations);
+            console.log(data);
+            this.selectComplexWords(data).then((rslt:string[])=>{
+              this.hardWords = rslt;
+              console.log(this.hardWords);
+              if(this.mode === 'highlight'){
+                this.processHardWords();
+              }
+              else{
+                this.joinAnnotation();
+                this.testService.saveTest(this.id, this.annotations).then(rslt=>{
+                  console.log(rslt)
+                  this.router.navigate(['add-answers', this.id]);
+                });
+              }
+            })
+
           });
         }else{
           this.testService.saveTest(this.id, this.annotations).then(rslt=>{

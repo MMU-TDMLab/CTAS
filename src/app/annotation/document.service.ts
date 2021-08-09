@@ -25,6 +25,10 @@ export class DocService {
     return this.http.get(BACKEND_URL_Document + id);
   }
 
+  complexityValues(id: string){
+    return this.http.get(BACKEND_URL_Document + '/cwi-values/' + id);
+  }
+
   /**
    * This is the Get query. It requests the backend for the words and annotations and document ID.
    */

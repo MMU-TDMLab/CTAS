@@ -141,6 +141,14 @@ export class PostTestComponent implements OnInit, OnDestroy {
     }
   }
 
+  shuffleAnswers(){
+    let randomSequence = shuffle(Array.from(Array(this.answers.length).keys()));
+    let answersCopy = Array.from(this.answers);
+    shuffle(Array.from(Array(this.answers.length).keys())).forEach((i:number)=>{
+      this.answers[i] = answersCopy[randomSequence[i]]; 
+    });
+  }
+
   ngOnDestroy() {
     if(this.readTestSub)this.readTestSub.unsubscribe();
     if(this.readPostSub)this.readPostSub.unsubscribe();

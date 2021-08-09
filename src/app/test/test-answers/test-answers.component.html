@@ -5,9 +5,9 @@
       Provide the correct definitions for the displayed items.<br>
       Leave blank any items you wish not to be included in the text.<br>
       For clarification on any items click the text to view examples given in context.
-    <div class='annotationBox' *ngFor='let test of testEntries'>
-      <div class='targetText' id='word-{{test._id}}' (click)="openModalBox(test.word)">{{ test.word}}</div>    
-      <input type="text" id="input-{{test._id}}" value="{{test.answer}}" class="annoTextBox">
+    <div class='annotationBox' *ngFor='let test of testWords; index as i'>
+      <div class='targetText' id='word-{{i}}' (click)="openModalBox(test)">{{ test}}</div>    
+      <input type="text" id="input-{{i}}" value="{{findTestEntry(i).answer}}" class="annoTextBox">
     </div> 
   </div>
   <div class="column right">
