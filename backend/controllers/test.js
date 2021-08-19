@@ -123,20 +123,10 @@ exports.saveAnswers = (req, res, next) =>{  //need auth
             update: {'$set':{answer: testEntry.answer}},
             upsert: true,
         }
-    }))).then(rslt=>{
-        Tests.deleteMany({
-            document_id:doc_id,
-            answer:''
-        }).then(result=>{
-            res.status(200).json({
-                sucess:true,
-                message:'Updated Answers'
-            });
-        }).catch(error=>{
-            res.status(500).json({
-                sucess:false,
-                message:error
-            })
+    }))).then(()=>{
+        res.status(200).json({
+            sucess:true,
+            message:'Updated Answers'
         });
     }).catch(error=>{
         res.status(500).json({
@@ -166,5 +156,13 @@ exports.stuTest = (req, res, next) =>{
             message:error
         });
     });
+}
 
+exports.getStuAnswered = async (req, res, next) => {
+    let tests = await Answers.find({user_id:req.body.stuID})
+    tests = tests.map(el=>el.document_id)
+    res.status(200).json({
+        success:true,
+        completed_tests:tests
+    });
 }

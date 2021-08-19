@@ -69,12 +69,13 @@ export class PostTestComponent implements OnInit, OnDestroy {
     this.readTestSub = this.testService.getTestsListener().subscribe((tests:testEntry[])=>{
       this.testEntries = tests;
       this.words = shuffle(Array.from(
-        new Set(this.testEntries.map((entry:testEntry)=>entry.word))
+        new Set(this.testEntries.filter((entry:testEntry)=>entry.answer !== '-')
+          .map((entry:testEntry)=>entry.word))
       ));
       this.answers = shuffle(Array.from(
-        new Set(this.testEntries.map((entry:testEntry)=>entry.answer))
+        new Set(this.testEntries.filter((entry:testEntry)=>entry.answer !== '-')
+          .map((entry:testEntry)=>entry.answer))
       ));
-      console.log(this.answers);
       this.isLoading = false;
     });
 
@@ -85,10 +86,10 @@ export class PostTestComponent implements OnInit, OnDestroy {
     });
   }
 
-  addSelection(selection:string){
+  addSelection(selection:string, index:number){
     if(!this.isFinished){
       let target = this.testEntries.find((el:testEntry)=>el.word===this.words[this.currentWord])
-      if(!target) throw new Error("Unable to find word in test entries!");
+      if(!target || !selection) throw new Error("Unable to find element in entries!");
       else{
         if(target.answer === selection){
           this.answerEntries.push({
@@ -106,11 +107,28 @@ export class PostTestComponent implements OnInit, OnDestroy {
             correctAnswer:target.answer
           });
         }
-
         if(this.currentWord<this.words.length-1)this.currentWord++;
         else this.isFinished = true;
       }
     }
+  }
+  undoLastAnswer(){
+    if(this.currentWord != 0){
+      this.answerEntries = this.answerEntries.slice(0,-1);
+      if(this.isFinished)this.isFinished = false;
+      else this.currentWord -= 1;
+    }
+  }
+
+  toggleColor(index:number, e:Event){
+    e.preventDefault();
+    let ans = $(`#def-${index}`)
+    let bgcolor = ans.css('background-color')
+    if(bgcolor == 'rgb(253, 208, 126)'){
+      ans.css('background-color', 'ghostwhite')
+    }else{
+      ans.css('background-color', '#fdd07e')
+    } 
   }
 
   switchSentence = TestAnswersComponent.prototype.switchSentence;
@@ -128,9 +146,11 @@ export class PostTestComponent implements OnInit, OnDestroy {
     
   }
 
-  answerSelect(definition:string){
+  answerSelect(definition:string, index:number){
     if(!this.isFinished){
-      this.addSelection(definition);
+      this.addSelection(definition, index);
+
+      ////////////////////////////////////////////////
       if(this.shuffleDefs){
         let randomSequence = shuffle(Array.from(Array(this.answers.length).keys()));
         let answersCopy = Array.from(this.answers);
@@ -138,6 +158,7 @@ export class PostTestComponent implements OnInit, OnDestroy {
           this.answers[i] = answersCopy[randomSequence[i]]; 
         });
       }
+      /////////////////////////////////////////////////
     }
   }
 

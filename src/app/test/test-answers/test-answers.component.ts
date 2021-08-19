@@ -5,7 +5,7 @@ import { testEntry } from '../test.model';
 import { PostsService } from 'src/app/posts/posts.service';
 import { Subscription } from 'rxjs';
 import { Post } from 'src/app/posts/post.model';
-
+import { AuthService } from '../../auth/auth.service';
 declare var $: any;
 
 
@@ -25,7 +25,7 @@ export class TestAnswersComponent implements OnInit, OnDestroy {
   public focusWord: string = '';
   public contextSentences: string[];
   public focusNumber: number = 0;
-
+  role: string;
   public isLoading:boolean = false;
 
   private postSub: Subscription;
@@ -33,11 +33,16 @@ export class TestAnswersComponent implements OnInit, OnDestroy {
   constructor(
     public testService:TestService,
     public postService:PostsService,
+    private authService: AuthService,
     public route: ActivatedRoute,
     private router: Router
   ) { }
 
   ngOnInit() {
+    this.role = this.authService.getUserRole();
+    if(this.role === 'student'){
+      throw new Error('No authentication!')
+    }
     this.id = this.route.snapshot.paramMap.get('postId');
     this.testService.getTests(false, this.id);
     this.readTestsSub = this.testService.getTestsListener().subscribe((tests:testEntry[])=>{
@@ -110,7 +115,11 @@ export class TestAnswersComponent implements OnInit, OnDestroy {
         console.log(ids)
         for(let id of ids){
           let answerInput = $(`#input-${i}`);
-          if(answerInput) this.testEntries[id].answer = answerInput.val().trim(); 
+          if(answerInput){
+            let answerVal:string = answerInput.val().trim();
+            if(answerVal === '') answerVal = '-';
+            this.testEntries[id].answer = answerVal;
+          } 
         }
       }
       console.log(this.testEntries);

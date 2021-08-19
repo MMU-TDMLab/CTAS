@@ -39,9 +39,9 @@ export class PreTestComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.id = this.route.snapshot.paramMap.get('postId');
     
-    this.testService.getTests(false, this.id, false);
+    this.testService.getTests(false, this.id);
     this.readTestSub = this.testService.getTestsListener().subscribe((tests:testEntry[])=>{
-      this.hardWords = tests.map(el=>el.word);
+      this.hardWords = Array.from(new Set(tests.map(el=>el.word))); //set->unique array
       this.isLoading = false;
     });
     this.postService.getPosts();

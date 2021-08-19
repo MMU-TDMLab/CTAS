@@ -14,7 +14,13 @@ import { environment } from '../../environments/environment';
 
 const BACKEND_URL_Document = environment.apiUrl + '/tests/'
 
-
+const documentTestGroups:object = {
+  '610004dbae81ae53b60adfc2':1,
+  '6100239fae81ae53b60adfd0':1,
+  '610025b1ae81ae53b60adfd2':2,
+  '61002413ae81ae53b60adfd1':0,
+  '610d1bdfc76c6d38b8b18aa9':0//testing
+};
 
 @Injectable({ providedIn: 'root' })
 export class TestService {
@@ -36,10 +42,13 @@ export class TestService {
    * For student user testing, sets which experiment group they're in
    * And stores pre-test details
    */ 
+
   setStuTestDetails(selectedPreTest:string[], doc_id:string){
     let testGroup:string;
-    let randomnum = 2
-    switch (randomnum) {
+
+    let groupNum = doc_id in documentTestGroups ? documentTestGroups[doc_id] : 3;
+
+    switch (groupNum) {
       case 0:
         testGroup = 'control';
         break;
@@ -50,7 +59,7 @@ export class TestService {
         testGroup = 'auto';
         break;
       default:
-        throw new Error("Invalid Random Number");
+        throw new Error("Invalid document id, valid document id's for the test environment are hardcoded");
     }
     this.stuTestDetails = {
       testGroup: testGroup,
@@ -64,6 +73,11 @@ export class TestService {
     this.stuTestDetails.answers = answers;
     return this.http.post(BACKEND_URL_Document + '/stu-test', this.stuTestDetails).toPromise();
   }
+
+  getAnsweredTests(stuID:string){
+    return this.http.post(BACKEND_URL_Document + '/stu-get-answered', {stuID}).toPromise();
+  }
+
   getStuTestDetails(){
     return this.stuTestDetails;
   }

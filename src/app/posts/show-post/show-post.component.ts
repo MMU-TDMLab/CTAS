@@ -34,6 +34,7 @@ export class ShowPostComponent implements OnInit, OnDestroy {
   private theModuleName;
   public userIsAuthenticated = false;
   public moduleNameWithoutPunc;
+  public completedTests:string[] = [];
 
   constructor(
     public postsService: PostsService,
@@ -83,6 +84,11 @@ export class ShowPostComponent implements OnInit, OnDestroy {
         this.userId = this.authService.getUserId();
         this.role = this.authService.getUserRole();
       });
+
+    this.testService.getAnsweredTests(this.userId).then((response)=>{
+      this.completedTests = response['completed_tests'];
+      console.log(this.completedTests);
+    });
   }
 
   /**

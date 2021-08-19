@@ -3,7 +3,8 @@
   <div class="column center">  
     <div id='topText'>
       <span id='stronger'>Test Description: </span><p>
-      Match the text to the definitions below, click on the words or phrases for examples given in context.</p>
+      Match the text to the definitions below, click on the words or phrases for examples given in context.
+      <br><b>Right Click</b> answers to toggle color.</p>
       <mat-progress-bar mode="indeterminate" *ngIf='isLoading'></mat-progress-bar>
     </div>
     <ng-template [ngIf]='isFinished'>
@@ -13,7 +14,7 @@
       <div role='button' class='bigButton' (click)="openModalBox(words[currentWord])">{{words[currentWord]}}</div>
       <span style="text-align: center; display: block;">Question: {{currentWord+1}}/{{words.length}}</span>
       <div id='answerArea'>
-        <div role='button' class='answer' *ngFor='let definition of answers' (click)="answerSelect(definition)">
+        <div role='button' class='answer' *ngFor='let definition of answers; index as i' id='def-{{i}}' (click)="answerSelect(definition, i)" (contextmenu)='toggleColor(i, $event)'>
           <q>{{definition}}</q>
         </div>
       </div>
@@ -24,7 +25,10 @@
       Shuffle
       <i class="fas fa-random" style="padding-left: 5px;"></i>
     </div>
-
+    <div role="button" id='undo' (click)='undoLastAnswer()'>
+      Undo
+      <i class="fas fa-undo" style="padding-left: 5px;"></i>
+    </div>
   </div>
 </div>
 

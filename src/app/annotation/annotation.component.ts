@@ -151,7 +151,6 @@ export class AnnotationComponent
       this.readTestSub = this.testService.getTestsListener().subscribe((tests:testEntry[])=>{
         this.docWords = tests.map(el=>el.word);
         this.testWords = tests;
-        console.log(tests);
       });
      }
    }
