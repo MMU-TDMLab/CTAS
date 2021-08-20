@@ -14,14 +14,14 @@
       <div role='button' class='bigButton' (click)="openModalBox(words[currentWord])">{{words[currentWord]}}</div>
       <span style="text-align: center; display: block;">Question: {{currentWord+1}}/{{words.length}}</span>
       <div id='answerArea'>
-        <div role='button' class='answer' *ngFor='let definition of answers; index as i' id='def-{{i}}' (click)="answerSelect(definition, i)" (contextmenu)='toggleColor(i, $event)'>
+        <div role='button' class='answer' *ngFor='let definition of answerSet; index as i' id='def-{{i}}' (click)="answerSelect(definition, i)" (contextmenu)='toggleColor(i, $event)'>
           <q>{{definition}}</q>
         </div>
       </div>
     </ng-template>
   </div>
   <div class="column right">
-    <div role="button" id='shuffle' (click)='shuffleAnswers()'>
+    <div role="button" id='shuffle' (click)='shuffleAnswers(this.answerSet)'>
       Shuffle
       <i class="fas fa-random" style="padding-left: 5px;"></i>
     </div>

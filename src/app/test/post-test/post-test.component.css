@@ -107,10 +107,11 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-
+    justify-content: center;
 }
 
 .answer {
+    text-align: center;
     transition: 0.2s;
     margin:5px;
     font-weight: 500;

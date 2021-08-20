@@ -48,6 +48,7 @@ export class PostTestComponent implements OnInit, OnDestroy {
   public answerEntries: Answer[] = [];
   public isFinished:boolean = false;
   public shuffleDefs:boolean = false;
+  public answerSet:string[];
 
   public focusWord: string = '';
   public contextSentences: string[];
@@ -76,6 +77,7 @@ export class PostTestComponent implements OnInit, OnDestroy {
         new Set(this.testEntries.filter((entry:testEntry)=>entry.answer !== '-')
           .map((entry:testEntry)=>entry.answer))
       ));
+      this.getAnswerSet();
       this.isLoading = false;
     });
 
@@ -84,6 +86,21 @@ export class PostTestComponent implements OnInit, OnDestroy {
       this.selectedPost = posts.find((el:Post)=>el.id===this.id).body;
       this.sentences = this.selectedPost.split(/[.;!?]/); //add more comprehensive parsing
     });
+  }
+
+  getAnswerSet(){
+    this.removeColor();
+    let currentTarget = this.words[this.currentWord]
+    let correctAnswer = this.testEntries.filter((el:testEntry)=>el.word===currentTarget).map((el:testEntry)=>el.answer)[0];
+    let subset = this.answers.slice(0,10);
+    if(subset.includes(correctAnswer)){
+      this.answerSet = this.shuffleAnswers(subset, true)
+    }
+    else{
+      subset.pop();
+      subset.push(correctAnswer);
+      this.answerSet = this.shuffleAnswers(subset, true);
+    }
   }
 
   addSelection(selection:string, index:number){
@@ -107,7 +124,10 @@ export class PostTestComponent implements OnInit, OnDestroy {
             correctAnswer:target.answer
           });
         }
-        if(this.currentWord<this.words.length-1)this.currentWord++;
+        if(this.currentWord<this.words.length-1){
+          this.currentWord++;
+          this.getAnswerSet();
+        }
         else this.isFinished = true;
       }
     }
@@ -116,7 +136,17 @@ export class PostTestComponent implements OnInit, OnDestroy {
     if(this.currentWord != 0){
       this.answerEntries = this.answerEntries.slice(0,-1);
       if(this.isFinished)this.isFinished = false;
-      else this.currentWord -= 1;
+      else{
+        this.currentWord -= 1;
+        this.getAnswerSet();
+      }
+    }
+  }
+
+  removeColor(){
+    for(let i in this.answerSet){
+      let element = $(`#def-${i}`);
+      element.css('background-color', 'ghostwhite');
     }
   }
 
@@ -162,12 +192,14 @@ export class PostTestComponent implements OnInit, OnDestroy {
     }
   }
 
-  shuffleAnswers(){
-    let randomSequence = shuffle(Array.from(Array(this.answers.length).keys()));
-    let answersCopy = Array.from(this.answers);
-    shuffle(Array.from(Array(this.answers.length).keys())).forEach((i:number)=>{
-      this.answers[i] = answersCopy[randomSequence[i]]; 
+  shuffleAnswers(array:string[], toReturn=false){
+    let randomSequence = shuffle(Array.from(Array(array.length).keys()));
+    let answersCopy = Array.from(array);
+    shuffle(Array.from(Array(array.length).keys())).forEach((i:number)=>{
+      array[i] = answersCopy[randomSequence[i]]; 
     });
+
+    if(toReturn===true)return array;
   }
 
   ngOnDestroy() {
