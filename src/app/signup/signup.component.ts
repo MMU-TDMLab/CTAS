@@ -45,7 +45,7 @@ export class SignupComponent implements OnInit, OnDestroy {
    * values for the email, password and role will be pushed to the Auth Service, passing it through the CreateUser.
    */
   onSignup() {
-    if (this.form.invalid) {
+    if (this.form.invalid || this.form.value.role !== 'student') {
       return;
     }
     this.authService.createUser(this.form.value.email, this.form.value.password, this.form.value.role);
